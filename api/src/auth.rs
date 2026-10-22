@@ -37,7 +37,7 @@ impl FromRequestParts<Arc<AppState>> for Member {
             .headers
             .get("authorization")
             .and_then(|h| h.to_str().ok())
-            .and_then(|h| h.strip_prefix("Bearer "))
+            .and_then(|h| h.strip_prefix("Session "))
             .filter(|t| t.len() == 64)
             .ok_or(Error::Unauthorized)?;
         let session_hash = hash(token);

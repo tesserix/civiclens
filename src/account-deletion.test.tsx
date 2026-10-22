@@ -14,7 +14,7 @@ test('requires confirmation and shows a durable pending receipt, not completed d
   expect(await screen.findByText('Deletion requested')).toBeOnTheScreen();
   expect(screen.queryByText('Deletion completed')).toBeNull();
   expect(screen.getByText(new RegExp(receipt.id))).toBeOnTheScreen();
-  expect(fetch.mock.calls[1][1]).toMatchObject({ method: 'POST', body: '{}', headers: { Authorization: `Bearer ${'a'.repeat(64)}` } });
+  expect(fetch.mock.calls[1][1]).toMatchObject({ method: 'POST', body: '{}', headers: { Authorization: `Session ${'a'.repeat(64)}` } });
 });
 
 test('failed requests remain retryable and never show a successful receipt', async () => {

@@ -11,7 +11,7 @@ export async function request<T>(path: string, options: { token?: string; method
   if (!__DEV__ && !API_URL.startsWith('https://')) throw new Error('A secure CivicLens API URL must be configured for this build.');
   const response = await fetch(`${API_URL}${path}`, {
     method: options.method || 'GET',
-    headers: { 'Content-Type': 'application/json', ...(options.token ? { Authorization: `Bearer ${options.token}` } : {}),
+    headers: { 'Content-Type': 'application/json', ...(options.token ? { Authorization: `Session ${options.token}` } : {}),
       ...(options.key ? { 'Idempotency-Key': options.key } : {}) },
     body: options.body ? JSON.stringify(options.body) : undefined,
     signal: options.signal || AbortSignal.timeout(25000),

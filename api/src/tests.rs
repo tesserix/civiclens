@@ -89,7 +89,7 @@ async fn send(
         .uri(path)
         .header("content-type", "application/json");
     if let Some(token) = token {
-        builder = builder.header("authorization", format!("Bearer {token}"));
+        builder = builder.header("authorization", format!("Session {token}"));
     }
     if let Some(key) = key {
         builder = builder.header("idempotency-key", key.to_string());
@@ -217,6 +217,22 @@ async fn database_enforces_ownership_roles_idempotency_and_transactional_publica
         sqlx::query("INSERT INTO sessions(token_hash,user_id,expires_at) VALUES($1,$2,now()+interval '1 day')").bind(auth::hash(&token)).bind(id).execute(&pool).await.unwrap();
         users.push((id, token));
     }
+    let bearer = app
+        .clone()
+        .oneshot(
+            Request::builder()
+                .uri("/v1/me")
+                .header("authorization", format!("Bearer {}", users[0].1))
+                .body(Body::empty())
+                .unwrap(),
+        )
+        .await
+        .unwrap();
+    assert_eq!(
+        bearer.status(),
+        StatusCode::UNAUTHORIZED,
+        "gateway-reserved Bearer scheme accepted"
+    );
     let collision = sqlx::query(
         "INSERT INTO users(id,identity_hash,nickname) VALUES($1,'unique-hash','riverfox')",
     )

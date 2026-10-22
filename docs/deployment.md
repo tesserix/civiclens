@@ -56,8 +56,9 @@ retention before a public-volume launch to protect the shared cluster's disk.
    sufficient. Configure the verified gateway namespace in `ingressNamespaces`,
    mesh egress for Zitadel/Meta, and the existing WAF/distributed rate limiting.
 7. Add a dedicated host/route in the gateway owner after DNS/TLS review. This API
-   exchanges a signed OIDC ID token for an opaque application session; do not attach
-   a gateway JWT rule that rejects its opaque Bearer token. Let the API enforce its
+   exchanges a signed OIDC ID token for an opaque session sent as
+   `Authorization: Session <token>`; the shared gateway rejects any non-JWT
+   `Bearer` value, so never move it back to `Bearer`. Let the API enforce its
    session on report routes; allow only health/capabilities/OAuth entrypoints without
    it. Preserve all other products' issuer/audience rules. Do not loosen a shared
    default policy. Test wrong audience, missing session and cross-user requests
