@@ -158,6 +158,16 @@ pub struct Approval {
     pub include_parents: bool,
 }
 
+#[derive(Serialize, Deserialize, TS)]
+#[serde(rename_all = "camelCase")]
+pub struct DeletionRequest {
+    pub id: String,
+    pub status: String,
+    pub requested_at: String,
+    pub due_at: String,
+    pub owner: String,
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -180,6 +190,7 @@ mod tests {
             Routing::decl(),
             Report::decl(),
             Approval::decl(),
+            DeletionRequest::decl(),
         ];
         let output = format!(
             "// Generated from Rust. Run cargo test export_mobile_contract.\n{}\n",

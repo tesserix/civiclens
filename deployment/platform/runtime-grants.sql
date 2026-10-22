@@ -12,3 +12,8 @@ GRANT SELECT, INSERT ON civiclens.audit_events TO civiclens_runtime;
 GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA civiclens TO civiclens_runtime;
 REVOKE UPDATE, DELETE, TRUNCATE ON civiclens.audit_events FROM civiclens_runtime;
 REVOKE INSERT, UPDATE, DELETE, TRUNCATE ON civiclens.user_roles FROM civiclens_runtime;
+
+GRANT UPDATE (identity_subject) ON civiclens.users TO civiclens_runtime;
+GRANT SELECT ON civiclens.account_deletion_requests TO civiclens_runtime;
+GRANT INSERT (id, user_id) ON civiclens.account_deletion_requests TO civiclens_runtime;
+REVOKE UPDATE, DELETE, TRUNCATE ON civiclens.account_deletion_requests FROM civiclens_runtime;

@@ -561,6 +561,127 @@ async fn database_enforces_ownership_roles_idempotency_and_transactional_publica
             .1["publishing"]["instagram"],
         false
     );
+    for path in ["/v1/privacy", "/v1/terms", "/v1/account-deletion"] {
+        let response = app
+            .clone()
+            .oneshot(Request::builder().uri(path).body(Body::empty()).unwrap())
+            .await
+            .unwrap();
+        assert_eq!(response.status(), StatusCode::OK, "{path}");
+        assert_eq!(
+            response.headers()["content-type"],
+            "text/html; charset=utf-8"
+        );
+        assert!(response.headers()["content-security-policy"]
+            .to_str()
+            .unwrap()
+            .contains("default-src 'none'"));
+        let bytes = to_bytes(response.into_body(), 100_000).await.unwrap();
+        let html = std::str::from_utf8(&bytes).unwrap();
+        assert!(html.contains("CivicLens"));
+        assert!(html.contains("sales@tesserix.app"));
+        assert!(!html.contains("<script"));
+    }
+    for (id, token) in users.iter_mut().take(2) {
+        *token = auth::opaque();
+        sqlx::query("INSERT INTO sessions(token_hash,user_id,expires_at) VALUES($1,$2,now()+interval '1 day')")
+            .bind(auth::hash(token)).bind(*id).execute(&pool).await.unwrap();
+    }
+    let deletion_path = "/v1/me/deletion-request";
+    assert_eq!(
+        send(&app, "POST", deletion_path, None, json!({}), None)
+            .await
+            .0,
+        StatusCode::UNAUTHORIZED
+    );
+    assert_eq!(
+        send(
+            &app,
+            "GET",
+            deletion_path,
+            Some(&users[0].1),
+            json!({}),
+            None
+        )
+        .await
+        .0,
+        StatusCode::NOT_FOUND
+    );
+    let (status, receipt) = send(
+        &app,
+        "POST",
+        deletion_path,
+        Some(&users[0].1),
+        json!({}),
+        None,
+    )
+    .await;
+    assert_eq!(status, StatusCode::ACCEPTED, "{receipt}");
+    assert_eq!(receipt["status"], "pending");
+    assert_eq!(receipt["owner"], "sales@tesserix.app");
+    let requested = time::OffsetDateTime::parse(
+        receipt["requestedAt"].as_str().unwrap(),
+        &time::format_description::well_known::Rfc3339,
+    )
+    .unwrap();
+    let due = time::OffsetDateTime::parse(
+        receipt["dueAt"].as_str().unwrap(),
+        &time::format_description::well_known::Rfc3339,
+    )
+    .unwrap();
+    assert_eq!(due - requested, time::Duration::days(30));
+    assert_eq!(
+        send(
+            &app,
+            "POST",
+            deletion_path,
+            Some(&users[0].1),
+            json!({}),
+            None
+        )
+        .await
+        .1,
+        receipt
+    );
+    assert_eq!(
+        send(
+            &app,
+            "GET",
+            deletion_path,
+            Some(&users[0].1),
+            json!({}),
+            None
+        )
+        .await
+        .1,
+        receipt
+    );
+    assert_eq!(
+        send(
+            &app,
+            "GET",
+            deletion_path,
+            Some(&users[1].1),
+            json!({}),
+            None
+        )
+        .await
+        .0,
+        StatusCode::NOT_FOUND
+    );
+    assert_eq!(
+        send(
+            &app,
+            "POST",
+            deletion_path,
+            Some(&users[1].1),
+            json!({"userId":users[0].0}),
+            None
+        )
+        .await
+        .0,
+        StatusCode::UNPROCESSABLE_ENTITY
+    );
     stop_identity.send(()).unwrap();
     identity_server.await.unwrap();
     pool.close().await;

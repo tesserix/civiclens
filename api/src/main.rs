@@ -1,3 +1,4 @@
+mod account_deletion;
 mod admin;
 mod auth;
 mod authority;
@@ -6,6 +7,7 @@ mod contracts;
 mod error;
 mod http;
 mod nickname;
+mod privacy;
 mod publishing;
 mod reports;
 #[cfg(test)]

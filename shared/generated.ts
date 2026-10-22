@@ -15,3 +15,4 @@ export type Publication = { channel: Channel, status: PublicationStatus, provide
 export type Routing = { status: string, authorityNames: Array<string>, };
 export type Report = { id: string, nickname: string, category: Category, description: string, location: Location, createdAt: string, status: string, routing: Routing, publications: Array<Publication>, };
 export type Approval = { publicDescription: string, publicLocality: string, photoPrivacyReviewed: boolean, includeParents: boolean, };
+export type DeletionRequest = { id: string, status: string, requestedAt: string, dueAt: string, owner: string, };

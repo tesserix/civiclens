@@ -36,7 +36,9 @@ revocable, hashed at rest, and stored in device SecureStore. Browser preview use
 memory only. Google/Facebook authentication uses the existing Tesserix Zitadel broker, as
 Roamie does. Native code+PKCE and one-time server nonce precede issuer/audience/
 signature/expiry validation against the trusted broker JWKS.
-Raw provider tokens, names and emails are never persisted. Identity uniqueness
+Raw provider tokens, names and emails are never persisted by the CivicLens API.
+The private verified broker subject is retained for scoped deletion fulfilment;
+it is never exposed in mobile or public report payloads. Identity uniqueness
 uses an HMAC of issuer + subject with a dedicated runtime application key.
 Nicknames are unique case-insensitively; auto names have random suffixes and a
 database uniqueness constraint. Provider linking belongs to the broker's verified identity policy; the API never links by email. Loss/rotation of the HMAC key needs a planned account migration.
@@ -104,8 +106,10 @@ Manager application-secret fallback. No deployment or database migration is part
 of this initial repo creation. Production requires independent moderator accounts,
 append-only audit export, abuse controls, retention/deletion/export tools, photo
 redaction, moderation operations, country-specific legal review and real device QA.
-Pilot deletion/retention is manual offline maintenance: never collect real public
-reports until automated deletion and backup expiry have been implemented.
+Deletion initiation uses a persistent authenticated request and the existing
+Tesserix 30-day manual fulfilment model; see account-deletion-fulfilment.md.
+Never collect real public reports until scoped erasure, provider cleanup and
+backup expiry have been exercised end to end.
 
 ## Rollout and cost
 

@@ -108,9 +108,16 @@ pub fn router(state: Arc<AppState>) -> Result<Router, Error> {
         .route("/healthz", get(|| async { Json(json!({"status":"ok"})) }))
         .route("/readyz", get(ready))
         .route("/v1/capabilities", get(capabilities))
+        .route("/v1/privacy", get(crate::privacy::privacy))
+        .route("/v1/terms", get(crate::privacy::terms))
+        .route("/v1/account-deletion", get(crate::privacy::deletion))
         .route("/v1/auth/{provider}/challenge", post(auth::challenge))
         .route("/v1/auth/{provider}", post(auth::login))
         .route("/v1/me", get(auth::me))
+        .route(
+            "/v1/me/deletion-request",
+            get(crate::account_deletion::get).post(crate::account_deletion::create),
+        )
         .route("/v1/auth/logout", post(auth::logout))
         .route("/v1/reports", get(reports::list).post(reports::create))
         .route("/v1/reports/{id}", get(reports::get))

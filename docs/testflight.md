@@ -6,17 +6,16 @@ Project ID: `d439b0ec-4482-4f17-a134-fa0b0af57588`.
 Bundle ID: `app.tesserix.civiclens`. Intended Apple team: Tesserix Pty Ltd
 (`2CRHRRYBPL`), following Roamie's release process.
 
-The user approved creating CivicLens's own provisioning profile with the existing
-Tesserix distribution certificate/submission key and uploading to TestFlight.
-On 22 October 2026 the saved Apple Developer login returned error `-20755`,
-“This Apple Account is not active.” No profile or TestFlight build was created
-by that attempt. Do not rotate or revoke credentials to work around this error.
-An approved recovery path is needed before continuing signing setup.
+Signing is configured and the initial build is available for internal testing.
+The approved setup reuses the existing Tesserix distribution certificate and
+submission key with a dedicated CivicLens provisioning profile. The earlier
+Apple login error was resolved through this setup; no shared credential was
+rotated or revoked.
 
-Once signing is resolved:
+For subsequent releases:
 
-1. Register CivicLens's own App Store Connect app record; do not use Roamie's
-   numeric Apple ID. Put its actual ID in repository variable `CIVICLENS_ASC_APP_ID`.
+1. Use CivicLens's existing App Store Connect app `6825667307`, recorded in
+   repository variable `CIVICLENS_ASC_APP_ID`; do not use Roamie's numeric ID.
 2. Configure `EXPO_TOKEN` access to this EAS project and the GitHub `testflight`
    environment using existing platform practices. Application secrets stay in
    OpenBao; signing credentials stay in EAS/approved platform storage.
@@ -89,3 +88,13 @@ lens/location mark and mint center, used for native app icons and the web favico
 The production API/database rollout and full device authentication/reporting
 acceptance remain pending. Social publishing is disabled until its provider
 configuration and authority data are verified.
+
+The branded `0.1.1 (4)` build from `b22a22f` was processed as `VALID` and
+`IN_BETA_TESTING` on 22 October 2026. Apple build ID:
+`8fc87c63-55d0-40f8-80b9-926a6b3755cc`. Submission:
+`76f58740-e4d3-46bb-aee7-0c7aa639f763`. Both internal groups contain this exact
+build and `samyak.rout@gmail.com`. Device installation is not confirmed.
+IPA SHA-256: `de0d4f514bd26e138d54532d4b28e62b594481f6935032ca577d6daa7aff35ce`.
+
+This build is an internal preview, not production compliance clearance. See
+[the store readiness audit](store-readiness.md) before any public release.

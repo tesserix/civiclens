@@ -240,6 +240,11 @@ pub async fn login(
             nickname,
         }
     };
+    sqlx::query("UPDATE users SET identity_subject=$2 WHERE id=$1")
+        .bind(Uuid::parse_str(&user.id).map_err(|_| Error::Internal)?)
+        .bind(subject)
+        .execute(&mut *tx)
+        .await?;
     let token = opaque();
     let expires_at = OffsetDateTime::now_utc() + Duration::days(30);
     sqlx::query("INSERT INTO sessions(token_hash,user_id,expires_at) VALUES($1,$2,$3)")

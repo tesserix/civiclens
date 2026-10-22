@@ -1,6 +1,6 @@
 # CivicLens
 
-Expo Router mobile app and a local Node.js API. Follow the parent working agreements.
+Expo Router mobile app and a Rust/Axum API. Follow the parent working agreements.
 Read docs/architecture.md before changing authentication, routing or publishing.
 Run npm run check, npx expo-doctor and npm run export before delivery.
 Never put provider access tokens or real names in reports, captions or client logs.

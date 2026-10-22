@@ -1,3 +1,4 @@
+import { LegalLinks } from '../src/legal-links';
 import { useState } from 'react';
 import { ActivityIndicator, KeyboardAvoidingView, Platform, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -51,6 +52,7 @@ export default function Welcome() {
         {sessionError ? <><Notice>{sessionError}</Notice><Button title="Retry saved sign-in" secondary onPress={retry} /></> : null}
       </View>
       <View className="flex-row items-start gap-2.5"><Ionicons name="shield-checkmark-outline" size={17} color="#717887" /><Text className="flex-1 text-xs leading-5 text-muted">Your profile stays private. Reports appear under your nickname and are reviewed before public sharing.</Text></View>
+      <LegalLinks />
     </ScrollView>
   </KeyboardAvoidingView></SafeAreaView>;
 }

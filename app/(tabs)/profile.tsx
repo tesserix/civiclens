@@ -1,3 +1,5 @@
+import { LegalLinks } from '../../src/legal-links';
+import { AccountDeletion } from '../../src/account-deletion';
 import { useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -21,6 +23,8 @@ export default function Profile() {
     ].map(([icon,title,description]) => <View key={title} className="flex-row gap-3"><Ionicons name={icon as 'camera-outline'} size={23} color="#3858F5" /><View className="flex-1 gap-1"><Text className="font-semibold text-ink">{title}</Text><Text className="text-sm leading-6 text-muted">{description}</Text></View></View>)}</View>
     <Notice>Your sign-in provider identifies your account privately. Public posts use your nickname. Photos, text and location may still identify you or someone else. Check them carefully.</Notice>
     <Text className="text-sm leading-6 text-muted">CivicLens is for constructive community reporting. Avoid identifying private people, unsupported allegations, faces, number plates and sensitive locations. This is not an emergency service.</Text>
+    <LegalLinks />
+    {session ? <AccountDeletion token={session.token} /> : null}
     {error ? <Notice>{error}</Notice> : null}<Button title="Sign out securely" secondary icon="log-out-outline" busy={busy} onPress={() => void logout()} />
     <Text className="text-center text-xs text-muted">CivicLens · by Tesserix · 0.1.0</Text>
   </ScrollView></SafeAreaView>;
