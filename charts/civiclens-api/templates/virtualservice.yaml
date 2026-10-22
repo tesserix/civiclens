@@ -4,6 +4,7 @@ kind: VirtualService
 metadata:
   name: civiclens-api
   annotations:
+    argocd.argoproj.io/sync-wave: "4"
     external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
 spec:
   gateways:
