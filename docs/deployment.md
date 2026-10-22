@@ -1,153 +1,44 @@
-# Deployment handoff
+# Deployment
 
-No live rollout, migration, role grant, secret write or store submission has been
-performed. All files under `deployment/` are reviewable inputs for the owning
-`tesserix-k8s` workflows. They are not an instruction to apply directly.
+This repo owns the API code and its image. Everything that runs it lives
+elsewhere, following the Roamie layout:
 
-## Verified target
+| Repo | Owns |
+|---|---|
+| `tesserix/civiclens` | API code, migrations, `images.yml` publishing `deploy-<sha>` to GAR `global/civiclens-api` |
+| `tesserix/kargo-manifests` | `projects/civiclens/`: Warehouse and `prod` Stage promoting `deploy-<sha>` |
+| `tesserix/tesserix-k8s` | `charts/apps/civiclens-api`, Argo apps, OpenBao readers, CNPG roles, Istio, Zitadel claims (`k8s/operators/zitadel/claims/civiclens.yaml`) |
 
-Read-only discovery on 22 October 2026 found account `unidevidp@gmail.com`, project
-`tesseracthub-480811`, context
-`gke_tesseracthub-480811_asia-south1_tesseract-prod-in-gke` and healthy CNPG cluster
-`global/global-postgres`, two instances ready. The read/write Service is
-`global-postgres-rw.global.svc.cluster.local:5432`. Recheck identity, context and
-RBAC immediately before any approved change; local instructions are not access.
+The production runbook, credential paths and approval gate are in
+`tesserix-k8s/docs/civiclens-api-rollout.md`.
 
-Use **database `civiclens_db`, schema `civiclens`**, with separate
-`civiclens_migrator` and `civiclens_runtime` roles on that cluster. Create no new
-CNPG cluster, PVC or operator. API pool: five connections per pod, prepared
-statement cache off, 15-second statement and 3-second lock timeouts. Two API pods
-consume at most ten connections. Photos currently reside in the product database
-for a small controlled pilot; move them to private object storage and implement
-retention before a public-volume launch to protect the shared cluster's disk.
+## Contract with the platform
 
-## Concrete prerequisites and sequence
+- Database `civiclens_db`, schema `civiclens`, on the shared `global/global-postgres`.
+  `civiclens_migrator` owns it and runs `civiclens-api migrate`; migration
+  `0004_runtime_grants.sql` grants `civiclens_runtime` its DML. Migrations are
+  forward-only; roll back by image, never by dropping the schema.
+- Production reads `CIVICLENS_SECRETS_FILE` (JSON with `civiclens-database-url`
+  using `sslmode=verify-full`, and `civiclens-identity-key`). The identity key
+  needs a mapping migration, never a blind rotation.
+- Pool: five connections per pod, statement cache off, 15s statement and 3s lock
+  timeouts. Photos sit in the database for the pilot; move them to private object
+  storage before public volume.
+- The API exchanges a signed OIDC ID token for an opaque session sent as
+  `Authorization: Session <token>`. The shared gateway rejects non-JWT `Bearer`
+  values, so never move it back to `Bearer`. Only `/v1/` is public.
 
-1. Review and append `deployment/platform/global-postgres-additions.yaml` entries
-   into the owning chart's existing lists. Preserve every existing database/role.
-   Both reproducible bootstrap SQL and CNPG Database CR reconciliation are needed;
-   postInitSQL alone does not affect an existing cluster. Keep reclaim policy retain.
-2. Provision namespace-bound OpenBao secrets separately for development, UAT and
-   production. Product secrets use `civiclens-` names. CNPG role passwords must be
-   synced into the `global` namespace using appropriately scoped platform readers;
-   the API reads only its runtime URL and identity key. Never copy a global owner
-   credential into the product namespace. Restrict each environment's reader to
-   its own paths. `deployment/openbao/` includes the production read policy and
-   ExternalSecret proposal; define `civiclens-openbao` using the verified existing
-   Kubernetes auth mount, service account, CA and auth role. Do not guess those IDs.
-3. Approve and execute the migrations using the migrator credential; migration
-   0004 grants `civiclens_runtime` its privileges. A new dedicated schema/database is additive, but it
-   is still a live database change requiring specific approval. The SQLx migration
-   is forward-only; rollback is to the prior API image while retaining the schema.
-   Deletion of the database or schema is not a rollback procedure.
-4. Add the dedicated native identity claims to the existing operator kustomization
-   and reconcile through its GitOps owner. Read actual IDs from Ready claim status.
-   Set CivicLens API OIDC project/iOS/Android IDs and the verified provider IDs.
-   Enable Google/Facebook connectors only after completing broker-side profile,
-   verification and linking checks. Never reuse Roamie's client audience.
-5. Build and scan via the pinned reusable workflows, then release the API image
-   manually. Pin the resulting immutable digest in the owning GitOps chart values;
-   the local Helm chart refuses an empty digest. Existing Tesserix shared runtime
-   and pinned Rust builder match `roamie/docker/api.Dockerfile`.
-6. Mount the global CNPG CA into `civiclens` through an approved public-CA sync.
-   Runtime URL must use `sslmode=verify-full` and its certificate host name. Add
-   explicit ingress on the global database side for only `civiclens-api` pods in
-   namespace `civiclens`, TCP 5432. The supplied product-side egress alone is not
-   sufficient. Configure the verified gateway namespace in `ingressNamespaces`,
-   mesh egress for Zitadel/Meta, and the existing WAF/distributed rate limiting.
-7. Add a dedicated host/route in the gateway owner after DNS/TLS review. This API
-   exchanges a signed OIDC ID token for an opaque session sent as
-   `Authorization: Session <token>`; the shared gateway rejects any non-JWT
-   `Bearer` value, so never move it back to `Bearer`. Let the API enforce its
-   session on report routes; allow only health/capabilities/OAuth entrypoints without
-   it. Preserve all other products' issuer/audience rules. Do not loosen a shared
-   default policy. Test wrong audience, missing session and cross-user requests
-   through the real public gateway before release.
-8. Register EAS project and signing credentials, set `EXPO_PUBLIC_EAS_PROJECT_ID`
-   and the actual HTTPS API URL per EAS environment, then use the reusable mobile
-   workflow for Android APK/AAB and iOS simulator/device builds. Physical-device
-   Google/Facebook, camera, location, denial, offline draft/retry, large text,
-   background/relaunch and logout QA are release gates. No store auto-submit is set.
+## Identity
 
-The sample ExternalSecret initially omits the Page token; when publishing is
-approved, add its exact OpenBao reader/path and JSON entry. A mounted Secret update
-does not reload this process's configuration. Credential rotation must update the
-writer, platform reader and application readers and roll the pods through GitOps.
-The identity HMAC key needs a mapping migration rather than blind rotation.
+`consumer-civiclens` holds the project and both native clients (code + PKCE, no
+secret, callback `civiclens:/auth/callback`, Login V2). Provider IDs and client
+IDs are set in the tesserix-k8s chart values. Provider secrets live in OpenBao at
+`civiclens/prod/app/civiclens-{google,apple,facebook}-idp-prod`. Do not mark
+login verified until first and returning sign-in work on a real device.
 
-## Operations and rollback
+## Launch gates
 
-`/healthz` is process liveness. `/readyz` checks Postgres connectivity. Set error
-and latency SLO alerts, an outbox-stuck/uncertain alert, shared-CNPG storage alerts
-and an assigned moderation owner before public operation. Target 99.9% availability
-and p99 metadata under 500 ms; these are proposed objectives, not measured results.
-
-Backups use the existing global CNPG/Barman policy. Agree photo/account retention
-and verify actual backup expiry. Proposed RPO 15 minutes and RTO 1 hour require a
-tested isolated product restore; they are not yet verified. Capture a before-state
-record and backup reference before any approved live change. Restore drills must
-not overwrite the shared primary. Roll back application image digest through the
-owner; keep public publishing disabled until reports and outbox are reconciled.
-
-Public launch also requires account deletion/export, retention, abuse/rate-limit
-operations, moderator review tooling, image redaction, country-specific review and
-licensed/source-backed authority discovery. Instagram/WhatsApp integration work
-remains explicit; no operational destination is fabricated for the starter.
-
-No new CNPG infrastructure cost is proposed. Initial API resources are 2 × 100m CPU
-and 128 MiB memory requested, 512 MiB memory limit each. Photo storage and review
-labor dominate growth; validate the shared cluster's headroom before provisioning.
-
-## CivicLens identity and public origin
-
-The owning GitOps branch `feat/civiclens-v2-onboarding` in `tesserix-k8s` contains
-the isolated organization/native-client claims and namespace-bound OpenBao reader.
-The operator release enforces Login V2 for every managed client, preserving
-existing product-specific V2 URLs. The broker patch is based on the deployed
-v4.19.5 tag, rather than the fork's unrelated main-branch changes. Its image is
-published under `ghcr.io/tesserix/zitadel-api-patched:sha-<commit>`.
-
-Before activation, populate `civiclens/prod/app/civiclens-{google,apple,facebook}-idp-prod`
-through the platform's authorized secret writer. Each KV payload's `value` is a
-JSON string containing the provider fields documented in the operator's
-`operators/zitadel/docs/consumer-organizations.md`. Never put those values in
-claims, Helm values, source, logs, or Expo variables. The operator's consumer
-reader has its own projected `openbao` audience token; existing writer identities
-are preserved.
-
-After the approved broker/operator rollout, verify the consumer project Ready
-receipt and both native clients. Use the returned IDs for
-`CIVICLENS_OIDC_ORGANIZATION_ID`, project/client IDs, and all three provider IDs.
-Do not configure a provider as available until real first and returning sign-in
-works. Product tokens are rejected outside the configured organization.
-
-The requested public origin is exactly `https://civiclns-api.tesserix.app`.
-The product Helm chart contains an opt-in VirtualService using the existing
-`istio-ingress/tesseract-gateway`; enable it with
-`gateway.enabled=true` and `ingressNamespaces=[istio-ingress]` after the runtime
-secrets, shared-CNPG database/schema, migration/grants, TLS, and immutable API image
-are ready. No new CNPG cluster or external load balancer is needed. Production
-rollout and database migrations still require their named approval.
-
-The new additive `0002_apple_login.sql` migration enables Apple challenges in an
-existing CivicLens schema. It must run under the migrator role before the new API
-image is served. New test schemas apply it together with the initial migration.
-
-## Reconciled identity receipt — 22 October 2026
-
-The operator project and both native clients are Ready at generation 1 in the
-dedicated `consumer-civiclens` organization. Their verified public IDs are set in
-`charts/civiclens-api/values.yaml`. Both clients use authorization code/PKCE with
-no client secret, callback `civiclens:/auth/callback`, no refresh grant, and Login
-V2 through the instance's configured hosted-login URL. The active policy disables
-local authentication, manual registration, passkeys and domain discovery, and
-attaches only the three organization-owned social providers. The active theme is
-cobalt `#3858F5` on `#F7F8FA` with text `#151923`.
-
-The mobile app selects the provider through Zitadel's
-`urn:zitadel:iam:org:idp:id:<provider-id>` scope, together with the organization
-and project-audience scopes. It retains a one-time API nonce and native PKCE.
-A hosted-login parsing defect still needs its frontend release: the deployed UI
-recognizes only numeric organization scope IDs and falls back to the shared page
-for `consumer-civiclens`. Do not mark end-to-end login verified until the corrected
-hosted image is deployed and first/returning provider logins are exercised.
+Public launch still needs account export, retention, moderation tooling, image
+redaction, alerts on errors/latency/shared-CNPG storage, an isolated restore
+drill and verified authority records. Social publishing stays disabled until a
+real Page and scoped credentials exist; Instagram and WhatsApp are not built.
