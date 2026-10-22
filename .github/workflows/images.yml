@@ -1,0 +1,17 @@
+name: Release API image
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+  packages: write
+  id-token: write
+jobs:
+  verify:
+    uses: ./.github/workflows/ci.yml
+  publish:
+    needs: verify
+    uses: tesserix/tesserix-workflows/.github/workflows/container-release.yml@62f7f663a98d5ef92567850dd03c8c2513c9068e
+    with:
+      namespace: tesserix
+      images: >-
+        {"include":[{"name":"civiclens-api","context":".","dockerfile":"docker/api.Dockerfile","target":"","source_root":"api","build_args":"","requires_application_build_secret":false,"trivy_ignore_file":"","smoke_port":0,"smoke_path":"/healthz"}]}

@@ -1,0 +1,29 @@
+[workspace]
+members = ["api"]
+resolver = "2"
+
+[workspace.dependencies]
+axum = "0.8"
+tokio = { version = "1", features = ["full"] }
+tower-http = { version = "0.6", features = ["cors", "limit", "timeout", "request-id", "trace"] }
+tower = { version = "0.5", features = ["util"] }
+sqlx = { version = "0.8", default-features = false, features = ["runtime-tokio-rustls", "postgres", "uuid", "time", "json", "migrate"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "2"
+uuid = { version = "1", features = ["v4", "v7", "serde"] }
+time = { version = "0.3", features = ["serde", "formatting", "parsing"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["json", "env-filter"] }
+reqwest = { version = "0.12", default-features = false, features = ["rustls-tls", "json", "multipart"] }
+jsonwebtoken = { version = "10", default-features = false, features = ["aws_lc_rs", "use_pem"] }
+sha2 = "0.10"
+hmac = "0.12"
+rand = "0.9"
+hex = "0.4"
+base64 = "0.22"
+image = { version = "0.25", default-features = false, features = ["jpeg", "png", "webp"] }
+geo = "0.33"
+geojson = { version = "1", features = ["geo-types"] }
+ts-rs = { version = "11", features = ["serde-json-impl"] }
+dotenvy = "0.15"

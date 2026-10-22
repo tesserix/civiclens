@@ -1,0 +1,11 @@
+**/node_modules
+target
+.git
+.env*
+.expo
+dist
+artifacts
+ios
+android
+.data
+graft

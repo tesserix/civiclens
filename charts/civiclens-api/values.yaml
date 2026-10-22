@@ -1,0 +1,23 @@
+replicaCount: 2
+ingressNamespaces: []
+image:
+  repository: ghcr.io/tesserix/civiclens-api
+  digest: ""
+secretName: civiclens-api-config
+databaseCaSecret: global-postgres-ca
+env:
+  CIVICLENS_ENV: production
+  CIVICLENS_BIND: 0.0.0.0:8080
+  CIVICLENS_SECRETS_FILE: /var/run/civiclens/secrets/secrets.json
+  CIVICLENS_PUBLISHING_ENABLED: "false"
+  CIVICLENS_OIDC_PROJECT_ID: ""
+  CIVICLENS_OIDC_IOS_CLIENT_ID: ""
+  CIVICLENS_OIDC_ANDROID_CLIENT_ID: ""
+  CIVICLENS_GOOGLE_IDP_ID: ""
+  CIVICLENS_FACEBOOK_IDP_ID: ""
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    memory: 512Mi

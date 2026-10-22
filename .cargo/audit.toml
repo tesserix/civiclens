@@ -1,0 +1,5 @@
+[advisories]
+# SQLx 0.8 resolves an unused MySQL RSA dependency into Cargo.lock. The normal,
+# build and dev graphs for all targets must exclude rsa; CI checks this before
+# accepting the exception. Review by 2026-11-21. Matches Roamie's scoped policy.
+ignore = ["RUSTSEC-2023-0071"]

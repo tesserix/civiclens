@@ -1,0 +1,36 @@
+apiVersion: identity.tesserix.app/v1alpha1
+kind: ZitadelProject
+metadata:
+  name: civiclens
+  namespace: identity-operator
+  labels: { app.kubernetes.io/part-of: civiclens }
+spec:
+  displayName: CivicLens
+  organization: TESSERIX
+  access: { mode: public }
+---
+apiVersion: identity.tesserix.app/v1alpha1
+kind: ZitadelApplication
+metadata:
+  name: civiclens-ios
+  namespace: identity-operator
+  labels: { app.kubernetes.io/part-of: civiclens }
+spec:
+  projectRef: { name: civiclens }
+  displayName: CivicLens iOS
+  applicationType: native
+  refreshToken: false
+  redirectUris: ["civiclens:/auth/callback"]
+---
+apiVersion: identity.tesserix.app/v1alpha1
+kind: ZitadelApplication
+metadata:
+  name: civiclens-android
+  namespace: identity-operator
+  labels: { app.kubernetes.io/part-of: civiclens }
+spec:
+  projectRef: { name: civiclens }
+  displayName: CivicLens Android
+  applicationType: native
+  refreshToken: false
+  redirectUris: ["civiclens:/auth/callback"]

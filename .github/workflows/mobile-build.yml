@@ -1,0 +1,45 @@
+name: Android and iOS builds
+on:
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: Target platform
+        type: choice
+        options: [all, android, ios]
+        default: all
+      profile:
+        description: EAS profile
+        type: choice
+        options: [development, preview, preview-simulator, production]
+        default: preview
+permissions:
+  contents: read
+concurrency:
+  group: mobile-release
+  cancel-in-progress: false
+jobs:
+  preflight:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check simulator target
+        env:
+          PLATFORM: ${{ inputs.platform }}
+          PROFILE: ${{ inputs.profile }}
+        run: '[[ "$PROFILE" != "preview-simulator" || "$PLATFORM" == "ios" ]]'
+  verify:
+    needs: preflight
+    uses: ./.github/workflows/ci.yml
+  build:
+    needs: verify
+    uses: tesserix/tesserix-workflows/.github/workflows/expo-eas-build.yml@62f7f663a98d5ef92567850dd03c8c2513c9068e
+    with:
+      working_directory: .
+      install_directory: .
+      lockfile_path: package-lock.json
+      node_version: "24.14.0"
+      platform: ${{ inputs.platform }}
+      profile: ${{ inputs.profile }}
+      no_wait: false
+      auto_submit: false
+    secrets:
+      expo_token: ${{ secrets.EXPO_TOKEN }}
