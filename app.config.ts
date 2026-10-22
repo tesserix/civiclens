@@ -16,7 +16,7 @@ const config: ExpoConfig = {
     permissions: ['android.permission.ACCESS_COARSE_LOCATION', 'android.permission.ACCESS_FINE_LOCATION', 'android.permission.CAMERA'] },
   plugins: ['expo-router', ['expo-secure-store', { faceIDPermission: false }], 'expo-web-browser', ['expo-image-picker', {
     photosPermission: 'Choose a photo of the civic issue you want to report.', cameraPermission: 'Take a photo for your civic report.', microphonePermission: false,
-  }], ['expo-location', { locationWhenInUsePermission: 'Attach your current location to a report when you choose.', locationAlwaysPermission: false, locationAlwaysAndWhenInUsePermission: false, motionUsagePermission: false, isIosBackgroundLocationEnabled: false, isAndroidBackgroundLocationEnabled: false, isAndroidForegroundServiceEnabled: false, isAndroidMotionActivityEnabled: false }]],
+  }], ['expo-location', { locationWhenInUsePermission: 'Attach your current location to a report when you choose.', locationAlwaysPermission: false, locationAlwaysAndWhenInUsePermission: false, motionUsagePermission: 'Motion information helps the location library improve the position attached to a civic report.', isIosBackgroundLocationEnabled: false, isAndroidBackgroundLocationEnabled: false, isAndroidForegroundServiceEnabled: false, isAndroidMotionActivityEnabled: false }]],
   web: { bundler: 'metro', output: 'static', name: 'CivicLens', themeColor: '#3858F5', favicon: './assets/civiclens-icon.png' },
   extra: { eas: { projectId: 'd439b0ec-4482-4f17-a134-fa0b0af57588' } },
 };

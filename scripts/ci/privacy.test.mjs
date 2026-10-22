@@ -6,10 +6,11 @@ const config = JSON.parse(execFileSync(process.execPath, ['node_modules/expo/bin
 
 test('native permissions match foreground photo reporting', () => {
   const plist = config._internal.modResults.ios.infoPlist;
-  for (const key of ['NSLocationAlwaysUsageDescription', 'NSLocationAlwaysAndWhenInUseUsageDescription', 'NSMotionUsageDescription', 'NSFaceIDUsageDescription', 'NSMicrophoneUsageDescription']) {
+  for (const key of ['NSLocationAlwaysUsageDescription', 'NSLocationAlwaysAndWhenInUseUsageDescription', 'NSFaceIDUsageDescription', 'NSMicrophoneUsageDescription']) {
     assert.equal(plist[key], undefined, `unneeded permission ${key}`);
   }
   assert.match(plist.NSCameraUsageDescription, /report/);
+  assert.match(plist.NSMotionUsageDescription, /location.*report/i);
   assert.match(plist.NSLocationWhenInUseUsageDescription, /choose/);
   const manifest = config._internal.modResults.android.manifest.manifest;
   const permissions = (manifest['uses-permission'] || []).filter(p => p.$['tools:node'] !== 'remove').map(p => p.$['android:name']);
