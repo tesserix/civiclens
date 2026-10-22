@@ -131,3 +131,22 @@ rollout and database migrations still require their named approval.
 The new additive `0002_apple_login.sql` migration enables Apple challenges in an
 existing CivicLens schema. It must run under the migrator role before the new API
 image is served. New test schemas apply it together with the initial migration.
+
+## Reconciled identity receipt — 22 October 2026
+
+The operator project and both native clients are Ready at generation 1 in the
+dedicated `consumer-civiclens` organization. Their verified public IDs are set in
+`charts/civiclens-api/values.yaml`. Both clients use authorization code/PKCE with
+no client secret, callback `civiclens:/auth/callback`, no refresh grant, and Login
+V2 through the instance's configured hosted-login URL. The active policy disables
+local authentication, manual registration, passkeys and domain discovery, and
+attaches only the three organization-owned social providers. The active theme is
+cobalt `#3858F5` on `#F7F8FA` with text `#151923`.
+
+The mobile app selects the provider through Zitadel's
+`urn:zitadel:iam:org:idp:id:<provider-id>` scope, together with the organization
+and project-audience scopes. It retains a one-time API nonce and native PKCE.
+A hosted-login parsing defect still needs its frontend release: the deployed UI
+recognizes only numeric organization scope IDs and falls back to the shared page
+for `consumer-civiclens`. Do not mark end-to-end login verified until the corrected
+hosted image is deployed and first/returning provider logins are exercised.
