@@ -3,7 +3,6 @@ set -euo pipefail
 
 : "${API_IMAGE:?set API_IMAGE to the built release image}"
 pg_image='postgres@sha256:a85daf0dbd5e79586e850e3fe4b21b796799828ad015ce2166aeb98cc24da61c'
-repo_root=$(cd "$(dirname "$0")/../.." && pwd)
 smoke_dir=$(mktemp -d)
 smoke_name="civiclens-smoke-$$"
 cleanup() {
@@ -62,8 +61,6 @@ docker create --name "$smoke_name-api" --network "$smoke_name"\
 start_api -a
 test "$(docker inspect -f '{{.State.ExitCode}}' "$smoke_name-api")" = 0
 docker rm "$smoke_name-api" >/dev/null
-docker exec -i "$smoke_name-db" psql -U civiclens_migrator -d civiclens_db -v ON_ERROR_STOP=1 \
-  < "$repo_root/deployment/platform/runtime-grants.sql" >/dev/null
 
 secrets civiclens_runtime
 docker create --name "$smoke_name-api" --network "$smoke_name" \

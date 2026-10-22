@@ -129,12 +129,59 @@ async fn database_enforces_ownership_roles_idempotency_and_transactional_publica
         .connect_with(options)
         .await
         .unwrap();
+    sqlx::query("DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'civiclens_runtime') THEN CREATE ROLE civiclens_runtime NOLOGIN; END IF; END $$")
+        .execute(&admin)
+        .await
+        .unwrap();
     admin::migrate(
         &pool,
         std::path::Path::new(concat!(env!("CARGO_MANIFEST_DIR"), "/migrations")),
     )
     .await
     .unwrap();
+    for (table, privilege, granted) in [
+        ("users", "INSERT", true),
+        ("users", "UPDATE", false),
+        ("users", "DELETE", false),
+        ("user_roles", "SELECT", true),
+        ("user_roles", "INSERT", false),
+        ("sessions", "DELETE", true),
+        ("auth_challenges", "DELETE", true),
+        ("reports", "UPDATE", true),
+        ("reports", "DELETE", false),
+        ("publications", "UPDATE", true),
+        ("audit_events", "INSERT", true),
+        ("audit_events", "UPDATE", false),
+        ("account_deletion_requests", "SELECT", true),
+        ("account_deletion_requests", "UPDATE", false),
+        ("account_deletion_requests", "DELETE", false),
+    ] {
+        let actual: bool = sqlx::query_scalar("SELECT has_table_privilege('civiclens_runtime', format('%I.%I', $1::text, $2::text), $3)")
+            .bind(&schema).bind(table).bind(privilege)
+            .fetch_one(&admin).await.unwrap();
+        assert_eq!(actual, granted, "civiclens_runtime {privilege} on {table}");
+    }
+    for (table, column, granted) in [
+        ("users", "identity_subject", true),
+        ("users", "nickname", false),
+        ("account_deletion_requests", "user_id", true),
+    ] {
+        let privilege = if table == "users" { "UPDATE" } else { "INSERT" };
+        let actual: bool = sqlx::query_scalar("SELECT has_column_privilege('civiclens_runtime', format('%I.%I', $1::text, $2::text), $3, $4)")
+            .bind(&schema).bind(table).bind(column).bind(privilege)
+            .fetch_one(&admin).await.unwrap();
+        assert_eq!(
+            actual, granted,
+            "civiclens_runtime {privilege} on {table}.{column}"
+        );
+    }
+    let schema_access: (bool, bool) = sqlx::query_as("SELECT has_schema_privilege('civiclens_runtime', $1, 'USAGE'), has_schema_privilege('civiclens_runtime', $1, 'CREATE')")
+        .bind(&schema).fetch_one(&admin).await.unwrap();
+    assert_eq!(
+        schema_access,
+        (true, false),
+        "civiclens_runtime schema access"
+    );
     let (signing, jwks) = identity_fixture();
     let identity_listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
     let issuer = format!("http://{}", identity_listener.local_addr().unwrap());

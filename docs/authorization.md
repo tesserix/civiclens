@@ -50,8 +50,8 @@ as JPEG, stripping metadata; no arbitrary URL fetch is permitted. Moderators mus
 visually check faces, plates and other identifying details. There is no automated
 face detection/redaction claim.
 
-Apply [runtime-grants.sql](../deployment/platform/runtime-grants.sql) after the
-reviewed migration. Runtime can read roles but cannot grant them, run DDL, modify
+Migration [0004_runtime_grants.sql](../api/migrations/0004_runtime_grants.sql)
+grants `civiclens_runtime` its privileges when the migrator runs. Runtime can read roles but cannot grant them, run DDL, modify
 audit rows or access another product's schema. Schema owner and application
 credentials are separate OpenBao secrets. Rotate through the platform procedure;
 changing the identity HMAC key without a migration would orphan account mappings.

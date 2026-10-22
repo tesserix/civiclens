@@ -35,8 +35,8 @@ retention before a public-volume launch to protect the shared cluster's disk.
    its own paths. `deployment/openbao/` includes the production read policy and
    ExternalSecret proposal; define `civiclens-openbao` using the verified existing
    Kubernetes auth mount, service account, CA and auth role. Do not guess those IDs.
-3. Approve and execute the initial migration using the migrator credential,
-   then `runtime-grants.sql`. A new dedicated schema/database is additive, but it
+3. Approve and execute the migrations using the migrator credential; migration
+   0004 grants `civiclens_runtime` its privileges. A new dedicated schema/database is additive, but it
    is still a live database change requiring specific approval. The SQLx migration
    is forward-only; rollback is to the prior API image while retaining the schema.
    Deletion of the database or schema is not a rollback procedure.
