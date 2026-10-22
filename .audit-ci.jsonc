@@ -1,0 +1,19 @@
+{
+  "high": true,
+  "allowlist": [
+    {
+      "GHSA-vfj7-8cjw-p6xm": {
+        "active": true,
+        "expiry": "2026-11-21T00:00:00Z",
+        "notes": "Unfixed braces <=3.0.3 in Jest/Metro/Tailwind tooling. Patterns come from trusted repo config; reporter text/photos are never glob patterns. NativeWind v4 requires Tailwind 3. Recheck upstream by expiry; see docs/dependencies.md."
+      }
+    },
+    {
+      "GHSA-86w9-cpqp-85rv": {
+        "active": true,
+        "expiry": "2026-11-21T00:00:00Z",
+        "notes": "Unfixed node-forge <=1.4.0 in Expo CLI code-signing tooling. OTA updates/code-signing are not configured. Identity JWT verification is Rust/AWS-LC and native store signing uses Apple tooling. Recheck before enabling OTA; see docs/dependencies.md."
+      }
+    }
+  ]
+}
