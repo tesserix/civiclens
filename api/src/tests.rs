@@ -164,10 +164,12 @@ async fn database_enforces_ownership_roles_idempotency_and_transactional_publica
         bind: "127.0.0.1:0".into(),
         oidc_issuer: issuer.clone(),
         oidc_project_id: "test-project".into(),
+        oidc_organization_id: "consumer-civiclens".into(),
         oidc_ios_client_id: "test-ios".into(),
         oidc_android_client_id: "test-android".into(),
         google_idp_id: "test-google".into(),
         facebook_idp_id: String::new(),
+        apple_idp_id: "test-apple".into(),
     };
     let state = Arc::new(AppState {
         pool: pool.clone(),
@@ -178,6 +180,29 @@ async fn database_enforces_ownership_roles_idempotency_and_transactional_publica
         photo_slots: Arc::new(tokio::sync::Semaphore::new(2)),
     });
     let app = http::router(state.clone()).unwrap();
+    let unavailable = send(
+        &app,
+        "POST",
+        "/v1/auth/facebook/challenge",
+        None,
+        json!({}),
+        None,
+    )
+    .await;
+    assert_eq!(
+        unavailable.0,
+        StatusCode::SERVICE_UNAVAILABLE,
+        "unconfigured provider issued a login challenge"
+    );
+    let capabilities = send(&app, "GET", "/v1/capabilities", None, json!({}), None).await;
+    assert_eq!(capabilities.0, StatusCode::OK);
+    assert_eq!(capabilities.1["apple"], true);
+    assert_eq!(capabilities.1["facebook"], false);
+    assert_eq!(
+        capabilities.1["auth"]["organizationId"],
+        "consumer-civiclens"
+    );
+
     let mut users = Vec::new();
     for name in ["RiverFox", "OtherOtter", "ReviewOwl"] {
         let id = uuid::Uuid::now_v7();
@@ -412,24 +437,52 @@ async fn database_enforces_ownership_roles_idempotency_and_transactional_publica
             .0,
         StatusCode::UNAUTHORIZED
     );
-    for nickname in [None, Some("CloudWren")] {
-        let challenge = send(
+    for (provider, nickname) in [
+        ("google", None),
+        ("google", Some("CloudWren")),
+        ("apple", Some("AppleWren")),
+    ] {
+        let (challenge_status, challenge) = send(
             &app,
             "POST",
-            "/v1/auth/google/challenge",
+            &format!("/v1/auth/{provider}/challenge"),
             None,
             Value::Null,
             None,
         )
-        .await
-        .1;
+        .await;
+        assert_eq!(challenge_status, StatusCode::OK, "{challenge}");
         let mut header = jsonwebtoken::Header::new(jsonwebtoken::Algorithm::RS256);
         header.kid = Some("test-key".into());
-        let claims = json!({"sub":format!("private-provider-subject-{nickname:?}"),"iss":issuer,"aud":"test-ios","exp":time::OffsetDateTime::now_utc().unix_timestamp()+300,"nonce":challenge["nonce"],"name":"Private Legal Name","email":"private@example.invalid"});
+        let claims = json!({"sub":format!("private-provider-subject-{nickname:?}"),"iss":issuer,"aud":"test-ios","exp":time::OffsetDateTime::now_utc().unix_timestamp()+300,"nonce":challenge["nonce"],"urn:zitadel:iam:user:resourceowner:id":"consumer-civiclens","name":"Private Legal Name","email":"private@example.invalid"});
+        let mut wrong_org = claims.clone();
+        wrong_org["urn:zitadel:iam:user:resourceowner:id"] = json!("another-product");
+        let wrong_token = jsonwebtoken::encode(&header, &wrong_org, &signing).unwrap();
+        let rejected = send(
+            &app,
+            "POST",
+            &format!("/v1/auth/{provider}"),
+            None,
+            json!({"token":wrong_token,"challengeId":challenge["id"],"nickname":nickname}),
+            None,
+        )
+        .await;
+        assert_eq!(
+            rejected.0,
+            StatusCode::UNAUTHORIZED,
+            "cross-organization identity accepted"
+        );
         let token = jsonwebtoken::encode(&header, &claims, &signing).unwrap();
         let login = json!({"token":token,"challengeId":challenge["id"],"nickname":nickname});
-        let (status, session) =
-            send(&app, "POST", "/v1/auth/google", None, login.clone(), None).await;
+        let (status, session) = send(
+            &app,
+            "POST",
+            &format!("/v1/auth/{provider}"),
+            None,
+            login.clone(),
+            None,
+        )
+        .await;
         assert_eq!(status, StatusCode::OK, "{session}");
         assert!(!session.to_string().contains("Private Legal Name"));
         assert!(!session.to_string().contains("private@example.invalid"));
@@ -442,9 +495,16 @@ async fn database_enforces_ownership_roles_idempotency_and_transactional_publica
                 .starts_with("kind-otter-"));
         }
         assert_eq!(
-            send(&app, "POST", "/v1/auth/google", None, login, None)
-                .await
-                .0,
+            send(
+                &app,
+                "POST",
+                &format!("/v1/auth/{provider}"),
+                None,
+                login,
+                None
+            )
+            .await
+            .0,
             StatusCode::UNAUTHORIZED
         );
         assert_eq!(

@@ -92,8 +92,11 @@ pub async fn challenge(
     State(state): State<Arc<AppState>>,
     Path(provider): Path<String>,
 ) -> Result<Json<Challenge>, Error> {
-    if !["google", "facebook"].contains(&provider.as_str()) {
+    if !["google", "facebook", "apple"].contains(&provider.as_str()) {
         return Err(Error::NotFound);
+    }
+    if !state.config.provider_configured(&provider) {
+        return Err(Error::Unavailable);
     }
     let id = Uuid::now_v7();
     let nonce = opaque();
@@ -110,6 +113,8 @@ pub async fn challenge(
 
 #[derive(Debug, Deserialize)]
 struct IdentityClaims {
+    #[serde(rename = "urn:zitadel:iam:user:resourceowner:id")]
+    organization_id: Option<String>,
     sub: String,
     nonce: Option<String>,
 }
@@ -120,8 +125,8 @@ async fn verify(
     token: &str,
     nonce: &str,
 ) -> Result<String, Error> {
-    if ["google", "facebook"].contains(&provider) {
-        if state.config.oidc_project_id.is_empty() {
+    if ["google", "facebook", "apple"].contains(&provider) {
+        if state.config.oidc_project_id.is_empty() || state.config.oidc_organization_id.is_empty() {
             return Err(Error::Unavailable);
         }
         let header = decode_header(token).map_err(|_| Error::Unauthorized)?;
@@ -164,7 +169,10 @@ async fn verify(
         )
         .map_err(|_| Error::Unauthorized)?
         .claims;
-        if claims.nonce.as_deref() != Some(nonce) || claims.sub.is_empty() {
+        if claims.nonce.as_deref() != Some(nonce)
+            || claims.sub.is_empty()
+            || claims.organization_id.as_deref() != Some(state.config.oidc_organization_id.as_str())
+        {
             return Err(Error::Unauthorized);
         }
         Ok(claims.sub)

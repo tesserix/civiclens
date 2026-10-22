@@ -28,10 +28,10 @@ There is no shared moderator bearer credential in production.
 OIDC uses Tesserix Zitadel, as Roamie does: native authorization code + PKCE,
 AuthSession state verification, server-issued one-time nonce, then ID token
 validation with trusted JWKS, RS256 only, fixed issuer, CivicLens client audiences,
-expiry and exact nonce. The Google/Facebook choice is a broker routing hint;
+expiry, exact nonce, and the CivicLens resource-owner organization claim. The
+Google/Apple/Facebook choice is a broker routing hint;
 the broker's policy controls which upstream methods are enabled. It is not a
-separate account-linking mechanism. Any email-based linking happens only under
-the broker's verified identity policy. The API persists an HMAC of issuer/subject
+separate account-linking mechanism. Automatic account linking is disabled by the CivicLens organization policy. The API persists an HMAC of issuer/subject
 and a nickname, not the provider token, name or email.
 
 Mobile sessions are random 256-bit bearer values with a 30-day expiry, SHA-256
@@ -55,3 +55,10 @@ reviewed migration. Runtime can read roles but cannot grant them, run DDL, modif
 audit rows or access another product's schema. Schema owner and application
 credentials are separate OpenBao secrets. Rotate through the platform procedure;
 changing the identity HMAC key without a migration would orphan account mappings.
+
+The public deployment hostname is `https://civiclns-api.tesserix.app`. Its gateway
+routes `/v1/` only, with no automatic POST retries. Health/readiness remain
+cluster probes. Capabilities and rate-limited login bootstrap are available
+before authentication; report data and privileged operations always use the API's
+session, ownership, and role checks. Mobile release/preview builds use this HTTPS
+origin. A public hostname does not grant access to application data.

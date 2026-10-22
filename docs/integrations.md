@@ -2,17 +2,26 @@
 
 ## Sign-in
 
-Google/Facebook are offered through existing Tesserix Zitadel connectors. Create
-dedicated CivicLens native clients using the supplied identity claims; callback
-is exactly `civiclens:/auth/callback`. Meta's callback returns to Zitadel, not to
-this native scheme. Do not add secrets to Expo public environment variables.
+Google, Apple, and Meta use brokered authorization code + PKCE. Apple is offered
+on iOS. CivicLens uses its own social-only organization, created through the
+Zitadel operator, plus separate native iOS/Android clients. The callback is exactly
+`civiclens:/auth/callback`; provider callbacks return to Zitadel. Provider secrets
+stay in product/environment-scoped OpenBao paths and never enter Expo public
+configuration.
 
-The existing Roamie onboarding notes identify unresolved Facebook connector
-mapping/verification prerequisites. Revalidate those prerequisites before setting
-`CIVICLENS_FACEBOOK_IDP_ID`; a configured ID is not evidence of a working login.
-Test real Google and Facebook accounts on both Android and iOS. App Store review
-may require an equivalent Apple sign-in option when third-party sign-in is offered;
-resolve that requirement before store submission.
+All managed clients use Login V2. The operator owns the organization policy,
+provider configuration, and cobalt/light theme. Manual signup, passwords,
+passkeys, and automatic account linking are disabled. First social login creates
+the broker account automatically when its required profile is present. Meta must
+grant email access and may require broker email verification. Its V2 Generic
+OAuth mapping requires the pinned v4.19.5 broker patch; V1 actions are not used.
+
+Read the project status receipt for the actual organization/provider IDs, and the
+native application receipts for client IDs. Configure the API only after real
+first/returning account tests succeed. Test Google and Meta on both platforms,
+Apple on iOS, cancellation, nonce replay, wrong organization, and expired tokens.
+A configured connector ID or Ready claim alone does not prove a social provider's
+external app approval, callback allowlist, or Services ID is working.
 
 ## Public social publishing
 

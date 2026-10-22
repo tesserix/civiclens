@@ -2,15 +2,15 @@ import { ActivityIndicator, Pressable, Text, TextInput, View, type TextInputProp
 import { Ionicons } from '@expo/vector-icons';
 import type { ComponentProps, PropsWithChildren } from 'react';
 
-export function Button({ title, onPress, busy = false, disabled = false, secondary = false, icon }: {
-  title: string; onPress: () => void; busy?: boolean; disabled?: boolean; secondary?: boolean; icon?: ComponentProps<typeof Ionicons>['name'];
+export function Button({ title, onPress, busy = false, disabled = false, secondary = false, tone, icon }: {
+  title: string; onPress: () => void; busy?: boolean; disabled?: boolean; secondary?: boolean; tone?: 'apple'; icon?: ComponentProps<typeof Ionicons>['name'];
 }) {
   return <Pressable accessibilityRole="button" accessibilityLabel={title} accessibilityState={{ disabled: disabled || busy, busy }}
     disabled={disabled || busy} onPress={onPress}
-    className={`min-h-14 flex-row items-center justify-center gap-3 rounded-2xl border px-5 py-4 ${secondary ? 'border-line bg-white' : 'border-forest bg-forest'}`}
+    className={`min-h-14 flex-row items-center justify-center gap-3 rounded-2xl border px-5 py-3.5 ${tone === 'apple' ? 'border-black bg-black' : secondary ? 'border-line bg-white' : 'border-primary bg-primary'}`}
     style={({ pressed }) => ({ opacity: disabled || busy ? 0.5 : pressed ? 0.75 : 1 })}>
-    {busy ? <ActivityIndicator color={secondary ? '#163D32' : '#FFF'} /> : icon ? <Ionicons name={icon} size={20} color={secondary ? '#163D32' : '#FFF'} /> : null}
-    <Text className={`text-base font-semibold ${secondary ? 'text-forest' : 'text-white'}`}>{title}</Text>
+    {busy ? <ActivityIndicator color={secondary ? '#3858F5' : '#FFF'} /> : icon ? <Ionicons name={icon} size={20} color={secondary ? '#3858F5' : '#FFF'} /> : null}
+    <Text className={`text-base font-semibold ${secondary ? 'text-primary' : 'text-white'}`}>{title}</Text>
   </Pressable>;
 }
 
@@ -25,5 +25,5 @@ export function Notice({ children }: PropsWithChildren) {
 }
 
 export function Brand() {
-  return <View className="flex-row items-center gap-2.5"><View className="h-10 w-10 items-center justify-center rounded-2xl bg-forest"><Ionicons name="scan" size={25} color="#DFF0D8" /></View><Text className="text-xl font-bold tracking-tight text-forest">civiclens<Text className="text-coral">.</Text></Text></View>;
+  return <View className="flex-row items-center gap-2.5"><View className="h-10 w-10 items-center justify-center rounded-[14px] bg-primary"><Ionicons name="scan" size={25} color="#EEF1FF" /></View><Text className="text-xl font-bold tracking-tight text-ink">civiclens<Text className="text-primary">.</Text></Text></View>;
 }

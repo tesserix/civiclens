@@ -1,0 +1,27 @@
+{{- if .Values.gateway.enabled }}
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: civiclens-api
+  annotations:
+    external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
+spec:
+  gateways:
+    - {{ .Values.gateway.reference | quote }}
+  hosts:
+    - civiclns-api.tesserix.app
+  http:
+    - match:
+        - uri: { prefix: /v1/ }
+      headers:
+        request:
+          set:
+            x-forwarded-host: civiclns-api.tesserix.app
+            x-forwarded-proto: https
+      route:
+        - destination:
+            host: civiclens-api
+            port: { number: 8080 }
+      timeout: 25s
+      retries: { attempts: 0 }
+{{- end }}

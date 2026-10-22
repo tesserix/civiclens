@@ -25,3 +25,11 @@ test('shows a connection error and a retry action when the API is offline', asyn
   expect(screen.getByText(/API could not be reached/)).toBeOnTheScreen();
   client.clear();
 });
+
+ test('offers Apple sign-in on iOS and holds it until the broker is configured', async () => {
+  globalThis.fetch = jest.fn().mockResolvedValue({ ok: true, json: async () => ({ google: false, facebook: false, apple: false }) });
+  const client = new QueryClient({ defaultOptions: { queries: { retry: false, gcTime: 0 } } });
+  render(<QueryClientProvider client={client}><SessionProvider><Welcome /></SessionProvider></QueryClientProvider>);
+  expect(await screen.findByRole('button', { name: 'Sign in with Apple' })).toBeDisabled();
+  client.clear();
+});

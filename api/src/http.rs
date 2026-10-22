@@ -57,15 +57,31 @@ async fn protect_response(request: Request, next: Next) -> Response {
     response
 }
 
-async fn capabilities(State(state): State<Arc<AppState>>) -> Json<serde_json::Value> {
-    let configured = !state.config.oidc_project_id.is_empty()
-        && !state.config.oidc_ios_client_id.is_empty()
-        && !state.config.oidc_android_client_id.is_empty();
-    Json(
-        json!({"google":configured && !state.config.google_idp_id.is_empty(),"facebook":configured && !state.config.facebook_idp_id.is_empty(),
-        "auth":{"issuer":state.config.oidc_issuer,"projectId":state.config.oidc_project_id,"iosClientId":state.config.oidc_ios_client_id,"androidClientId":state.config.oidc_android_client_id,"googleIdpId":state.config.google_idp_id,"facebookIdpId":state.config.facebook_idp_id},
-        "publishing":{"facebook":state.config.publishing_enabled && state.config.facebook_page_id.is_some() && state.config.secrets.facebook_page_token.is_some(),"instagram":false,"whatsapp":false}}),
-    )
+async fn capabilities(State(state): State<Arc<AppState>>) -> Json<crate::contracts::Capabilities> {
+    use crate::contracts::{BrokerConfiguration, Capabilities, PublishingCapabilities};
+    let config = &state.config;
+    Json(Capabilities {
+        google: config.provider_configured("google"),
+        facebook: config.provider_configured("facebook"),
+        apple: config.provider_configured("apple"),
+        auth: BrokerConfiguration {
+            issuer: config.oidc_issuer.clone(),
+            organization_id: config.oidc_organization_id.clone(),
+            project_id: config.oidc_project_id.clone(),
+            ios_client_id: config.oidc_ios_client_id.clone(),
+            android_client_id: config.oidc_android_client_id.clone(),
+            google_idp_id: config.google_idp_id.clone(),
+            facebook_idp_id: config.facebook_idp_id.clone(),
+            apple_idp_id: config.apple_idp_id.clone(),
+        },
+        publishing: PublishingCapabilities {
+            facebook: config.publishing_enabled
+                && config.facebook_page_id.is_some()
+                && config.secrets.facebook_page_token.is_some(),
+            instagram: false,
+            whatsapp: false,
+        },
+    })
 }
 
 async fn ready(State(state): State<Arc<AppState>>) -> Result<Json<serde_json::Value>, Error> {

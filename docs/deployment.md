@@ -96,3 +96,38 @@ remains explicit; no operational destination is fabricated for the starter.
 No new CNPG infrastructure cost is proposed. Initial API resources are 2 × 100m CPU
 and 128 MiB memory requested, 512 MiB memory limit each. Photo storage and review
 labor dominate growth; validate the shared cluster's headroom before provisioning.
+
+## CivicLens identity and public origin
+
+The owning GitOps branch `feat/civiclens-v2-onboarding` in `tesserix-k8s` contains
+the isolated organization/native-client claims and namespace-bound OpenBao reader.
+The operator release enforces Login V2 for every managed client, preserving
+existing product-specific V2 URLs. The broker patch is based on the deployed
+v4.19.5 tag, rather than the fork's unrelated main-branch changes. Its image is
+published under `ghcr.io/tesserix/zitadel-api-patched:sha-<commit>`.
+
+Before activation, populate `civiclens/prod/app/civiclens-{google,apple,facebook}-idp-prod`
+through the platform's authorized secret writer. Each KV payload's `value` is a
+JSON string containing the provider fields documented in the operator's
+`operators/zitadel/docs/consumer-organizations.md`. Never put those values in
+claims, Helm values, source, logs, or Expo variables. The operator's consumer
+reader has its own projected `openbao` audience token; existing writer identities
+are preserved.
+
+After the approved broker/operator rollout, verify the consumer project Ready
+receipt and both native clients. Use the returned IDs for
+`CIVICLENS_OIDC_ORGANIZATION_ID`, project/client IDs, and all three provider IDs.
+Do not configure a provider as available until real first and returning sign-in
+works. Product tokens are rejected outside the configured organization.
+
+The requested public origin is exactly `https://civiclns-api.tesserix.app`.
+The product Helm chart contains an opt-in VirtualService using the existing
+`istio-ingress/tesseract-gateway`; enable it with
+`gateway.enabled=true` and `ingressNamespaces=[istio-ingress]` after the runtime
+secrets, shared-CNPG database/schema, migration/grants, TLS, and immutable API image
+are ready. No new CNPG cluster or external load balancer is needed. Production
+rollout and database migrations still require their named approval.
+
+The new additive `0002_apple_login.sql` migration enables Apple challenges in an
+existing CivicLens schema. It must run under the migrator role before the new API
+image is served. New test schemas apply it together with the initial migration.

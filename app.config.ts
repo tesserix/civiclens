@@ -10,7 +10,7 @@ const config: ExpoConfig = {
   plugins: ['expo-router', 'expo-secure-store', 'expo-web-browser', ['expo-image-picker', {
     photosPermission: 'Choose a photo of the civic issue you want to report.', cameraPermission: 'Take a photo for your civic report.', microphonePermission: false,
   }], ['expo-location', { locationWhenInUsePermission: 'Attach your current location to a report when you choose.' }]],
-  web: { bundler: 'metro', output: 'static', name: 'CivicLens', themeColor: '#163D32', favicon: './assets/favicon.png' },
+  web: { bundler: 'metro', output: 'static', name: 'CivicLens', themeColor: '#3858F5', favicon: './assets/favicon.png' },
   extra: { eas: { projectId: 'd439b0ec-4482-4f17-a134-fa0b0af57588' } },
 };
 export default config;

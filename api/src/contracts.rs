@@ -1,6 +1,35 @@
 use serde::{Deserialize, Serialize};
 use ts_rs::TS;
 
+#[derive(Serialize, Deserialize, TS)]
+#[serde(rename_all = "camelCase")]
+pub struct BrokerConfiguration {
+    pub issuer: String,
+    pub organization_id: String,
+    pub project_id: String,
+    pub ios_client_id: String,
+    pub android_client_id: String,
+    pub google_idp_id: String,
+    pub facebook_idp_id: String,
+    pub apple_idp_id: String,
+}
+
+#[derive(Serialize, Deserialize, TS)]
+pub struct PublishingCapabilities {
+    pub facebook: bool,
+    pub instagram: bool,
+    pub whatsapp: bool,
+}
+
+#[derive(Serialize, Deserialize, TS)]
+pub struct Capabilities {
+    pub google: bool,
+    pub facebook: bool,
+    pub apple: bool,
+    pub auth: BrokerConfiguration,
+    pub publishing: PublishingCapabilities,
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, TS)]
 #[serde(rename_all = "snake_case")]
 pub enum Category {
@@ -135,6 +164,9 @@ mod tests {
     #[test]
     fn export_mobile_contract() {
         let definitions = [
+            BrokerConfiguration::decl(),
+            PublishingCapabilities::decl(),
+            Capabilities::decl(),
             Category::decl(),
             Channel::decl(),
             Location::decl(),

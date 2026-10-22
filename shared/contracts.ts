@@ -7,5 +7,4 @@ export const categoryLabels: Record<Category, string> = {
   water: 'Water & drainage', public_safety: 'Public safety',
 };
 export const channels: Channel[] = ['facebook', 'instagram', 'whatsapp'];
-export type Capabilities = { google: boolean; facebook: boolean; publishing: Record<Channel, boolean>;
-  auth: { issuer: string; projectId: string; iosClientId: string; androidClientId: string; googleIdpId: string; facebookIdpId: string } };
+export type LoginProvider = 'google' | 'facebook' | 'apple';

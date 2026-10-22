@@ -10,10 +10,12 @@ env:
   CIVICLENS_BIND: 0.0.0.0:8080
   CIVICLENS_SECRETS_FILE: /var/run/civiclens/secrets/secrets.json
   CIVICLENS_PUBLISHING_ENABLED: "false"
+  CIVICLENS_OIDC_ORGANIZATION_ID: ""
   CIVICLENS_OIDC_PROJECT_ID: ""
   CIVICLENS_OIDC_IOS_CLIENT_ID: ""
   CIVICLENS_OIDC_ANDROID_CLIENT_ID: ""
   CIVICLENS_GOOGLE_IDP_ID: ""
+  CIVICLENS_APPLE_IDP_ID: ""
   CIVICLENS_FACEBOOK_IDP_ID: ""
 resources:
   requests:
@@ -21,3 +23,6 @@ resources:
     memory: 128Mi
   limits:
     memory: 512Mi
+gateway:
+  enabled: false
+  reference: istio-ingress/tesseract-gateway

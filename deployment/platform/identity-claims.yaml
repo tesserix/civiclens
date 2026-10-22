@@ -6,7 +6,19 @@ metadata:
   labels: { app.kubernetes.io/part-of: civiclens }
 spec:
   displayName: CivicLens
-  organization: TESSERIX
+  organization: CivicLens
+  consumerOrganization:
+    initialAdminUserId: "387369508416782636"
+    primaryColor: "#3858F5"
+    backgroundColor: "#F7F8FA"
+    fontColor: "#151923"
+    providers:
+      - kind: google
+        secretName: civiclens-google-idp-prod
+      - kind: apple
+        secretName: civiclens-apple-idp-prod
+      - kind: facebook
+        secretName: civiclens-facebook-idp-prod
   access: { mode: public }
 ---
 apiVersion: identity.tesserix.app/v1alpha1
@@ -20,6 +32,7 @@ spec:
   displayName: CivicLens iOS
   applicationType: native
   refreshToken: false
+  idTokenUserinfoAssertion: true
   redirectUris: ["civiclens:/auth/callback"]
 ---
 apiVersion: identity.tesserix.app/v1alpha1
@@ -33,4 +46,5 @@ spec:
   displayName: CivicLens Android
   applicationType: native
   refreshToken: false
+  idTokenUserinfoAssertion: true
   redirectUris: ["civiclens:/auth/callback"]

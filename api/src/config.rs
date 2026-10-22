@@ -21,13 +21,29 @@ pub struct Config {
     pub bind: String,
     pub oidc_issuer: String,
     pub oidc_project_id: String,
+    pub oidc_organization_id: String,
     pub oidc_ios_client_id: String,
     pub oidc_android_client_id: String,
     pub google_idp_id: String,
     pub facebook_idp_id: String,
+    pub apple_idp_id: String,
 }
 
 impl Config {
+    pub fn provider_configured(&self, provider: &str) -> bool {
+        let id = match provider {
+            "google" => &self.google_idp_id,
+            "apple" => &self.apple_idp_id,
+            "facebook" => &self.facebook_idp_id,
+            _ => return false,
+        };
+        !id.is_empty()
+            && !self.oidc_project_id.is_empty()
+            && !self.oidc_organization_id.is_empty()
+            && !self.oidc_ios_client_id.is_empty()
+            && !self.oidc_android_client_id.is_empty()
+    }
+
     pub fn load() -> Result<Self, Error> {
         Self::from_source(|key| std::env::var(key).ok())
     }
@@ -86,10 +102,12 @@ impl Config {
             bind: get("CIVICLENS_BIND").unwrap_or_else(|| "127.0.0.1:8080".into()),
             oidc_issuer: "https://auth.tesserix.app".into(),
             oidc_project_id: get("CIVICLENS_OIDC_PROJECT_ID").unwrap_or_default(),
+            oidc_organization_id: get("CIVICLENS_OIDC_ORGANIZATION_ID").unwrap_or_default(),
             oidc_ios_client_id: get("CIVICLENS_OIDC_IOS_CLIENT_ID").unwrap_or_default(),
             oidc_android_client_id: get("CIVICLENS_OIDC_ANDROID_CLIENT_ID").unwrap_or_default(),
             google_idp_id: get("CIVICLENS_GOOGLE_IDP_ID").unwrap_or_default(),
             facebook_idp_id: get("CIVICLENS_FACEBOOK_IDP_ID").unwrap_or_default(),
+            apple_idp_id: get("CIVICLENS_APPLE_IDP_ID").unwrap_or_default(),
         })
     }
 }

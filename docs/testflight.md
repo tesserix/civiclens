@@ -34,3 +34,10 @@ Once signing is resolved:
 Validation performed during development includes an actual iOS simulator build,
 native launch, local Rust API connectivity, nickname entry and the software
 keyboard layout. Real provider login and physical-device testing remain pending.
+
+Release and preview builds now target `https://civiclns-api.tesserix.app`.
+The iOS welcome screen offers Sign in with Apple alongside Google and Meta, and
+keeps every provider disabled until its backend configuration is ready. The
+redesigned welcome screen and nickname entry have been checked in the iOS
+simulator. Hosted login and real provider account checks require completed live
+operator onboarding; an Expo bundle export does not prove that integration.
