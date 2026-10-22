@@ -63,5 +63,29 @@ EAS references the existing Tesserix App Store Connect submission key
 `WD75MB7L4B`, team `2CRHRRYBPL`, following the approved reuse of Roamie's
 release credentials. Existing distribution certificate `6R3R6WXML3` is valid
 until 16 June 2027. No shared key or certificate was rotated or revoked.
-Provisioning and upload remain pending; the app's empty TestFlight record is not
-a processed build.
+Provisioning profile `H43HJGFQ3B` is assigned to CivicLens. A local EAS production
+build from `4922e1afefa46d9514284187764ecc292bbe03d2` produced version `0.1.0 (3)`.
+Apple processed build `8c73d8bc-5584-41d7-826b-c75bd0e198ec` as `VALID`, with
+internal state `IN_BETA_TESTING`. Submission ID:
+`5299175a-2cb4-4e91-bdb8-88f0e5402d97`.
+
+The TestFlight groups mirror the verified Roamie configuration:
+- `Internal Testing`: internal, automatic access to all builds.
+- `CivicLens Internal`: internal, explicitly assigned builds.
+- `CivicLens External`: external, public link disabled; no external release yet.
+
+The confirmed tester `samyak.rout@gmail.com` belongs to both internal groups.
+App Store Connect availability does not prove installation on a device.
+
+EAS cloud build credits were exhausted. The signed build used local Xcode 26.6
+and the official EAS CLI 25.3.0 local helper. The supported
+`EAS_LOCAL_BUILD_PLUGIN_PATH` setting was needed because the nested `npx` launcher
+could not find the helper. Expo Doctor was run directly and passed 21/21 checks.
+EAS Submit uploaded the exact local IPA; optional CLI release notes require an
+Enterprise plan, so provide notes directly through App Store Connect.
+
+Version `0.1.1` adds `assets/civiclens-icon.png`: an opaque cobalt icon with a white
+lens/location mark and mint center, used for native app icons and the web favicon.
+The production API/database rollout and full device authentication/reporting
+acceptance remain pending. Social publishing is disabled until its provider
+configuration and authority data are verified.
