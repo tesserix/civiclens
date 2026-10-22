@@ -42,5 +42,12 @@
         "EXPO_PUBLIC_API_URL": "https://civiclns-api.tesserix.app"
       }
     }
+  },
+  "submit": {
+    "production": {
+      "ios": {
+        "ascAppId": "6825667307"
+      }
+    }
   }
 }

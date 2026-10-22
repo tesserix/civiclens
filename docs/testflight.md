@@ -41,3 +41,27 @@ keeps every provider disabled until its backend configuration is ready. The
 redesigned welcome screen and nickname entry have been checked in the iOS
 simulator. Hosted login and real provider account checks require completed live
 operator onboarding; an Expo bundle export does not prove that integration.
+
+## Release setup receipt — 22 October 2026
+
+CivicLens has App Store Connect ID `6825667307`, bundle
+`app.tesserix.civiclens`, primary language English (Australia), SKU
+`civiclens-ios`, and limited app access with existing administrator access.
+The repository variable and EAS production submission configuration reference
+this exact app ID: https://appstoreconnect.apple.com/apps/6825667307/testflight.
+
+The owner requested permanent public visibility for `tesserix/civiclens`.
+Committed history and the task diff passed secret scanning before that change.
+Reusable API release `39737509431` passed Rust database coverage, mobile quality,
+exports, dependency policy and image scanning. Native identity and hosted
+social-only login are deployed. Google and dedicated Apple provider redirects
+reach their sign-in pages. Meta's broker callback was added after explicit
+approval; its validator and returning-account screen now work. Full account-to-API
+sign-in remains a device/backend acceptance check.
+
+EAS references the existing Tesserix App Store Connect submission key
+`WD75MB7L4B`, team `2CRHRRYBPL`, following the approved reuse of Roamie's
+release credentials. Existing distribution certificate `6R3R6WXML3` is valid
+until 16 June 2027. No shared key or certificate was rotated or revoked.
+Provisioning and upload remain pending; the app's empty TestFlight record is not
+a processed build.

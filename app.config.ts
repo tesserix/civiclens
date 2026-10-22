@@ -3,7 +3,7 @@ import type { ExpoConfig } from 'expo/config';
 const config: ExpoConfig = {
   name: 'CivicLens', slug: 'civiclens', owner: 'tesserix-org', version: '0.1.0', scheme: 'civiclens',
   orientation: 'portrait', userInterfaceStyle: 'light', icon: './assets/icon.png',
-  ios: { bundleIdentifier: 'app.tesserix.civiclens', supportsTablet: true, buildNumber: '1',
+  ios: { bundleIdentifier: 'app.tesserix.civiclens', appleTeamId: '2CRHRRYBPL', supportsTablet: true, buildNumber: '1',
     infoPlist: { ITSAppUsesNonExemptEncryption: false, NSLocationWhenInUseUsageDescription: 'CivicLens uses your location to suggest the place and responsible office for your report.' } },
   android: { package: 'app.tesserix.civiclens', versionCode: 1, allowBackup: false,
     permissions: ['android.permission.ACCESS_COARSE_LOCATION', 'android.permission.ACCESS_FINE_LOCATION', 'android.permission.CAMERA'] },
