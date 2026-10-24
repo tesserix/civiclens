@@ -26,6 +26,12 @@ function Lookup({ token, category, location, disabled }: Props) {
     } catch { setError('Could not check authorities. Retry when connected; your draft is safe.'); }
     finally { setBusy(false); }
   };
+  const coverageMessage = result?.reason ? {
+    country_not_covered: `Verified authority coverage is not available in ${location?.countryCode} yet.`,
+    area_not_covered: 'This location is outside our verified local coverage.',
+    category_not_covered: 'We have not verified an office for this issue type here yet.',
+    review_required: 'A reviewer needs to confirm the responsible office.',
+  }[result.reason] : null;
   const open = (url: string) => {
     if (!url.startsWith('https://')) return;
     void Linking.openURL(url).catch(() => setError('Could not open the official source. Please try again.'));
@@ -35,7 +41,10 @@ function Lookup({ token, category, location, disabled }: Props) {
     <Text className="text-sm leading-5 text-muted">Find the office responsible for this location and issue.</Text>
       <Button title="Confirm location & find authorities" variant="secondary" compact busy={busy} disabled={disabled || busy || !valid} onPress={() => void lookup()} />
       {!valid ? <Text className="text-xs leading-5 text-muted">Add the issue’s location first.</Text> : null}
-    {result?.status === 'unverified' ? <Notice>No verified authority match for this location and category. You can submit for review; no authority will be tagged until verified.</Notice> : null}
+    {result?.status === 'unverified' ? <View accessibilityLiveRegion="polite" className="gap-2 rounded-lg bg-canvas p-3">
+      <Text className="text-sm font-semibold text-ink">{coverageMessage || 'No verified authority match for this location and category.'}</Text>
+      <Text className="text-sm leading-5 text-muted">Your location was checked. You can still submit for review; no office will be tagged until verified.</Text>
+    </View> : null}
     {result?.status === 'matched' ? <>
       {result.authorities.map(office => <View key={office.id} className="gap-2 border-t border-line pt-3">
         <Text className="text-base font-semibold text-ink">{office.name}</Text>

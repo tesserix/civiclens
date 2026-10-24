@@ -60,6 +60,21 @@ Native keyboard spellcheck stays on for typing.
 
 ## Geography and responsibility
 
+New reports request foreground device location automatically while the report
+screen is active. Existing draft locations are preserved until the reporter taps
+Update location. The native OS provides a high-accuracy fix; the app does not use
+an IP-geolocation service or select coordinates from a VPN exit address. This
+is not VPN detection or a guarantee against device-location spoofing. Browsers
+choose their own geolocation provider; emulators use their configured simulated
+location rather than the host computer's physical position.
+
+Fixes must have valid coordinates, a timestamp within two minutes, and reported
+accuracy of 100 metres or better. Location acquisition times out after 15 seconds;
+address lookup times out after eight seconds and leaves town/country editable.
+Permission denial and disabled Location Services show settings/retry actions.
+Backgrounded or unfocused requests cannot overwrite a draft, and returning from
+Settings retries a missing location. No background location permission is used.
+
 Coordinates support any country. Device geocoding is a location suggestion,
 confirmed by the reporter; it is not evidence of legal jurisdiction. Only a
 reviewed, source-backed authority directory can route to an office. Match country,
@@ -68,7 +83,10 @@ municipality/police/department and optional parent offices (state leadership, CM
 etc.) only when their boundaries, responsibility, official account and sources
 are verified. Parent escalation is an explicit moderator choice, not mass tagging.
 No fabricated handles, assumed current officers, search-result scraping, or
-countrywide claim of coverage. The initial production directory is empty.
+countrywide claim of coverage. The pilot directory covers City of Melbourne waste
+and litter only; see docs/authority-sources/README.md for evidence, expiry and
+Australia/India expansion. Unverified previews distinguish missing country, area
+or category coverage from records needing review (ADR-0004).
 
 ## Publication and failure behavior
 
