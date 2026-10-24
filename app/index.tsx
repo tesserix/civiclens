@@ -35,7 +35,7 @@ export default function Welcome() {
         <Text className="text-base leading-6 text-muted">Photograph the problem, mark where it is and describe it in your own language. Every report is reviewed before it’s shared.</Text>
       </View>
       <View className="gap-4">
-        <Field label="Public nickname (optional)" hint="Leave it blank and we’ll assign a unique nickname for you." value={nickname} onChangeText={setNickname} autoCapitalize="none" autoCorrect={false} maxLength={30} placeholder="What should we call you?" />
+        <Field label="Public nickname (optional)" hint="Choose a unique nickname, or leave blank for an automatic one. Existing accounts keep their nickname." value={nickname} onChangeText={setNickname} autoCapitalize="none" autoCorrect={false} maxLength={30} placeholder="e.g. RiverFox_27" />
         <View className="gap-2.5">
           {Platform.OS === 'ios' ? <Button title="Sign in with Apple" icon="logo-apple" variant="apple" busy={busy === 'apple'} disabled={busy !== null || !capabilities.data?.apple} onPress={() => void login('apple')} /> : null}
           <Button title="Continue with Google" icon="logo-google" variant="secondary" busy={busy === 'google'} disabled={busy !== null || !capabilities.data?.google} onPress={() => void login('google')} />

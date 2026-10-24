@@ -10,7 +10,7 @@ test('offers an optional nickname and holds sign-in when providers are unconfigu
   const field = await screen.findByLabelText('Public nickname (optional)', {}, { timeout: 5000 });
   fireEvent.changeText(field, 'RiverFox');
   expect(field.props.value).toBe('RiverFox');
-  expect(screen.getByText('Leave it blank and we’ll assign a unique nickname for you.')).toBeOnTheScreen();
+  expect(screen.getByText('Choose a unique nickname, or leave blank for an automatic one. Existing accounts keep their nickname.')).toBeOnTheScreen();
   await waitFor(() => expect(screen.getByRole('button',{ name:'Continue with Google' })).toBeDisabled());
   expect(screen.getByRole('button',{ name:'Continue with Facebook' })).toBeDisabled();
   expect(await screen.findByText(/Sign-in setup is in progress/)).toBeOnTheScreen();
