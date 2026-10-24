@@ -1,11 +1,16 @@
 // Generated from Rust. Run cargo test export_mobile_contract.
+export const communityRulesVersion = "2026-10-24";
 export type BrokerConfiguration = { issuer: string, organizationId: string, projectId: string, iosClientId: string, androidClientId: string, googleIdpId: string, facebookIdpId: string, appleIdpId: string, };
 export type PublishingCapabilities = { facebook: boolean, instagram: boolean, whatsapp: boolean, };
-export type Capabilities = { google: boolean, facebook: boolean, apple: boolean, auth: BrokerConfiguration, publishing: PublishingCapabilities, assist: boolean, assistContext: boolean, hashtagSelection: boolean, authorityPreview: boolean, };
+export type Capabilities = { manualSharing?: boolean, google: boolean, facebook: boolean, apple: boolean, auth: BrokerConfiguration, publishing: PublishingCapabilities, assist: boolean, assistContext: boolean, hashtagSelection: boolean, authorityPreview: boolean, maxPhotos?: number, communityRulesVersion?: string, };
 export type Category = "waste" | "pollution" | "roads" | "water" | "public_safety";
 export type Channel = "facebook" | "instagram" | "whatsapp";
 export type Location = { latitude: number, longitude: number, countryCode: string, locality: string, };
-export type ReportInput = { category: Category, description: string, location: Location, photoBase64: string, channels: Array<Channel>, consent: boolean, hashtags?: Array<string>, };
+export type ReportInput = { sharingMode?: SharingMode, category: Category, description: string, location: Location, photoBase64: string, additionalPhotosBase64?: Array<string>, communityRulesVersion?: string, locationSource?: LocationSource, channels: Array<Channel>, consent: boolean, hashtags?: Array<string>, };
+export type SharingMode = "managed" | "manual";
+export type ShareRequest = { channel: Channel, identityAcknowledged: boolean, };
+export type SharePackage = { reportId: string, channel: Channel, caption: string, photosBase64: Array<string>, };
+export type LocationSource = "device" | "camera" | "photo" | "manual";
 export type AssistMode = "draft" | "correct";
 export type AssistTone = "serious" | "satirical" | "balanced";
 export type AssistPlace = { locality: string, countryCode: string, };
@@ -23,6 +28,6 @@ export type Challenge = { id: string, nonce: string, };
 export type PublicationStatus = "queued" | "sending" | "published" | "blocked" | "failed" | "uncertain";
 export type Publication = { channel: Channel, status: PublicationStatus, providerId: string | null, reason: string | null, };
 export type Routing = { status: string, authorityNames: Array<string>, };
-export type Report = { id: string, nickname: string, category: Category, description: string, location: Location, createdAt: string, status: string, routing: Routing, publications: Array<Publication>, hashtags?: Array<string>, };
-export type Approval = { publicDescription: string, publicLocality: string, photoPrivacyReviewed: boolean, includeParents: boolean, };
+export type Report = { sharingMode?: SharingMode, id: string, nickname: string, category: Category, description: string, location: Location, createdAt: string, status: string, routing: Routing, publications: Array<Publication>, photoCount?: number, locationSource?: LocationSource, communityRulesVersion?: string, hashtags?: Array<string>, };
+export type Approval = { publicDescription: string, publicLocality: string, photoPrivacyReviewed: boolean, reviewedPhotoCount?: number, includeParents: boolean, };
 export type DeletionRequest = { id: string, status: string, requestedAt: string, dueAt: string, owner: string, };

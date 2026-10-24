@@ -4,8 +4,10 @@
 
 Sign in with Google or Facebook; choose a unique public nickname or receive one
 automatically. Photograph a civic issue, confirm GPS/location, choose a category,
-and submit. Reports are private until reviewed. The app publishes as CivicLens,
-crediting the nickname only. This is public pseudonymity: the service knows the
+and submit. Reports are private until reviewed. Managed posting publishes as CivicLens, crediting the nickname only. User sharing
+hands an approved caption and reviewed photos to the phone’s share sheet; the
+external app controls sender identity and may show a profile name, username or
+phone number. This is public pseudonymity: the service knows the
 account's provider identifier, and photos/text/location can themselves identify
 someone. Never promise untraceability. This is not an emergency dispatch service.
 
@@ -182,6 +184,20 @@ When Meta is down, retain the outbox; it never blocks report creation. When the
 database is down, writes fail; never return a fabricated receipt. Device retains
 the draft and submission key for retry. Queued drafts are private and are not
 silently sent after logout or to another account.
+
+### User-owned communities
+
+ADR-0008 adds user-owned sharing without changing broker sign-in. The new UI
+offers no CivicLens country-Page mode. Old managed drafts require fresh consent
+and a submission key when restored into the user-owned flow.
+An owner-only export repeats all-photo approval, current authority and content
+safety checks. Manual approval creates no outbox jobs and needs no country Page
+token. Nicknames remain in captions; users acknowledge external identity visibility
+before preparation and the final handoff. Users create/administer communities in
+the destination app. Native completion is never recorded as provider delivery.
+Google/Facebook/Apple sign-in remains private; there is no automatic email linking
+or invented consumer WhatsApp login. Automated user-owned Page/professional-account
+publishing still needs Meta authorization and owner-scoped OpenBao credentials.
 
 ## Threat model and launch boundary
 

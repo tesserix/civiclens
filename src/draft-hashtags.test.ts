@@ -31,3 +31,13 @@ test.each([{hashtags:['#Litter']},{hashtags:[]}])('restores explicit hashtag cho
   await waitFor(()=>expect(reopened.result.current.ready).toBe(true));
   expect(reopened.result.current.draft.hashtags).toEqual(hashtags);
 });
+
+
+test('moves an older country-Page draft to user sharing with fresh consent and submission key',async()=>{
+  const prior={key:'old-managed-key',sharingMode:'managed',category:'waste',description:'Keep this description.',photoUri:'',location:null,channels:['facebook','whatsapp'],consent:true};
+  jest.mocked(SecureStore.getItemAsync).mockResolvedValueOnce(JSON.stringify(prior));
+  const view=renderHook(()=>useDraft('qa-legacy-sharing'));
+  await waitFor(()=>expect(view.result.current.ready).toBe(true));
+  expect(view.result.current.draft).toMatchObject({sharingMode:'manual',consent:false,description:prior.description,channels:prior.channels});
+  expect(view.result.current.draft.key).not.toBe(prior.key);
+});

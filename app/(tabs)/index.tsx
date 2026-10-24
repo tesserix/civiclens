@@ -9,7 +9,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { Button, Chip, Field, Loading, Notice, Step, Title, Viewfinder, palette } from '../../src/ui';
 import { useSession } from '../../src/session';
-import { useDraft } from '../../src/useDraft';
+import { draftPhotos, isDraftPhotoUri, useDraft } from '../../src/useDraft';
 import { preparePhoto } from '../../src/report-photo';
 import { photoCoordinates, selectPhotoLocation } from '../../src/photo-location';
 import { captureWithLocation } from '../../src/camera-location';
@@ -21,7 +21,7 @@ import { WritingAssist } from '../../src/writing-assist';
 import {HashtagSelect} from '../../src/hashtag-select';
 import { AuthorityPreview } from '../../src/authority-preview';
 import { CategorySelect, LocationFields } from '../../src/report-details';
-import { channels, type AuthorityPreview as Preview, type Capabilities, type Report } from '../../shared/contracts';
+import { channels, communityRulesVersion, type AuthorityPreview as Preview, type Capabilities, type Report } from '../../shared/contracts';
 
 const channelIcons = { facebook: 'logo-facebook', instagram: 'logo-instagram', whatsapp: 'logo-whatsapp' } as const;
 const channelLabels = { facebook: 'Facebook', instagram: 'Instagram', whatsapp: 'WhatsApp' } as const;
@@ -38,6 +38,12 @@ export default function Capture() {
   const [error, setError] = useState<{ step: 'photo'; message: string } | null>(null);
   const client = useQueryClient(); const router = useRouter();
   const capabilities = useQuery({ queryKey: ['capabilities'], queryFn: ({ signal }) => request<Capabilities>('/v1/capabilities', { signal }) });
+  const photos = draftPhotos(draft);
+  const sharingMode = 'manual' as const;
+  const manualReady = capabilities.data?.manualSharing === true;
+  const maxPhotos = capabilities.data?.maxPhotos === 5 ? 5 : 1;
+  const rulesReady = capabilities.data?.communityRulesVersion === communityRulesVersion;
+  const rulesAccepted = draft.communityRulesVersion === communityRulesVersion;
   const [authorityRetry,setAuthorityRetry]=useState(0);
   const authorityScope=JSON.stringify([session?.user.id,draft.category,draft.location,authorityRetry]);
   const [resolvedAuthority,setResolvedAuthority]=useState<{scope:string;result:Preview|null;error:boolean}|null>(null);
@@ -54,43 +60,59 @@ export default function Capture() {
   },[suggestions?.result,draft.hashtags,update]);
   const retryHashtags=()=>setAuthorityRetry(value=>value+1);
   const chooseHashtags=(hashtags:string[])=>update({hashtags});
-  const readPhoto = () => Platform.OS === 'web' ? webBase64(draft.photoUri) : FileSystem.readAsStringAsync(draft.photoUri, { encoding: FileSystem.EncodingType.Base64 });
+  const readPhoto = (uri = draft.photoUri) => Platform.OS === 'web' ? webBase64(uri) : FileSystem.readAsStringAsync(uri, { encoding: FileSystem.EncodingType.Base64 });
   const submit = useMutation({ mutationFn: async () => {
     if (!session || !draft.location) throw new Error('Sign in and confirm the location first.');
     if (draft.hashtags !== undefined && capabilities.data?.hashtagSelection !== true) throw new Error('Hashtag choices can’t be saved right now. Please retry shortly.');
+    if (!manualReady) throw new Error('Sharing with your own apps is being updated. Keep your draft and retry with the latest CivicLens.');
+    if (!rulesReady || !rulesAccepted) throw new Error('Read and accept the current community rules before submitting.');
+    if (photos.length>maxPhotos) throw new Error('Extra photos are temporarily unavailable. Keep your draft and retry shortly.');
     await save();
+    const additionalPhotosBase64: string[] = [];
+    for (const uri of photos.slice(1)) additionalPhotosBase64.push(await readPhoto(uri));
     const photoBase64 = await readPhoto();
-    return request<Report>('/v1/reports', { token: session.token, method: 'POST', key: draft.key,
-      body: { category: draft.category, description: draft.description, location: draft.location, photoBase64, channels: draft.channels, consent: draft.consent, ...(draft.hashtags === undefined ? {} : {hashtags:draft.hashtags}) } });
+    return request<Report>('/v1/reports', { token: session.token, method: 'POST', key: draft.key, timeoutMs: 90000,
+      body: { category: draft.category, description: draft.description, location: draft.location, photoBase64, additionalPhotosBase64, locationSource: draft.locationSource, communityRulesVersion, ...(capabilities.data?.manualSharing === true ? {sharingMode} : {}), channels: draft.channels, consent: draft.consent, ...(draft.hashtags === undefined ? {} : {hashtags:draft.hashtags}) } });
   }, onSuccess: async () => {
     await reset();
     await client.invalidateQueries({ queryKey: ['reports', session?.user.id] });
     router.push('/(tabs)/reports');
   } });
   const photoGeneration = useRef(0);
-  const photo = async (camera: boolean) => {
+  const photo = async (camera: boolean, replace = false) => {
     const run = ++photoGeneration.current;
     const active = () => run === photoGeneration.current;
     setWorking('photo'); setError(null);
+    const prepared: string[] = []; let assigned = false;
     try {
       if (camera) {
         const permission = await ImagePicker.requestCameraPermissionsAsync();
         if (!permission.granted) throw new Error('Camera access is off. You can choose an existing photo instead, or enable access in Settings.');
       }
+      const replacing = !draft.photoUri || replace || maxPhotos === 1;
+      const remaining = replacing ? maxPhotos : maxPhotos - photos.length;
+      if (remaining<1) throw new Error('You can attach at most five photos. Remove a photo to add another.');
       const captured = camera ? await captureWithLocation(() => ImagePicker.launchCameraAsync({ mediaTypes: ['images'], quality: 0.8, exif: true })) : null;
-      const result = captured ? captured.result : await ImagePicker.launchImageLibraryAsync({ mediaTypes: ['images'], quality: 0.8, exif: true });
+      const result = captured ? captured.result : await ImagePicker.launchImageLibraryAsync({ mediaTypes: ['images'], quality: 0.8, exif: true, allowsMultipleSelection: remaining > 1, selectionLimit: remaining });
       if (!active()) return;
       if (!result.canceled) {
+        if (result.assets.length>remaining) throw new Error('Choose no more than five photos for one report.');
         const metadataPoint = photoCoordinates(result.assets[0].exif);
         const point = metadataPoint || captured?.point || null;
-        const inferred = point && draft.locationSource !== 'manual' ? await pointLocation(point) : null;
+        const inferred = replacing && point && draft.locationSource !== 'manual' ? await pointLocation(point) : null;
         if (!active()) return;
-        const uri = await preparePhoto(result.assets[0].uri);
-        if (!active()) return;
-        update({ photoUri: uri, ...selectPhotoLocation(draft, inferred, metadataPoint ? 'photo' : camera ? 'camera' : 'photo') });
+        for (const asset of result.assets) {
+          prepared.push(await preparePhoto(asset.uri));
+          if (!active()) return;
+        }
+        const next = replacing ? replace ? [prepared[0], ...photos.slice(1)] : prepared : [...photos, ...prepared];
+        update({photoUri:next[0], additionalPhotoUris:next.slice(1), ...(replacing ? selectPhotoLocation(draft,inferred,metadataPoint ? 'photo' : camera ? 'camera' : 'photo') : {})}); assigned = true;
       }
     } catch (e) { setError({ step: 'photo', message: e instanceof Error ? e.message : 'Could not open the camera. Please retry.' }); }
-    finally { setWorking(''); }
+    finally {
+      if (!assigned && Platform.OS!=='web') for (const uri of prepared.filter(isDraftPhotoUri)) {try {await FileSystem.deleteAsync(uri,{idempotent:true});} catch { /* Keep the original picker error visible during a storage outage. */ }}
+      setWorking('');
+    }
   };
   const [focused, setFocused] = useState(false);
   useFocusEffect(useCallback(() => { setFocused(true); return () => { setFocused(false); photoGeneration.current++; };  }, []));
@@ -107,8 +129,13 @@ export default function Capture() {
   if (!ready) return <SafeAreaView className="flex-1 justify-center bg-canvas"><Loading label="Opening your draft" /></SafeAreaView>;
   const located = !!draft.location && /^[A-Z]{2}$/.test(draft.location.countryCode) && draft.location.locality.trim().length > 1;
   const described = draft.description.trim().length >= 10;
-  const shared = draft.consent && draft.channels.length > 0;
+  const shared = draft.consent && draft.channels.length > 0 && rulesAccepted && rulesReady && manualReady;
   const locked = submit.isPending || discarding || confirmDiscard;
+  const removePhoto = (index: number) => {
+    const remaining = photos.filter((_,i)=>i!==index);
+    const clearLocation = index===0 && (draft.locationSource==='photo' || draft.locationSource==='camera');
+    update({photoUri:remaining[0] || '',additionalPhotoUris:remaining.slice(1),...(clearLocation ? {location:null,locationSource:undefined} : {})});
+  };
   const stepError = (step: 'photo') => error?.step === step ? <Notice>{error.message}</Notice> : null;
   return <SafeAreaView edges={['top', 'left', 'right']} className="flex-1 bg-canvas"><KeyboardAvoidingView className="flex-1" behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
     <ScrollView key={formVersion} keyboardShouldPersistTaps="handled" contentContainerStyle={{ padding: 20, gap: 32, paddingBottom: 40, width: '100%', maxWidth: 680, alignSelf: 'center' }}>
@@ -122,7 +149,7 @@ export default function Capture() {
         <Button title="Keep draft" variant="secondary" disabled={discarding} onPress={() => { setConfirmDiscard(false); setDiscardError(''); }} />
       </View> : <Button title="Discard draft" variant="quiet" icon="trash-outline" disabled={submit.isPending || working !== ''} onPress={() => setConfirmDiscard(true)} />}
 
-      <Step number={1} title="Take a photo" done={!!draft.photoUri}>
+      <Step number={1} title="Add photos" done={!!draft.photoUri}>
         <Viewfinder className="p-2">
           {draft.photoUri ? <Image source={{ uri: draft.photoUri }} contentFit="cover" style={{ height: 240, borderRadius: 12 }} accessibilityLabel="Your report photo" />
             : <Pressable accessibilityRole="button" accessibilityLabel="Take a photo" disabled={working !== '' || locked} onPress={() => void photo(true)}
@@ -133,9 +160,14 @@ export default function Capture() {
             </Pressable>}
         </Viewfinder>
         <View className={width < 380 || fontScale > 1.2 ? 'gap-2' : 'flex-row gap-2'}>
-          {draft.photoUri ? <View className="flex-1"><Button title="Retake" variant="secondary" compact icon="camera-outline" disabled={working !== '' || locked} onPress={() => void photo(true)} /></View> : null}
-          <View className="flex-1"><Button title="Choose from photos" variant="secondary" compact icon="images-outline" disabled={working !== '' || locked} onPress={() => void photo(false)} /></View>
+          {draft.photoUri ? <View className="flex-1"><Button title="Retake" variant="secondary" compact icon="camera-outline" disabled={working !== '' || locked} onPress={() => void photo(true, true)} /></View> : null}
+          <View className="flex-1"><Button title="Choose from photos" variant="secondary" compact icon="images-outline" disabled={working !== '' || locked || (maxPhotos>1 && photos.length>=maxPhotos)} onPress={() => void photo(false)} /></View>
         </View>
+        <Text className="text-sm text-muted">{photos.length} of {maxPhotos} photos</Text>
+        {draft.photoUri ? <Button title="Remove photo 1" variant="quiet" compact disabled={working!=='' || locked} onPress={()=>removePhoto(0)}/> : null}
+        {photos.length>1 ? <View className="flex-row flex-wrap gap-3">{photos.slice(1).map((uri,index)=><View key={uri} className="gap-1"><Image source={{uri}} contentFit="cover" style={{width:120,height:100,borderRadius:12}} accessibilityLabel={`Report photo ${index+2}`}/><Button title={`Remove photo ${index+2}`} variant="quiet" compact disabled={working!=='' || locked} onPress={()=>removePhoto(index+1)}/></View>)}</View> : null}
+        {draft.photoUri && photos.length<maxPhotos ? <Button title="Add camera photo" variant="secondary" compact icon="camera-outline" disabled={working!=='' || locked} onPress={()=>void photo(true)}/> : null}
+        <Text className="text-xs leading-5 text-muted">Use photos of the same issue at one location. The first photo sets the suggested location and is used for writing help. Check every photo before sharing.</Text>
         {stepError('photo')}
       </Step>
 
@@ -165,14 +197,22 @@ export default function Capture() {
       </Step>
 
       <Step number={5} title="Share after review" done={shared}>
-        <Text className="text-sm leading-5 text-muted">Pick where it should be posted. Posting starts after review, through a connected, supported account.</Text>
+        <Text className="text-sm leading-5 text-muted">You choose the group, Channel or account in your social app after review. You own the community and manage its members there. Select one, several or all destinations. Your social profile, username or phone number may be visible; the caption credits your CivicLens nickname.</Text>
+        {!manualReady && capabilities.isSuccess ? <Notice>Sharing with your own apps is being updated. Keep your draft and retry with the latest CivicLens.</Notice> : null}
         <View className="flex-row flex-wrap gap-2">
           {channels.map(channel => <Chip key={channel} role="checkbox" label={channelLabels[channel]} icon={channelIcons[channel]} selected={draft.channels.includes(channel)} disabled={locked}
             onPress={() => update({ channels: draft.channels.includes(channel) ? draft.channels.filter(c => c !== channel) : [...draft.channels, channel] })} />)}
         </View>
+        <View className="flex-row flex-wrap gap-2"><Button title="Select all social apps" compact variant="quiet" disabled={locked} onPress={()=>update({channels:[...channels]})}/><Button title="Clear social apps" compact variant="quiet" disabled={locked} onPress={()=>update({channels:[]})}/></View>
         <View className="flex-row items-start gap-3 rounded-xl border border-line bg-surface p-4">
-          <Text className="flex-1 text-sm leading-5 text-ink">I agree to public sharing after review, using my nickname and an approximate location. I’ve checked the photo for identifying details.</Text>
+          <Text className="flex-1 text-sm leading-5 text-ink">I agree to public sharing after review, using my nickname and an approximate location. I’ve checked every photo for identifying details.</Text>
           <Switch accessibilityLabel="Consent to reviewed public sharing" value={draft.consent} disabled={locked} onValueChange={consent => update({ consent })} trackColor={{ true: palette.brand }} />
+        </View>
+        <View className="gap-3 rounded-xl border border-line bg-surface p-4">
+          <Text accessibilityRole="header" className="font-semibold text-ink">Our community rules</Text>
+          <Text className="text-sm leading-6 text-muted">Keep it respectful: no hate, profanity, threats, harassment or personal attacks. Humour about the situation is welcome; humiliating a person is not.{`\n\n`}Share truthful evidence you have the right to share. Don’t invent a culprit or an official response. Keep private names, faces, number plates, children and precise home addresses out of public reports.{`\n\n`}Use photos of the same issue at one confirmed location. Every photo and public caption needs review. Hashtags do not guarantee that an authority has been notified. For emergencies, contact local emergency services.</Text>
+          <View className="flex-row items-center gap-3"><Text className="flex-1 text-sm leading-5 text-ink">I have read and accept these community rules.</Text><Switch accessibilityLabel="Accept community rules" value={rulesAccepted} disabled={locked} onValueChange={accepted=>update({communityRulesVersion:accepted ? communityRulesVersion : undefined})} trackColor={{true:palette.brand}}/></View>
+          {!rulesReady && capabilities.isSuccess ? <Notice>Reporting is being updated. Your draft is safe; please retry shortly or update CivicLens.</Notice> : null}
         </View>
       </Step>
 

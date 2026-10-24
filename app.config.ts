@@ -1,9 +1,9 @@
 import type { ExpoConfig } from 'expo/config';
 
 const config: ExpoConfig = {
-  name: 'CivicLens', slug: 'civiclens', owner: 'tesserix-org', version: '0.1.4', scheme: 'civiclens',
-  orientation: 'portrait', userInterfaceStyle: 'light', icon: './assets/civiclens-icon.png',
-  ios: { icon: './assets/civiclens-icon.png', bundleIdentifier: 'app.tesserix.civiclens', appleTeamId: '2CRHRRYBPL', supportsTablet: true, buildNumber: '9',
+  name: 'CivicLens', slug: 'civiclens', owner: 'tesserix-org', version: '0.1.5', scheme: 'civiclens',
+  runtimeVersion: '0.1.5-user-sharing-1', orientation: 'portrait', userInterfaceStyle: 'light', icon: './assets/civiclens-icon.png',
+  ios: { icon: './assets/civiclens-icon.png', bundleIdentifier: 'app.tesserix.civiclens', appleTeamId: '2CRHRRYBPL', supportsTablet: true, buildNumber: '11',
     privacyManifests: { NSPrivacyTracking: false, NSPrivacyTrackingDomains: [],
       NSPrivacyCollectedDataTypes: ['Name', 'EmailAddress', 'UserID', 'PreciseLocation', 'PhotosorVideos', 'OtherUserContent'].map(type => ({
         NSPrivacyCollectedDataType: `NSPrivacyCollectedDataType${type}`, NSPrivacyCollectedDataTypeLinked: true,

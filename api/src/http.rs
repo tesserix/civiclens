@@ -1,6 +1,6 @@
 use crate::{auth, error::Error, reports, AppState};
 use axum::{
-    extract::{ConnectInfo, Request, State},
+    extract::{ConnectInfo, DefaultBodyLimit, Request, State},
     http::{header, HeaderValue, StatusCode},
     middleware::{self, Next},
     response::{IntoResponse, Response},
@@ -45,6 +45,17 @@ async fn rate_limit(State(state): State<Arc<AppState>>, request: Request, next: 
     next.run(request).await
 }
 
+async fn report_bulkhead(
+    State(state): State<Arc<AppState>>,
+    request: Request,
+    next: Next,
+) -> Response {
+    let Ok(_permit) = state.report_slots.clone().try_acquire_owned() else {
+        return Error::Unavailable.into_response();
+    };
+    next.run(request).await
+}
+
 async fn protect_response(request: Request, next: Next) -> Response {
     let mut response = next.run(request).await;
     response
@@ -61,6 +72,7 @@ async fn capabilities(State(state): State<Arc<AppState>>) -> Json<crate::contrac
     use crate::contracts::{BrokerConfiguration, Capabilities, PublishingCapabilities};
     let config = &state.config;
     Json(Capabilities {
+        manual_sharing: Some(true),
         google: config.provider_configured("google"),
         facebook: config.provider_configured("facebook"),
         apple: config.provider_configured("apple"),
@@ -75,9 +87,7 @@ async fn capabilities(State(state): State<Arc<AppState>>) -> Json<crate::contrac
             apple_idp_id: config.apple_idp_id.clone(),
         },
         publishing: PublishingCapabilities {
-            facebook: config.publishing_enabled
-                && config.facebook_page_id.is_some()
-                && config.secrets.facebook_page_token.is_some(),
+            facebook: false,
             instagram: false,
             whatsapp: false,
         },
@@ -85,6 +95,8 @@ async fn capabilities(State(state): State<Arc<AppState>>) -> Json<crate::contrac
         assist_context: true,
         hashtag_selection: true,
         authority_preview: true,
+        max_photos: Some(if state.media.is_some() { 5 } else { 1 }),
+        community_rules_version: Some(crate::contracts::COMMUNITY_RULES_VERSION.into()),
     })
 }
 
@@ -123,12 +135,16 @@ pub fn router(state: Arc<AppState>) -> Result<Router, Error> {
             get(crate::account_deletion::get).post(crate::account_deletion::create),
         )
         .route("/v1/auth/logout", post(auth::logout))
-        .route("/v1/reports", get(reports::list).post(reports::create))
+        .route("/v1/reports", get(reports::list))
         .route("/v1/assist", post(crate::assist::assist))
         .route("/v1/authorities/preview", post(crate::authority::preview))
         .route("/v1/reports/{id}", get(reports::get))
         .route("/v1/moderation/reports", get(reports::moderation_list))
         .route("/v1/moderation/reports/{id}/photo", get(reports::photo))
+        .route(
+            "/v1/moderation/reports/{id}/photos/{index}",
+            get(reports::indexed_photo),
+        )
         .route(
             "/v1/moderation/reports/{id}/approve",
             post(reports::approve),
@@ -138,13 +154,45 @@ pub fn router(state: Arc<AppState>) -> Result<Router, Error> {
             post(crate::publishing::reconcile),
         )
         .fallback(|| async { Error::NotFound })
-        .layer(middleware::from_fn_with_state(state.clone(), rate_limit))
-        .layer(middleware::from_fn(protect_response))
+        .layer(DefaultBodyLimit::max(8_100_000))
         .layer(TimeoutLayer::with_status_code(
             StatusCode::REQUEST_TIMEOUT,
             Duration::from_secs(20),
         ))
         .layer(RequestBodyLimitLayer::new(8_100_000))
+        .merge(
+            Router::new()
+                .route(
+                    "/v1/reports/{id}/share-package",
+                    post(reports::share_package),
+                )
+                .layer(DefaultBodyLimit::max(1024))
+                .layer(RequestBodyLimitLayer::new(1024))
+                .layer(TimeoutLayer::with_status_code(
+                    StatusCode::REQUEST_TIMEOUT,
+                    Duration::from_secs(75),
+                ))
+                .layer(middleware::from_fn_with_state(
+                    state.clone(),
+                    report_bulkhead,
+                )),
+        )
+        .merge(
+            Router::new()
+                .route("/v1/reports", post(reports::create))
+                .layer(middleware::from_fn_with_state(
+                    state.clone(),
+                    report_bulkhead,
+                ))
+                .layer(DefaultBodyLimit::max(40_100_000))
+                .layer(TimeoutLayer::with_status_code(
+                    StatusCode::REQUEST_TIMEOUT,
+                    Duration::from_secs(75),
+                ))
+                .layer(RequestBodyLimitLayer::new(40_100_000)),
+        )
+        .layer(middleware::from_fn_with_state(state.clone(), rate_limit))
+        .layer(middleware::from_fn(protect_response))
         .layer(cors)
         .layer(PropagateRequestIdLayer::x_request_id())
         .layer(SetRequestIdLayer::x_request_id(MakeRequestUuid))

@@ -28,7 +28,7 @@ export default function Profile() {
       <View className="flex-1 gap-0.5">
         <Text className="text-[13px] text-muted">Public nickname</Text>
         <Text selectable className="text-xl font-bold text-ink">{nickname}</Text>
-        <Text className="text-[13px] leading-5 text-muted">The only name shown on public posts.</Text>
+        <Text className="text-[13px] leading-5 text-muted">Used in CivicLens captions. Your social app controls its sender identity.</Text>
       </View>
     </View>
     <View className="gap-3">
@@ -38,8 +38,13 @@ export default function Profile() {
         <View className="flex-1 gap-0.5"><Text className="text-[15px] font-semibold text-ink">{title}</Text><Text className="text-sm leading-5 text-muted">{description}</Text></View>
       </View>)}
     </View>
-    <Notice>Your sign-in provider identifies your account privately. Public posts use your nickname. Photos, text and location may still identify you or someone else. Check them carefully.</Notice>
+    <Notice>Your sign-in provider identifies your account privately. CivicLens captions use your nickname. Sharing through your own social apps may show your profile name, username or phone number. Photos, text and location may still identify you or someone else. Check them carefully.</Notice>
     <Text className="text-sm leading-5 text-muted">CivicLens is for constructive community reporting. Avoid identifying private people, unsupported allegations, faces, number plates and sensitive locations. This is not an emergency service.</Text>
+    <View className="gap-3 rounded-2xl border border-line bg-surface p-4">
+      <Text accessibilityRole="header" className="text-[17px] font-semibold text-ink">Your communities, your control</Text>
+      <Text className="text-sm leading-5 text-muted">Create and manage your Facebook groups or Pages, WhatsApp groups or Channels and Instagram accounts in those apps. You control invites, members and community rules there.</Text>
+      <Text className="text-sm leading-5 text-muted">Stay signed in here with Google, Facebook or Apple. Sharing a reviewed report through your phone needs no additional login in CivicLens. Always check the sending account and destination before you post.</Text>
+    </View>
     <LegalLinks />
     {session ? <AccountDeletion token={session.token} /> : null}
     <View className="gap-3">

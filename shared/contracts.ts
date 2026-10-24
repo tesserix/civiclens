@@ -1,4 +1,5 @@
 export type * from './generated';
+export {communityRulesVersion} from './generated';
 import type { Category, Channel } from './generated';
 
 export const categories: Category[] = ['waste', 'pollution', 'roads', 'water', 'public_safety'];

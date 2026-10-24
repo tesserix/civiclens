@@ -9,10 +9,13 @@ mod contracts;
 mod directory;
 mod error;
 mod http;
+mod media;
 mod nickname;
 mod privacy;
 mod publishing;
 mod reports;
+#[cfg(test)]
+mod sharing_tests;
 #[cfg(test)]
 mod tests;
 
@@ -31,6 +34,8 @@ pub struct AppState {
     authorities: Vec<authority::Authority>,
     rate_limits: Mutex<HashMap<String, (Instant, u32)>>,
     photo_slots: Arc<tokio::sync::Semaphore>,
+    report_slots: Arc<tokio::sync::Semaphore>,
+    media: Option<media::Store>,
     assist_limits: Mutex<HashMap<uuid::Uuid, (Instant, u32)>>,
 }
 
@@ -90,14 +95,22 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
     let authorities = directory::load_verified(&pool).await?;
     let bind = config.bind.clone();
+    let http = reqwest::Client::builder()
+        .timeout(std::time::Duration::from_secs(12))
+        .redirect(reqwest::redirect::Policy::none())
+        .build()?;
+    let media = config
+        .media_bucket
+        .as_deref()
+        .map(|bucket| media::Store::new(bucket, http.clone()))
+        .transpose()?;
     let state = Arc::new(AppState {
         pool,
         config,
         authorities,
-        http: reqwest::Client::builder()
-            .timeout(std::time::Duration::from_secs(12))
-            .redirect(reqwest::redirect::Policy::none())
-            .build()?,
+        http,
+        media,
+        report_slots: Arc::new(tokio::sync::Semaphore::new(1)),
         rate_limits: Mutex::new(HashMap::new()),
         photo_slots: Arc::new(tokio::sync::Semaphore::new(2)),
         assist_limits: Mutex::new(HashMap::new()),

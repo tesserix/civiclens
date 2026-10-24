@@ -1,6 +1,8 @@
 use serde::{Deserialize, Serialize};
 use ts_rs::TS;
 
+pub const COMMUNITY_RULES_VERSION: &str = "2026-10-24";
+
 #[derive(Serialize, Deserialize, TS)]
 #[serde(rename_all = "camelCase")]
 pub struct BrokerConfiguration {
@@ -23,6 +25,10 @@ pub struct PublishingCapabilities {
 
 #[derive(Serialize, Deserialize, TS)]
 pub struct Capabilities {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[ts(optional)]
+    #[serde(rename = "manualSharing")]
+    pub manual_sharing: Option<bool>,
     pub google: bool,
     pub facebook: bool,
     pub apple: bool,
@@ -35,6 +41,16 @@ pub struct Capabilities {
     pub hashtag_selection: bool,
     #[serde(rename = "authorityPreview")]
     pub authority_preview: bool,
+    #[serde(rename = "maxPhotos", default, skip_serializing_if = "Option::is_none")]
+    #[ts(optional)]
+    pub max_photos: Option<u8>,
+    #[serde(
+        rename = "communityRulesVersion",
+        default,
+        skip_serializing_if = "Option::is_none"
+    )]
+    #[ts(optional)]
+    pub community_rules_version: Option<String>,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, TS)]
@@ -74,13 +90,57 @@ pub struct Location {
     pub locality: String,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, TS)]
+#[serde(rename_all = "snake_case")]
+pub enum LocationSource {
+    Device,
+    Camera,
+    Photo,
+    Manual,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, TS)]
+#[serde(rename_all = "snake_case")]
+pub enum SharingMode {
+    Managed,
+    Manual,
+}
+
+#[derive(Deserialize, Serialize, TS)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct ShareRequest {
+    pub channel: Channel,
+    pub identity_acknowledged: bool,
+}
+
+#[derive(Serialize, Deserialize, TS)]
+#[serde(rename_all = "camelCase")]
+pub struct SharePackage {
+    pub report_id: String,
+    pub channel: Channel,
+    pub caption: String,
+    pub photos_base64: Vec<String>,
+}
+
 #[derive(Deserialize, Serialize, TS)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct ReportInput {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[ts(optional)]
+    pub sharing_mode: Option<SharingMode>,
     pub category: Category,
     pub description: String,
     pub location: Location,
     pub photo_base64: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[ts(optional)]
+    pub additional_photos_base64: Option<Vec<String>>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[ts(optional)]
+    pub community_rules_version: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[ts(optional)]
+    pub location_source: Option<LocationSource>,
     pub channels: Vec<Channel>,
     pub consent: bool,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -239,6 +299,9 @@ pub struct Routing {
 #[derive(Debug, Clone, Serialize, Deserialize, TS)]
 #[serde(rename_all = "camelCase")]
 pub struct Report {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[ts(optional)]
+    pub sharing_mode: Option<SharingMode>,
     pub id: String,
     pub nickname: String,
     pub category: Category,
@@ -250,6 +313,15 @@ pub struct Report {
     pub publications: Vec<Publication>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     #[ts(optional)]
+    pub photo_count: Option<u8>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[ts(optional)]
+    pub location_source: Option<LocationSource>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[ts(optional)]
+    pub community_rules_version: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[ts(optional)]
     pub hashtags: Option<Vec<String>>,
 }
 
@@ -259,6 +331,9 @@ pub struct Approval {
     pub public_description: String,
     pub public_locality: String,
     pub photo_privacy_reviewed: bool,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[ts(optional)]
+    pub reviewed_photo_count: Option<u8>,
     pub include_parents: bool,
 }
 
@@ -285,6 +360,10 @@ mod tests {
             Channel::decl(),
             Location::decl(),
             ReportInput::decl(),
+            SharingMode::decl(),
+            ShareRequest::decl(),
+            SharePackage::decl(),
+            LocationSource::decl(),
             AssistMode::decl(),
             AssistTone::decl(),
             AssistPlace::decl(),
@@ -307,7 +386,7 @@ mod tests {
             DeletionRequest::decl(),
         ];
         let output = format!(
-            "// Generated from Rust. Run cargo test export_mobile_contract.\n{}\n",
+            "// Generated from Rust. Run cargo test export_mobile_contract.\nexport const communityRulesVersion = \"{COMMUNITY_RULES_VERSION}\";\n{}\n",
             definitions.map(|d| format!("export {d}")).join("\n")
         );
         std::fs::write(

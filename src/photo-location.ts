@@ -1,3 +1,5 @@
+import type {LocationSource} from '../shared/contracts';
+export type {LocationSource} from '../shared/contracts';
 export type Coordinates = { latitude: number; longitude: number };
 
 function number(value: unknown): number | null {
@@ -44,7 +46,6 @@ export function deviceCoordinates(position: { timestamp: number; coords: Coordin
   return { latitude, longitude };
 }
 
-export type LocationSource = 'device' | 'camera' | 'photo' | 'manual';
 export function selectPhotoLocation(current: { location: import('../shared/contracts').Location | null; locationSource?: LocationSource }, inferred: import('../shared/contracts').Location | null, source: 'camera' | 'photo') {
   return current.locationSource === 'manual' && current.location ? {location:current.location,locationSource:'manual' as const} : {location:inferred,locationSource:inferred ? source : undefined};
 }

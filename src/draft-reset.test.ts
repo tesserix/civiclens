@@ -17,7 +17,7 @@ test('discard clears saved content and the private photo, and starts with fresh 
   await act(async()=>{await view.result.current.reset();});
   expect(FileSystem.deleteAsync).toHaveBeenCalledWith('file:///drafts/civiclens-photo-test.jpg',{idempotent:true});
   expect(SecureStore.deleteItemAsync).toHaveBeenCalledWith('civiclens-draft-reset-user');
-  expect(view.result.current.draft).toEqual({key:expect.any(String),category:'waste',description:'',photoUri:'',location:null,channels:['facebook'],consent:false});
+  expect(view.result.current.draft).toEqual({key:expect.any(String),sharingMode:'manual',category:'waste',description:'',photoUri:'',location:null,channels:['facebook'],consent:false});
   expect(view.result.current.draft.key).not.toBe(key);
 });
 
