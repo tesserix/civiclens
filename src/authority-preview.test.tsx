@@ -44,3 +44,16 @@ test('never fabricates a handle when coverage is missing or the API is unavailab
   fireEvent.press(screen.getByRole('button', { name: 'Confirm location & find authorities' }));
   expect(await screen.findByText(/Could not check authorities/)).toBeOnTheScreen();
 });
+
+test('keeps authority controls out of the way until location is provided', () => {
+  render(<AuthorityPreview token="test-session" category="waste" location={null} available />);
+  expect(screen.queryByText('Responsible authorities')).not.toBeOnTheScreen();
+  expect(screen.queryByRole('button', { name: 'Confirm location & find authorities' })).not.toBeOnTheScreen();
+});
+
+test('uses a brief review explanation when authority lookup is unavailable', () => {
+  render(<AuthorityPreview token="test-session" category="waste" location={location} available={false} />);
+  expect(screen.getByText('A reviewer will verify the responsible office before sharing.')).toBeOnTheScreen();
+  expect(screen.queryByText(/Topic hashtags/)).not.toBeOnTheScreen();
+  expect(screen.queryByRole('button', { name: 'Confirm location & find authorities' })).not.toBeOnTheScreen();
+});

@@ -8,10 +8,12 @@ import { Button, Notice, palette } from './ui';
 type Props = { userId?: string; token: string; category: Category; location: Location | null; available: boolean; disabled?: boolean };
 
 export function AuthorityPreview(props: Props) {
+  if (!props.location) return null;
+  if (!props.available) return <View className="flex-row items-center gap-2"><Ionicons name="shield-checkmark-outline" size={15} color={palette.muted} /><Text className="flex-1 text-xs leading-5 text-muted">A reviewer will verify the responsible office before sharing.</Text></View>;
   return <Lookup key={JSON.stringify([props.userId, props.category, props.location])} {...props} />;
 }
 
-function Lookup({ token, category, location, available, disabled }: Props) {
+function Lookup({ token, category, location, disabled }: Props) {
   const [result, setResult] = useState<Preview | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
@@ -30,11 +32,9 @@ function Lookup({ token, category, location, available, disabled }: Props) {
   };
   return <View className="gap-3 rounded-xl border border-line bg-surface p-4">
     <Text accessibilityRole="header" className="text-base font-semibold text-ink">Responsible authorities</Text>
-    <Text className="text-sm leading-5 text-muted">Check the location and issue category above. We match verified jurisdiction records, not AI guesses.</Text>
-    {!available ? <Text className="text-sm leading-5 text-muted">Authority preview isn’t available on this server yet. A reviewer must verify the responsible office before publication.</Text> : <>
+    <Text className="text-sm leading-5 text-muted">Find the office responsible for this location and issue.</Text>
       <Button title="Confirm location & find authorities" variant="secondary" compact busy={busy} disabled={disabled || busy || !valid} onPress={() => void lookup()} />
       {!valid ? <Text className="text-xs leading-5 text-muted">Add the issue’s location first.</Text> : null}
-    </>}
     {result?.status === 'unverified' ? <Notice>No verified authority match for this location and category. You can submit for review; no authority will be tagged until verified.</Notice> : null}
     {result?.status === 'matched' ? <>
       {result.authorities.map(office => <View key={office.id} className="gap-2 border-t border-line pt-3">
@@ -53,7 +53,7 @@ function Lookup({ token, category, location, available, disabled }: Props) {
       </Pressable>
       <Text className="text-xs leading-5 text-muted">{confirmed ? 'Checked for this draft. ' : 'Review the source before confirming. '}A moderator rechecks authority details and photo privacy before posting. Mentions depend on platform support and may not notify the office.</Text>
     </> : null}
-    <Text className="text-xs leading-5 text-muted">Topic hashtags: #CivicLens #BetterTogether. These describe the post; @mentions identify verified accounts.</Text>
+    {result?.status === 'matched' ? <Text className="text-xs leading-5 text-muted">Only verified accounts are mentioned. Topic hashtags are added after review.</Text> : null}
     {error ? <Notice>{error}</Notice> : null}
   </View>;
 }

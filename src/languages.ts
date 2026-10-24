@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export type WritingLanguage = { tag: string; native: string; english: string };
@@ -33,13 +33,21 @@ const deviceLanguage = () => known(Intl.DateTimeFormat().resolvedOptions().local
 
 export function useWritingLanguage(userId: string) {
   const key = `civiclens-writing-language-${userId}`;
-  const [tag, setTag] = useState(deviceLanguage);
+  const [selection, setSelection] = useState(() => ({ key, tag: deviceLanguage() }));
+  const revision = useRef(0);
   useEffect(() => {
     let active = true;
-    AsyncStorage.getItem(key).then(saved => { if (active && known(saved)) setTag(saved!); }).catch(() => {});
+    const started = revision.current;
+    AsyncStorage.getItem(key).then(saved => {
+      if (active && started === revision.current) setSelection({ key, tag: known(saved)?.tag ?? deviceLanguage() });
+    }).catch(() => {});
     return () => { active = false; };
   }, [key]);
   // A lost preference only falls back to the device language.
-  const choose = useCallback((next: string) => { setTag(next); AsyncStorage.setItem(key, next).catch(() => {}); }, [key]);
-  return [known(tag) ?? languages[0], choose] as const;
+  const choose = useCallback((next: string) => {
+    revision.current += 1;
+    setSelection({ key, tag: next });
+    AsyncStorage.setItem(key, next).catch(() => {});
+  }, [key]);
+  return [known(selection.key === key ? selection.tag : deviceLanguage()) ?? languages[0], choose] as const;
 }
