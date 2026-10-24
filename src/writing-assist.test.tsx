@@ -110,3 +110,28 @@ test('keeps optional tools in an accessible sheet instead of crowding the report
   fireEvent.press(screen.getByRole('button', { name: 'Close writing help' }));
   expect(screen.queryByRole('button', { name: /Writing language/ })).not.toBeOnTheScreen();
 });
+
+test('sends a selected tone and coarse place without coordinates and invalidates suggestions when the place changes', async()=>{
+  globalThis.fetch=jest.fn().mockResolvedValue(reply(200,{text:'Plastic bottles are scattered on the grass in Melbourne.'}));
+  const props={userId:'u1',token:'t1',category:'waste' as const,description:'',hasPhoto:true,readPhoto:async()=>'cGhvdG8=',onUse:jest.fn(),contextual:true,location:{latitude:-37.814,longitude:144.9633,locality:'Melbourne, VIC',countryCode:'AU'}};
+  const view=renderOpenAssist(<WritingAssist {...props}/>);
+  fireEvent.press(await screen.findByRole('radio',{name:'Light satire'}));
+  fireEvent.press(screen.getByRole('button',{name:'Write it for me'}));
+  expect(await screen.findByText('Plastic bottles are scattered on the grass in Melbourne.')).toBeOnTheScreen();
+  expect(sent()).toMatchObject({tone:'satirical',place:{locality:'Melbourne, VIC',countryCode:'AU'}});
+  expect(JSON.stringify(sent())).not.toContain('144.9633');
+  view.rerender(<WritingAssist {...props} location={{...props.location,locality:'Sydney, NSW',longitude:151.2}}/>);
+  expect(screen.queryByRole('button',{name:'Use this'})).not.toBeOnTheScreen();
+});
+
+
+test('does not revive a reviewed caption when a tone is changed and then changed back',async()=>{
+  globalThis.fetch=jest.fn().mockResolvedValue(reply(200,{text:'Litter is scattered on the grass. Please arrange a clean-up.'}));
+  renderOpenAssist(<WritingAssist userId="u1" token="t1" category="waste" description="" hasPhoto readPhoto={async()=> 'photo'} onUse={jest.fn()} contextual/>);
+  fireEvent.press(await screen.findByRole('button',{name:'Write it for me'}));
+  expect(await screen.findByText('Litter is scattered on the grass. Please arrange a clean-up.')).toBeOnTheScreen();
+  fireEvent.press(screen.getByRole('checkbox',{name:'I checked the caption and photo for identifying details'}));
+  fireEvent.press(screen.getByRole('radio',{name:'Serious'}));
+  fireEvent.press(screen.getByRole('radio',{name:'Balanced'}));
+  expect(screen.queryByRole('button',{name:'Use this'})).not.toBeOnTheScreen();
+});

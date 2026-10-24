@@ -29,6 +29,8 @@ pub struct Capabilities {
     pub auth: BrokerConfiguration,
     pub publishing: PublishingCapabilities,
     pub assist: bool,
+    #[serde(rename = "assistContext")]
+    pub assist_context: bool,
     #[serde(rename = "authorityPreview")]
     pub authority_preview: bool,
 }
@@ -88,6 +90,21 @@ pub enum AssistMode {
     Correct,
 }
 
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, TS)]
+#[serde(rename_all = "snake_case")]
+pub enum AssistTone {
+    Serious,
+    Satirical,
+    Balanced,
+}
+
+#[derive(Deserialize, Serialize, TS)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct AssistPlace {
+    pub locality: String,
+    pub country_code: String,
+}
+
 #[derive(Deserialize, Serialize, TS)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct AssistInput {
@@ -96,6 +113,12 @@ pub struct AssistInput {
     pub language: String,
     pub text: String,
     pub photo_base64: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[ts(optional)]
+    pub tone: Option<AssistTone>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[ts(optional)]
+    pub place: Option<AssistPlace>,
 }
 
 #[derive(Serialize, Deserialize, TS)]
@@ -146,6 +169,9 @@ pub struct AuthorityPreview {
     #[ts(optional)]
     pub reason: Option<AuthorityPreviewReason>,
     pub authorities: Vec<AuthoritySuggestion>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[ts(optional)]
+    pub hashtags: Option<Vec<String>>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, TS)]
@@ -252,6 +278,8 @@ mod tests {
             Location::decl(),
             ReportInput::decl(),
             AssistMode::decl(),
+            AssistTone::decl(),
+            AssistPlace::decl(),
             AssistInput::decl(),
             AssistSuggestion::decl(),
             AuthorityPreviewInput::decl(),

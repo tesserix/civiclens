@@ -111,6 +111,25 @@ pub fn route<'a>(
     }
 }
 
+fn hashtags(authorities: &[&Authority]) -> Vec<String> {
+    let mut tags = vec!["#CivicLens".to_owned(), "#BetterTogether".to_owned()];
+    for authority in authorities {
+        let name: String = authority
+            .name
+            .chars()
+            .filter(char::is_ascii_alphanumeric)
+            .take(80)
+            .collect();
+        if !name.is_empty() {
+            let tag = format!("#{name}");
+            if !tags.contains(&tag) {
+                tags.push(tag);
+            }
+        }
+    }
+    tags
+}
+
 pub fn caption(
     nickname: &str,
     description: &str,
@@ -138,8 +157,8 @@ pub fn caption(
         })
         .collect::<Vec<_>>()
         .join(", ");
-    format!("{}\n\n{}\n\nApproximate location: {:.2}, {:.2} ({})\n\nReported by {} via CivicLens. Community report; awaiting official verification.\nResponsible offices: {}\n\n#CivicLens #BetterTogether",
-        clean(locality), clean(description), location.latitude, location.longitude, location.country_code, nickname, offices)
+    format!("{}\n\n{}\n\nApproximate location: {:.2}, {:.2} ({})\n\nReported by {} via CivicLens. Community report; awaiting official verification.\nResponsible offices: {}\n\n{}",
+        clean(locality), clean(description), location.latitude, location.longitude, location.country_code, nickname, offices, hashtags(authorities).join(" "))
 }
 
 pub fn preview_for(
@@ -160,7 +179,13 @@ pub fn preview_for(
             "Confirm a valid location before looking up authorities.",
         ));
     }
-    let authorities: Vec<_> = route(directory, l, input.category, now)
+    let routed = route(directory, l, input.category, now);
+    let tags = if routed.is_empty() {
+        vec![]
+    } else {
+        hashtags(&routed)
+    };
+    let authorities: Vec<_> = routed
         .into_iter()
         .map(|a| AuthoritySuggestion {
             id: a.id.clone(),
@@ -205,6 +230,7 @@ pub fn preview_for(
             AuthorityPreviewStatus::Matched
         },
         authorities,
+        hashtags: Some(tags),
     })
 }
 
@@ -273,6 +299,7 @@ mod preview_tests {
             let result = preview_for(&directory, &input(), now).unwrap();
             assert!(matches!(result.status, AuthorityPreviewStatus::Unverified));
             assert!(result.authorities.is_empty());
+            assert_eq!(result.hashtags, Some(vec![]));
         }
         let mut outside = input();
         outside.location.longitude = 90.0;

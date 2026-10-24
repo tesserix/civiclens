@@ -2,9 +2,10 @@ import { useCallback, useEffect, useState } from 'react';
 import { Platform } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import * as Crypto from 'expo-crypto';
+import type { LocationSource } from './photo-location';
 import type { Category, Channel, Location } from '../shared/contracts';
 
-export type Draft = { key: string; category: Category; description: string; photoUri: string; location: Location | null; channels: Channel[]; consent: boolean };
+export type Draft = { key: string; category: Category; description: string; photoUri: string; location: Location | null; locationSource?: LocationSource; channels: Channel[]; consent: boolean };
 const empty = (): Draft => ({ key: Crypto.randomUUID(), category: 'waste', description: '', photoUri: '', location: null, channels: ['facebook'], consent: false });
 
 export function useDraft(userId: string) {

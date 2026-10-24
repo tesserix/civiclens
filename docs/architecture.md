@@ -43,6 +43,16 @@ uses an HMAC of issuer + subject with a dedicated runtime application key.
 Nicknames are unique case-insensitively; auto names have random suffixes and a
 database uniqueness constraint. Provider linking belongs to the broker's verified identity policy; the API never links by email. Loss/rotation of the HMAC key needs a planned account migration.
 
+## Photo location
+
+Before resizing a selected photo, read only its validated GPS metadata. Camera
+capture samples fresh foreground device GPS while the native camera is open.
+An explicit user-selected point takes precedence; a gallery photo with no usable
+GPS clears an unrelated device point and asks for a location. Native place search
+moves the point used for council-boundary routing. Editing town/country labels
+alone does not move it. Precise coordinates remain private; writing assist receives
+only the chosen town/city and country. See ADR-0006 for deadlines and failure paths.
+
 ## Writing assist
 
 Optional help with the description, through the Tesserix private AI gateway
@@ -50,7 +60,13 @@ Optional help with the description, through the Tesserix private AI gateway
 in the reporter's chosen language; "Fix spelling" corrects text without
 translating it. The API calls the logical model `civiclens-compose` at the
 dedicated in-cluster `civiclens-ai` gateway with a product client key; the gateway owns the
-provider, quotas and model choice. Suggestions are never applied without the
+provider, quotas and model choice. New clients offer Serious, Light satire and Balanced tones when `assistContext`
+is advertised. Omitted tone defaults to Serious. Humour remains factual, constructive
+and free of personal attacks or unsupported blame. Draft replies must explicitly
+confirm the selected issue is visible and identifying details are absent; missing
+or malformed verdicts fail closed. Model checks cannot establish photo authenticity
+or replace human review. Verified routing records supply authority mentions and
+topic tags separately from generated prose. Suggestions are never applied without the
 reporter's tap and still pass normal description validation and human review.
 Limits: 20 requests per account per 15 minutes per replica, 15 s deadline, 64 KB
 reply cap. Logs record mode, language, latency and outcome, never text or photos.

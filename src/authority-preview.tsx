@@ -1,31 +1,41 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Linking, Pressable, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import type { AuthorityPreview as Preview, Category, Location } from '../shared/contracts';
 import { request } from './api';
 import { Button, Notice, palette } from './ui';
 
-type Props = { userId?: string; token: string; category: Category; location: Location | null; available: boolean; disabled?: boolean };
+type Props = { userId?: string; token: string; category: Category; location: Location | null; available: boolean; disabled?: boolean; automatic?: boolean };
 
 export function AuthorityPreview(props: Props) {
   if (!props.location) return null;
   if (!props.available) return <View className="flex-row items-center gap-2"><Ionicons name="shield-checkmark-outline" size={15} color={palette.muted} /><Text className="flex-1 text-xs leading-5 text-muted">A reviewer will verify the responsible office before sharing.</Text></View>;
-  return <Lookup key={JSON.stringify([props.userId, props.category, props.location])} {...props} />;
+  return <Lookup key={JSON.stringify([props.userId, props.token, props.category, props.location])} {...props} />;
 }
 
-function Lookup({ token, category, location, disabled }: Props) {
+function Lookup({ token, category, location, disabled, automatic }: Props) {
   const [result, setResult] = useState<Preview | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const [confirmed, setConfirmed] = useState(false);
   const valid = location && /^[A-Z]{2}$/.test(location.countryCode) && location.locality.trim().length >= 2;
-  const lookup = async () => {
+  const pending = useRef<AbortController | null>(null);
+  useEffect(() => () => pending.current?.abort(), []);
+  const lookup = useCallback(async () => {
+    pending.current?.abort();
+    const controller = new AbortController();
+    pending.current = controller;
+    const timer = setTimeout(() => controller.abort(), 25000);
     setBusy(true); setError(''); setResult(null); setConfirmed(false);
     try {
-      setResult(await request<Preview>('/v1/authorities/preview', { token, method: 'POST', body: { category, location } }));
-    } catch { setError('Could not check authorities. Retry when connected; your draft is safe.'); }
-    finally { setBusy(false); }
-  };
+      const preview = await request<Preview>('/v1/authorities/preview', { token, method: 'POST', body: { category, location }, signal: controller.signal });
+      if (!controller.signal.aborted) setResult(preview);
+    } catch { if (pending.current === controller) setError('Could not check authorities. Retry when connected; your draft is safe.'); }
+    finally { clearTimeout(timer); if (pending.current === controller) setBusy(false); }
+  }, [token, category, location]);
+  useEffect(() => {
+    if (automatic && valid && !disabled) void lookup();
+  }, [automatic, valid, disabled, lookup]);
   const coverageMessage = result?.reason ? {
     country_not_covered: `Verified authority coverage is not available in ${location?.countryCode} yet.`,
     area_not_covered: 'This location is outside our verified local coverage.',
@@ -62,6 +72,7 @@ function Lookup({ token, category, location, disabled }: Props) {
       </Pressable>
       <Text className="text-xs leading-5 text-muted">{confirmed ? 'Checked for this draft. ' : 'Review the source before confirming. '}A moderator rechecks authority details and photo privacy before posting. Mentions depend on platform support and may not notify the office.</Text>
     </> : null}
+    {result?.status === 'matched' && result.hashtags?.length ? <Text className="text-sm text-brand">{result.hashtags.join(' ')}</Text> : null}
     {result?.status === 'matched' ? <Text className="text-xs leading-5 text-muted">Only verified accounts are mentioned. Topic hashtags are added after review.</Text> : null}
     {error ? <Notice>{error}</Notice> : null}
   </View>;

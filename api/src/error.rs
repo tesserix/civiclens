@@ -21,6 +21,8 @@ pub enum Error {
     RateLimited(&'static str),
     #[error("dependency unavailable")]
     Unavailable,
+    #[error("photo review required")]
+    PhotoRejected(&'static str),
     #[error("content rejected")]
     ContentRejected,
     #[error(transparent)]
@@ -51,6 +53,7 @@ impl IntoResponse for Error {
                 "UNAVAILABLE",
                 "This service is not configured or is temporarily unavailable.",
             ),
+            Self::PhotoRejected(message) => (StatusCode::UNPROCESSABLE_ENTITY, "PHOTO_REVIEW_REQUIRED", message),
             Self::ContentRejected => (
                 StatusCode::UNPROCESSABLE_ENTITY,
                 "CONTENT_REJECTED",

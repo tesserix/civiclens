@@ -1,16 +1,17 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { FlatList, Modal, Platform, Pressable, ScrollView, Text, View, useWindowDimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import type { AssistInput, AssistMode, AssistSuggestion, Category } from '../shared/contracts';
+import type { AssistInput, AssistMode, AssistSuggestion, AssistTone, Category, Location } from '../shared/contracts';
 import { ApiError, request } from './api';
 import { languages, useWritingLanguage } from './languages';
-import { Button, Notice, palette } from './ui';
+import { Button, Chip, Notice, palette } from './ui';
 
-export function WritingAssist({ userId, token, category, description, hasPhoto, readPhoto, onUse, disabled = false, available = true, sourceId = '' }: {
+export function WritingAssist({ userId, token, category, description, hasPhoto, readPhoto, onUse, disabled = false, available = true, sourceId = '', location = null, contextual = false }: {
   userId: string; token: string; category: Category; description: string; hasPhoto: boolean;
-  readPhoto: () => Promise<string>; onUse: (text: string) => void; disabled?: boolean; available?: boolean; sourceId?: string;
+  readPhoto: () => Promise<string>; onUse: (text: string) => void; disabled?: boolean; available?: boolean; sourceId?: string; location?: Location | null; contextual?: boolean;
 }) {
+  const [tone, setTone] = useState<AssistTone>('balanced');
   const [language, choose] = useWritingLanguage(userId);
   const [picking, setPicking] = useState(false);
   const [open, setOpen] = useState(false);
@@ -20,17 +21,25 @@ export function WritingAssist({ userId, token, category, description, hasPhoto, 
   const [busy, setBusy] = useState<AssistMode | null>(null);
   const [answer, setAnswer] = useState<{ text: string; source: string } | null>(null);
   const [reviewed, setReviewed] = useState(false);
-  const source = JSON.stringify([userId, category, description, hasPhoto, sourceId, language.tag]);
+  const source = JSON.stringify([userId, category, description, hasPhoto, sourceId, language.tag, location, tone, contextual]);
   const suggestion = answer?.source === source ? answer.text : '';
   const [error, setError] = useState('');
+  const generation = useRef(0);
+  useEffect(() => {
+    generation.current++;
+    setAnswer(null); setReviewed(false); setError('');
+    return () => { generation.current++; };
+  }, [source]);
   const ask = async (mode: AssistMode) => {
+    const run = generation.current;
     setBusy(mode); setError(''); setAnswer(null); setReviewed(false);
     try {
       const photoBase64 = mode === 'draft' ? await readPhoto() : null;
-      const body: AssistInput = { mode, category, language: language.tag, text: description, photoBase64 };
-      setAnswer({ text: (await request<AssistSuggestion>('/v1/assist', { token, method: 'POST', body })).text, source });
+      const body: AssistInput = { mode, category, language: language.tag, text: description, photoBase64, ...(mode === 'draft' && contextual ? {tone, place:location ? {locality:location.locality,countryCode:location.countryCode} : undefined} : {}) };
+      const { text } = await request<AssistSuggestion>('/v1/assist', { token, method: 'POST', body });
+      if (run === generation.current) setAnswer({ text, source });
     } catch (e) {
-      setError(e instanceof ApiError && (e.status === 429 || e.code === 'CONTENT_REJECTED') ? e.message : 'Writing help isn’t available right now. Your text hasn’t changed.');
+      if (run === generation.current) setError(e instanceof ApiError && (e.status === 429 || e.code === 'CONTENT_REJECTED' || e.code === 'PHOTO_REVIEW_REQUIRED') ? e.message : 'Writing help isn’t available right now. Your text hasn’t changed.');
     } finally { setBusy(null); }
   };
   const locked = disabled || busy !== null;
@@ -57,6 +66,13 @@ export function WritingAssist({ userId, token, category, description, hasPhoto, 
       <Text className="text-sm font-semibold text-ink">{language.native}</Text>
       <Ionicons name="chevron-down" size={15} color={palette.muted} />
     </Pressable>
+    {contextual ? <View className="gap-2">
+      <Text className="text-[13px] font-semibold text-ink">Caption tone</Text>
+      <View accessibilityRole="radiogroup" className="flex-row flex-wrap gap-2">
+        {([['serious','Serious'],['satirical','Light satire'],['balanced','Balanced']] as const).map(([value,label])=><Chip key={value} label={label} selected={tone===value} disabled={locked} onPress={()=>setTone(value)}/>)}
+      </View>
+      <Text className="text-xs leading-5 text-muted">Humour stays constructive, with factual details and a clear request for action. No personal attacks or unsupported blame.</Text>
+    </View> : null}
     <View className={actionsClass}>
       <View className={stacked ? undefined : "flex-1"}><Button title="Write it for me" variant="secondary" compact icon="sparkles-outline" busy={busy === 'draft'} disabled={locked || !available || !hasPhoto} onPress={() => void ask('draft')} /></View>
       <View className={stacked ? undefined : "flex-1"}><Button title="Fix spelling" variant="secondary" compact icon="checkmark-done-outline" busy={busy === 'correct'} disabled={locked || !available || description.trim().length < 10} onPress={() => void ask('correct')} /></View>
