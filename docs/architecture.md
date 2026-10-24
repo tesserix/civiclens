@@ -102,6 +102,16 @@ responsibility and account evidence before mentions; parent escalation remains a
 moderator decision. Hashtags are topic labels, not proof that an account was
 notified or a Facebook group received the post.
 
+The Description section and generated suggestion both offer the same tappable
+hashtag choices, with Select all and Clear. Choices are stored privately with the
+draft and report, separately from prose. An omitted selection uses automatic tags;
+an explicit empty list means no hashtags. Changing category or location resets
+choices. Retry and fresh lookup reconcile choices against current reviewed tags.
+The `hashtagSelection` capability gates clients sending explicit choices. The API
+rejects malformed, duplicate or out-of-route tags on submission and re-filters
+choices against fresh routing on approval. Verified account mentions remain
+separate. Reports use their existing JSON storage; no schema migration is needed.
+
 Every tone retains profanity/harassment checks, photo privacy checks, factuality,
 reporter approval and moderator review before publishing. Exact coordinates stay
 out of model context and public hashtags. Emulator fixtures must be visibly labelled

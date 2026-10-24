@@ -47,3 +47,11 @@ locality text and AI output never supply tags or handles. Missing/expired/ambigu
 routing supplies no office or place tags. This reuses the existing lookup, adds no
 network calls and preserves the pilot latency/cost budget. API and seed changes
 remain local until a specifically approved rollout.
+
+The description tools expose shared, selectable hashtag suggestions without an
+extra lookup. The private draft and report JSON preserve optional choices: omitted
+means automatic, an empty array means none. The submission endpoint checks an
+authenticated member's selection against current reviewed routing; approval checks
+it again. Old clients omit this field, and new clients require `hashtagSelection`
+before sending it. Changing location/category resets the selection; failures leave
+the caption intact and offer retry. No database migration or extra provider cost.

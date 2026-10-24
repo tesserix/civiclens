@@ -1,4 +1,4 @@
-import type { ReactElement } from 'react';
+import {useState,type ReactElement} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
 import { WritingAssist } from './writing-assist';
@@ -134,4 +134,26 @@ test('does not revive a reviewed caption when a tone is changed and then changed
   fireEvent.press(screen.getByRole('radio',{name:'Serious'}));
   fireEvent.press(screen.getByRole('radio',{name:'Balanced'}));
   expect(screen.queryByRole('button',{name:'Use this'})).not.toBeOnTheScreen();
+});
+
+
+test('shows selectable hashtags beside the caption and keeps the prose while tags change',async()=>{
+  globalThis.fetch=jest.fn().mockResolvedValue(reply(200,{text:'Rubbish is scattered on the grass. Please arrange a clean-up.'}));
+  const use=jest.fn();
+  function Tool(){
+    const [selected,setSelected]=useState<string[]|undefined>();
+    return <WritingAssist userId="u1" token="t1" category="waste" description="" hasPhoto readPhoto={async()=> 'photo'} sourceId="photo-1" onUse={use} suggestedHashtags={['#Litter','#Melbourne','#CityofMelbourne']} selectedHashtags={selected} onHashtagsChange={setSelected}/>;
+  }
+  renderOpenAssist(<Tool/>);
+  fireEvent.press(await screen.findByRole('button',{name:'Write it for me'}));
+  expect(await screen.findByText('Rubbish is scattered on the grass. Please arrange a clean-up.')).toBeOnTheScreen();
+  fireEvent.press(screen.getByRole('button',{name:'Clear hashtags'}));
+  fireEvent.press(screen.getByRole('checkbox',{name:'#Melbourne'}));
+  expect(screen.getByText('Rubbish is scattered on the grass. Please arrange a clean-up.')).toBeOnTheScreen();
+  expect(screen.getByRole('checkbox',{name:'#Melbourne'})).toBeChecked();
+  expect(screen.getByRole('checkbox',{name:'#Litter'})).not.toBeChecked();
+  fireEvent.press(screen.getByRole('checkbox',{name:'I checked the caption and photo for identifying details'}));
+  fireEvent.press(screen.getByRole('button',{name:'Use this'}));
+  expect(use).toHaveBeenCalledWith('Rubbish is scattered on the grass. Please arrange a clean-up.');
+  expect(sent()).not.toHaveProperty('hashtags');
 });

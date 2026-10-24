@@ -31,6 +31,8 @@ pub struct Capabilities {
     pub assist: bool,
     #[serde(rename = "assistContext")]
     pub assist_context: bool,
+    #[serde(rename = "hashtagSelection")]
+    pub hashtag_selection: bool,
     #[serde(rename = "authorityPreview")]
     pub authority_preview: bool,
 }
@@ -81,6 +83,9 @@ pub struct ReportInput {
     pub photo_base64: String,
     pub channels: Vec<Channel>,
     pub consent: bool,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[ts(optional)]
+    pub hashtags: Option<Vec<String>>,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, TS)]
@@ -243,6 +248,9 @@ pub struct Report {
     pub status: String,
     pub routing: Routing,
     pub publications: Vec<Publication>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[ts(optional)]
+    pub hashtags: Option<Vec<String>>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, TS)]

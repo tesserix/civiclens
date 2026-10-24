@@ -26,10 +26,12 @@ test('looks up confirmed coordinates and shows verified sources and channel-spec
 test('removes old matches when the location changes and ignores their late response', async () => {
   let resolve!: (value: unknown) => void;
   (globalThis.fetch as jest.Mock).mockReturnValueOnce(new Promise(r => { resolve = r; }));
-  const view = render(<AuthorityPreview token="test-session" category="waste" location={location} available />);
+  const resolved=jest.fn();
+  const view = render(<AuthorityPreview token="test-session" category="waste" location={location} available onResolve={resolved} />);
   fireEvent.press(screen.getByRole('button', { name: 'Confirm location & find authorities' }));
   view.rerender(<AuthorityPreview token="test-session" category="waste" location={{ ...location, longitude: 76 }} available />);
   await act(async () => { resolve(reply(match)); });
+  expect(resolved).not.toHaveBeenCalledWith(expect.objectContaining({status:'matched'}));
   expect(screen.queryByText('Test Municipality')).not.toBeOnTheScreen();
   expect(screen.getByRole('button', { name: 'Confirm location & find authorities' })).toBeEnabled();
 });
@@ -77,4 +79,13 @@ test('automatically resolves a photo location and shows server-supplied verified
   render(<AuthorityPreview token="test-session" category="waste" location={location} available automatic/>);
   expect(await screen.findByText('Test Municipality')).toBeOnTheScreen();
   expect(screen.getByText('#CivicLens #CityOfMelbourne')).toBeOnTheScreen();
+});
+
+
+test('passes the reviewed suggestions to the description tools without exposing an old lookup',async()=>{
+  (globalThis.fetch as jest.Mock).mockResolvedValue(reply({...match,hashtags:['#Litter','#Melbourne']}));
+  const resolved=jest.fn();
+  render(<AuthorityPreview token="test-session" category="waste" location={location} available automatic onResolve={resolved}/>);
+  await screen.findByText('Test Municipality');
+  expect(resolved).toHaveBeenLastCalledWith(expect.objectContaining({hashtags:['#Litter','#Melbourne']}));
 });

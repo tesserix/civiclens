@@ -119,7 +119,7 @@ pub fn route<'a>(
     }
 }
 
-fn hashtags(authorities: &[&Authority], category: Category) -> Vec<String> {
+pub fn hashtags(authorities: &[&Authority], category: Category) -> Vec<String> {
     let mut tags = vec!["#CivicLens".to_owned(), "#BetterTogether".to_owned()];
     let topics = match category {
         Category::Waste => ["#Litter", "#WasteManagement"],
@@ -152,14 +152,22 @@ fn hashtags(authorities: &[&Authority], category: Category) -> Vec<String> {
 }
 
 pub fn caption(
-    nickname: &str,
+    report: &crate::contracts::Report,
     description: &str,
     locality: &str,
-    location: &Location,
     authorities: &[&Authority],
     channel: Channel,
-    category: Category,
 ) -> String {
+    let location = &report.location;
+    let tags: Vec<_> = hashtags(authorities, report.category)
+        .into_iter()
+        .filter(|tag| {
+            report
+                .hashtags
+                .as_ref()
+                .is_none_or(|selected| selected.contains(tag))
+        })
+        .collect();
     let clean = |s: &str| {
         s.chars()
             .filter(|c| !c.is_control() && *c != '@' && *c != '#')
@@ -180,7 +188,7 @@ pub fn caption(
         .collect::<Vec<_>>()
         .join(", ");
     format!("{}\n\n{}\n\nApproximate location: {:.2}, {:.2} ({})\n\nReported by {} via CivicLens. Community report; awaiting official verification.\nResponsible offices: {}\n\n{}",
-        clean(locality), clean(description), location.latitude, location.longitude, location.country_code, nickname, offices, hashtags(authorities, category).join(" "))
+        clean(locality), clean(description), location.latitude, location.longitude, location.country_code, report.nickname, offices, tags.join(" ")).trim_end().to_string()
 }
 
 pub fn preview_for(

@@ -32,6 +32,15 @@ fn validate(input: &ReportInput) -> Result<(), Error> {
         || !l.country_code.bytes().all(|b| b.is_ascii_uppercase())
         || !(2..=120).contains(&l.locality.trim().len())
         || !description_valid(&input.description)
+        || input.hashtags.as_ref().is_some_and(|tags| {
+            tags.len() > 64
+                || tags.iter().any(|tag| {
+                    !(2..=81).contains(&tag.len())
+                        || !tag.starts_with('#')
+                        || !tag[1..].bytes().all(|byte| byte.is_ascii_alphanumeric())
+                })
+                || tags.iter().collect::<HashSet<_>>().len() != tags.len()
+        })
         || !input.consent
         || input.channels.is_empty()
         || input.channels.len() > 3
@@ -126,11 +135,24 @@ pub async fn create(
     let now = OffsetDateTime::now_utc();
     let id = Uuid::now_v7();
     let matches = authority::route(&state.authorities, &input.location, input.category, now);
+    if let Some(selected) = &input.hashtags {
+        let allowed = if matches.is_empty() {
+            vec![]
+        } else {
+            authority::hashtags(&matches, input.category)
+        };
+        if selected.iter().any(|tag| !allowed.contains(tag)) {
+            return Err(Error::Invalid(
+                "Choose hashtags from the current location suggestions, then retry.",
+            ));
+        }
+    }
     let report = Report {
         id: id.to_string(),
         nickname: member.nickname,
         category: input.category,
         description: input.description.trim().to_string(),
+        hashtags: input.hashtags,
         location: input.location,
         created_at: now.format(&Rfc3339).map_err(|_| Error::Internal)?,
         status: "pending_review".into(),
@@ -333,13 +355,11 @@ pub async fn approve(
     };
     for publication in &report.publications {
         let caption = authority::caption(
-            &report.nickname,
+            &report,
             &input.public_description,
             &input.public_locality,
-            &report.location,
             &offices,
             publication.channel,
-            report.category,
         );
         sqlx::query("INSERT INTO publications(id,report_id,channel,status,caption) VALUES($1,$2,$3,'queued',$4) ON CONFLICT(report_id,channel) DO NOTHING")
             .bind(Uuid::now_v7()).bind(id).bind(publication.channel.as_str()).bind(caption).execute(&mut *tx).await?;

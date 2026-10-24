@@ -3,13 +3,15 @@ import { FlatList, Modal, Platform, Pressable, ScrollView, Text, View, useWindow
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import type { AssistInput, AssistMode, AssistSuggestion, AssistTone, Category, Location } from '../shared/contracts';
+import {HashtagSelect} from './hashtag-select';
 import { ApiError, request } from './api';
 import { languages, useWritingLanguage } from './languages';
 import { Button, Chip, Notice, palette } from './ui';
 
-export function WritingAssist({ userId, token, category, description, hasPhoto, readPhoto, onUse, disabled = false, available = true, sourceId = '', location = null, contextual = false }: {
+export function WritingAssist({ userId, token, category, description, hasPhoto, readPhoto, onUse, disabled = false, available = true, sourceId = '', location = null, contextual = false, suggestedHashtags = [], selectedHashtags, onHashtagsChange, hashtagsBusy = false, hashtagsError = false, onHashtagsRetry }: {
   userId: string; token: string; category: Category; description: string; hasPhoto: boolean;
   readPhoto: () => Promise<string>; onUse: (text: string) => void; disabled?: boolean; available?: boolean; sourceId?: string; location?: Location | null; contextual?: boolean;
+  suggestedHashtags?: string[]; selectedHashtags?: string[]; onHashtagsChange?: (tags: string[]) => void; hashtagsBusy?: boolean; hashtagsError?: boolean; onHashtagsRetry?: () => void;
 }) {
   const [tone, setTone] = useState<AssistTone>('balanced');
   const [language, choose] = useWritingLanguage(userId);
@@ -43,6 +45,7 @@ export function WritingAssist({ userId, token, category, description, hasPhoto, 
     } finally { setBusy(null); }
   };
   const locked = disabled || busy !== null;
+  const hashtagPicker=onHashtagsChange ? <HashtagSelect suggestions={suggestedHashtags} selected={selectedHashtags} onChange={onHashtagsChange} loading={hashtagsBusy} error={hashtagsError} onRetry={onHashtagsRetry} disabled={locked}/> : null;
   return <View className="gap-2">
     {available ? <Pressable accessibilityRole="button" accessibilityLabel="Writing help" accessibilityHint="Draft from your photo or improve your wording" disabled={disabled}
       onPress={() => setOpen(true)} className="min-h-11 flex-row items-center gap-2 self-start rounded-full bg-mint px-4" style={({ pressed }) => ({ opacity: disabled ? 0.4 : pressed ? 0.7 : 1 })}>
@@ -80,6 +83,7 @@ export function WritingAssist({ userId, token, category, description, hasPhoto, 
     {suggestion ? <View className="gap-3 rounded-xl border border-brand/25 bg-mint p-4">
       <View className="flex-row items-center gap-1.5"><Ionicons name="sparkles" size={14} color={palette.brand} /><Text className="text-[13px] font-semibold text-brand">Suggestion</Text></View>
       <Text selectable className="text-base leading-6 text-ink">{suggestion}</Text>
+      {hashtagPicker}
       <Pressable accessibilityRole="checkbox" accessibilityLabel="I checked the caption and photo for identifying details" accessibilityState={{ checked: reviewed }} disabled={locked}
         onPress={() => setReviewed(!reviewed)} className="min-h-11 flex-row items-center gap-3">
         <Ionicons name={reviewed ? 'checkbox' : 'square-outline'} size={24} color={palette.brand} />
@@ -91,6 +95,7 @@ export function WritingAssist({ userId, token, category, description, hasPhoto, 
       </View>
       <Text className="text-xs leading-5 text-muted">Keep it factual and respectful: no profanity, insults or threats. Remove identifying details from the caption; crop or replace photos showing faces, plates or private addresses. This check does not replace moderator review.</Text>
     </View> : <Text className="text-xs leading-5 text-muted">{hasPhoto ? 'Your photo and notes are used to create a suggestion. Nothing changes until you choose Use this.' : 'Add a photo to draft a caption. You can fix spelling once you’ve written at least 10 characters.'}</Text>}
+    {!suggestion ? hashtagPicker : null}
     {error ? <Notice>{error}</Notice> : null}
         </ScrollView> :
         <FlatList data={languages} keyExtractor={l => l.tag} initialNumToRender={languages.length} contentContainerStyle={{ padding: 16, paddingBottom: 40 }}

@@ -5,7 +5,7 @@ import * as Crypto from 'expo-crypto';
 import type { LocationSource } from './photo-location';
 import type { Category, Channel, Location } from '../shared/contracts';
 
-export type Draft = { key: string; category: Category; description: string; photoUri: string; location: Location | null; locationSource?: LocationSource; channels: Channel[]; consent: boolean };
+export type Draft = { key: string; category: Category; description: string; photoUri: string; location: Location | null; locationSource?: LocationSource; channels: Channel[]; consent: boolean; hashtags?: string[] };
 const empty = (): Draft => ({ key: Crypto.randomUUID(), category: 'waste', description: '', photoUri: '', location: null, channels: ['facebook'], consent: false });
 
 export function useDraft(userId: string) {
@@ -30,7 +30,10 @@ export function useDraft(userId: string) {
     }, 300);
     return () => clearTimeout(timer);
   }, [draft, ready, storageKey]);
-  const update = useCallback((patch: Partial<Draft>) => setDraft(d => ({ ...d, ...patch, key: Crypto.randomUUID() })), []);
+  const update = useCallback((patch: Partial<Draft>) => setDraft(d => {
+    const changed = (patch.category !== undefined && patch.category !== d.category) || (patch.location !== undefined && JSON.stringify(patch.location) !== JSON.stringify(d.location));
+    return { ...d, ...patch, ...(changed ? {hashtags:undefined}:{}), key: Crypto.randomUUID() };
+  }), []);
   const save = async () => {
     if (Platform.OS !== 'web') await SecureStore.setItemAsync(storageKey, JSON.stringify(draft), { keychainAccessible: SecureStore.WHEN_UNLOCKED_THIS_DEVICE_ONLY });
   };
