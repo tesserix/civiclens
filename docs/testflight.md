@@ -100,34 +100,45 @@ This build is an internal preview, not production compliance clearance. See
 [the store readiness audit](store-readiness.md) before any public release.
 
 
-## User-owned sharing build — prepared 25 October 2026
+## User-owned sharing — released internally 25 October 2026
 
-The requested target is a real API-connected internal TestFlight build. The user
-cancelled the temporary demo approach and removed the country-Page option.
-Users select one, several or all of Facebook/Instagram/WhatsApp and explicitly
-confirm each native handoff after independent review. Social apps control sender
-identity and may omit captions or restrict attachments. Completion is unverified.
-No additional provider login, email-based account linking or demo fallback exists.
+**0.1.5 (12)** is VALID and IN_BETA_TESTING in both existing internal groups:
+`Internal Testing` and `CivicLens Internal`. Existing tester membership was
+verified; no new invitations or external beta were created. Apple build ID:
+`f0cf649c-3534-4675-90d2-f4d1a941e4b3`. EAS submission:
+`9e3614e7-2a4f-4de6-b1e2-d74c740fc0b2` (FINISHED).
+[Open TestFlight builds](https://appstoreconnect.apple.com/apps/6825667307/testflight/ios).
 
-A signed production-profile **0.1.5 (12)** IPA is prepared locally using the existing
-approved signing process. Store profile/team/bundle, debugging disabled and strict
-signature verification passed. Its bundle contains the production HTTPS API and
-multi-selection controls, and no demo identifiers or country-Page selector.
-SHA-256: `3bd1e33695faccec0d286fa995f45ad4df4c42517052d55adcf1b4a5646c7c80`.
-Local artifact/receipt: ignored `artifacts/qa/testflight-real-0.1.5/` in the isolated
-feature worktree. No new upload has occurred. The cancelled demo build reserved 11;
-that build was never uploaded. Current available TestFlight remains 0.1.4 (10).
+The exact signed IPA SHA-256 is
+`3bd1e33695faccec0d286fa995f45ad4df4c42517052d55adcf1b4a5646c7c80`.
+Its runtime source matches `7d2d1bbd94828fa3f582b5bbe8b8463af36df40c`, merged
+through [PR #10](https://github.com/tesserix/civiclens/pull/10) as `1c5ab95`.
+The cancelled demo build reserved 11 and was never uploaded. No demo login,
+fixture interceptor or country-Page control is in this release.
 
-Before upload, obtain explicit approval for the named backend rollout, create the
-private media bucket/Workload Identity grants through the prepared Terraform plan,
-back up and apply additive migration 0006 through GitOps, and verify the real API
-capabilities, privacy and owner-only reviewed exports. Native AMD64 image CI is
-required; local Linux ARM64 container/TLS/migration smoke passed. The prepared
-rollout is in the owning infra repo's `docs/civiclens-user-owned-sharing-rollout.md`.
+The approved backend rollout is complete. Two ready replicas run
+`sha256:fb761d44c5bafb8b458690179fc00209d840522b7d89fcb8e4339bc4a915fb2b`;
+Argo reports Synced/Healthy. CI release run `40104327068` passed native AMD64
+build, TLS PostgreSQL/migration/auth smoke and registry digest verification.
+A fresh product backup was restored to an isolated local database before migration
+0006; the live ledger now confirms all six migrations successful. The private GCS
+bucket uses the create/get-only Workload Identity grant and generation-pinned
+references. Live workload checks confirmed create/get, collision rejection,
+list denial and anonymous read denial. Protected API endpoints returned 401.
+Live capabilities: manualSharing=true, maxPhotos=5, current rules=2026-10-24,
+assist=true; managed publishing remains disabled.
 
-Upload only this verified IPA after the backend is ready, wait for Apple VALID,
-and confirm existing internal-group availability. Do not publish to App Store,
-Google Play or an external/public beta. The user will explicitly confirm any
-later public store release after testing on their device. End-to-end public
-provider delivery and broad reviewed authority coverage are not claims of this
-local verification.
+Install/update CivicLens from TestFlight, choose up to five photos and confirm the
+location. Review AI text and hashtag choices, accept the rules, and select one,
+several or all destinations. After independent review, confirm each native share
+handoff separately. External apps control visible account identity, attachments
+and captions. Native completion does not prove delivery. Physical-device tests
+with installed Facebook/Instagram/WhatsApp, cancellation and missing-app paths
+remain user acceptance; simulator QA does not establish provider delivery.
+
+Verified authority routing is still Melbourne waste/litter only. New country
+reference data, grievance integrations and participation features are tracked in
+issues #11–#13 and are not included in 0.1.5. Public App Store, Google Play and
+external beta releases remain held for the user's later explicit confirmation.
+Protected receipts are in ignored `artifacts/qa/testflight-real-0.1.5/` and
+`artifacts/qa/user-sharing-rollout/`; no credentials or backup contents are in Git.

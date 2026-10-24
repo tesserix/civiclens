@@ -1,9 +1,11 @@
 # User-owned social sharing QA — 25 October 2026
 
-Source worktree: `/tmp/civiclens-country-pages-qa`, branch
-`feat/australia-social-pilot`, base `b94a11a`. Changes are uncommitted.
-No production rollout, migration, registry push or new TestFlight upload has
-occurred. No public Apple/Google store release is authorized.
+Released through app [PR #10](https://github.com/tesserix/civiclens/pull/10)
+and infra [PR #1526](https://github.com/tesserix/tesserix-k8s/pull/1526).
+The approved backend, private storage, migration 0006 and internal TestFlight
+0.1.5 (12) rollout are complete. See [the release receipt](../testflight.md).
+Public Apple/Google store releases remain held. Preparation notes below retain
+the earlier local verification context; the receipt records the final live state.
 
 ## Final product scope
 
@@ -80,9 +82,9 @@ IPA SHA-256: `3bd1e33695faccec0d286fa995f45ad4df4c42517052d55adcf1b4a5646c7c80`.
 Artifact/receipt: ignored `artifacts/qa/testflight-real-0.1.5/`.
 A cancelled preliminary demo build reserved build 11 but was never uploaded.
 
-Do not upload this connected IPA until its backend rollout is approved, applied
-and verified. Current live capabilities still lack manualSharing/maxPhotos/rules.
-Existing TestFlight remains 0.1.4 (10), VALID. Public store release waits for the
+The named rollout was approved and completed. Current live capabilities include
+manualSharing=true, maxPhotos=5 and rules=2026-10-24. TestFlight 0.1.5 (12) is
+VALID and available in both internal groups. Public store release waits for the
 user's later explicit confirmation after mobile testing.
 
 ## Infrastructure preparation
@@ -104,4 +106,5 @@ Current API digest `sha256:2e4c4767cb6d32d5fa468d9f726fd3f3d6165253331e96397df90
 CNPG healthy; observed backup timestamp 24 October 02:10:56 UTC, retention 3d;
 require a fresh approved backup and scoped schema capture before migration.
 Only migration `0006_private_report_photos.sql` remains in the final change.
-No live changes have been made under the project AGENTS approval boundary.
+The user subsequently approved the named rollout; see the release receipt for
+completed backup/restore, migration, digest, live checks and internal availability.
