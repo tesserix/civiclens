@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { ActivityIndicator, KeyboardAvoidingView, Platform, Pressable, ScrollView, Switch, Text, View } from 'react-native';
+import { ActivityIndicator, KeyboardAvoidingView, Platform, Pressable, ScrollView, Switch, Text, View, useWindowDimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Image } from 'expo-image';
 import * as ImagePicker from 'expo-image-picker';
@@ -8,19 +8,21 @@ import * as FileSystem from 'expo-file-system/legacy';
 import { Ionicons } from '@expo/vector-icons';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useFocusEffect, useRouter } from 'expo-router';
-import { Button, Chip, Field, Loading, Notice, Step, Title, Viewfinder, categoryIcons, palette } from '../../src/ui';
+import { Button, Chip, Field, Loading, Notice, Step, Title, Viewfinder, palette } from '../../src/ui';
 import { useSession } from '../../src/session';
 import { useDraft } from '../../src/useDraft';
 import { useDeviceLocation } from '../../src/useDeviceLocation';
 import { request } from '../../src/api';
 import { WritingAssist } from '../../src/writing-assist';
 import { AuthorityPreview } from '../../src/authority-preview';
-import { categories, categoryLabels, channels, type Capabilities, type Report } from '../../shared/contracts';
+import { CategorySelect, LocationFields } from '../../src/report-details';
+import { channels, type Capabilities, type Report } from '../../shared/contracts';
 
 const channelIcons = { facebook: 'logo-facebook', instagram: 'logo-instagram', whatsapp: 'logo-whatsapp' } as const;
 const channelLabels = { facebook: 'Facebook', instagram: 'Instagram', whatsapp: 'WhatsApp' } as const;
 
 export default function Capture() {
+  const { width, fontScale } = useWindowDimensions();
   const { session } = useSession();
   const { draft, update, ready, error: draftError, save, reset } = useDraft(session?.user.id || '');
   const [working, setWorking] = useState<'photo' | ''>('');
@@ -70,7 +72,7 @@ export default function Capture() {
   const locked = submit.isPending;
   const stepError = (step: 'photo') => error?.step === step ? <Notice>{error.message}</Notice> : null;
   return <SafeAreaView edges={['top', 'left', 'right']} className="flex-1 bg-canvas"><KeyboardAvoidingView className="flex-1" behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-    <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ padding: 20, gap: 32, paddingBottom: 40 }}>
+    <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ padding: 20, gap: 32, paddingBottom: 40, width: '100%', maxWidth: 680, alignSelf: 'center' }}>
       <Title subtitle="Nothing is shared until a reviewer has checked it.">Report an issue</Title>
 
       <Step number={1} title="Take a photo" done={!!draft.photoUri}>
@@ -83,7 +85,7 @@ export default function Capture() {
               <Text className="text-center text-sm leading-5 text-white/70">Keep a safe distance. Leave faces and number plates out of frame.</Text>
             </Pressable>}
         </Viewfinder>
-        <View className="flex-row gap-2">
+        <View className={width < 380 || fontScale > 1.2 ? 'gap-2' : 'flex-row gap-2'}>
           {draft.photoUri ? <View className="flex-1"><Button title="Retake" variant="secondary" compact icon="camera-outline" disabled={working !== '' || locked} onPress={() => void photo(true)} /></View> : null}
           <View className="flex-1"><Button title="Choose from photos" variant="secondary" compact icon="images-outline" disabled={working !== '' || locked} onPress={() => void photo(false)} /></View>
         </View>
@@ -91,21 +93,13 @@ export default function Capture() {
       </Step>
 
       <Step number={2} title="What kind of issue?" done>
-        <View accessibilityRole="radiogroup" className="flex-row flex-wrap gap-2">
-          {categories.map(category => <Chip key={category} label={categoryLabels[category]} icon={categoryIcons[category]} selected={draft.category === category} disabled={locked} onPress={() => update({ category })} />)}
-        </View>
+        <CategorySelect value={draft.category} disabled={locked} onChange={category => update({ category })} />
       </Step>
 
       <Step number={3} title="Where is it?" done={located}>
-        {draft.location ? <>
-          <View className="flex-row gap-3">
-            <View className="flex-1"><Field label="Town or city" value={draft.location.locality} maxLength={120} editable={!locked && !deviceLocation.busy} onChangeText={locality => update({ location: { ...draft.location!, locality } })} /></View>
-            <View className="w-24"><Field label="Country code" placeholder="IN" autoCapitalize="characters" maxLength={2} value={draft.location.countryCode} editable={!locked && !deviceLocation.busy} onChangeText={countryCode => update({ location: { ...draft.location!, countryCode: countryCode.toUpperCase() } })} /></View>
-          </View>
-          <View className="flex-row items-center gap-1.5"><Ionicons name="lock-closed-outline" size={13} color={palette.muted} /><Text className="flex-1 text-xs text-muted" style={{ fontVariant: ['tabular-nums'] }}>{draft.location.latitude.toFixed(5)}, {draft.location.longitude.toFixed(5)} stays private</Text></View>
-        </> : <Text className="text-sm leading-5 text-muted">We detect your device location automatically. Stay near the issue; only the town or city is shown publicly.</Text>}
+        {draft.location ? <LocationFields value={draft.location} disabled={locked || deviceLocation.busy} onChange={location => update({ location })} /> : <Text className="text-sm leading-5 text-muted">We detect your device location automatically. Stay near the issue; only the town or city is shown publicly.</Text>}
         {deviceLocation.busy ? <Text accessibilityLiveRegion="polite" className="text-sm text-muted">Detecting your device location…</Text> : null}
-        <Button title={draft.location ? 'Update location' : 'Retry location'} variant="secondary" icon="navigate-outline" busy={deviceLocation.busy} disabled={working === 'photo' || locked} onPress={() => void deviceLocation.locate()} />
+        <Button title={draft.location ? 'Refresh device location' : 'Retry location'} variant="secondary" compact icon="navigate-outline" busy={deviceLocation.busy} disabled={working === 'photo' || locked} onPress={() => void deviceLocation.locate()} />
         {deviceLocation.error ? <Notice>{deviceLocation.error}</Notice> : null}
         {deviceLocation.settingsNeeded && Platform.OS !== 'web' ? <Button title="Open location settings" variant="secondary" onPress={() => void deviceLocation.openSettings()} /> : null}
         {session ? <AuthorityPreview userId={session.user.id} token={session.token} category={draft.category} location={draft.location} available={capabilities.data?.authorityPreview === true} disabled={locked || working !== '' || deviceLocation.busy} /> : null}
