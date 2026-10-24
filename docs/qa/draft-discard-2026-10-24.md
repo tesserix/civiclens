@@ -41,3 +41,29 @@ and does not authorize deletion of submitted reports or server-side data.
 User preference: use Apple simulators only; do not use Android emulators.
 Release target: iOS 0.1.4 via the repository TestFlight workflow; EAS assigns the
 remote build number. Build/submission evidence is recorded in GitHub Actions.
+
+## Signed release evidence
+
+PR #8 merged as `19f7dc5b7186ac2209a6fbe471eabc7150397058`; every applicable
+PR CI check passed, including mobile, Rust/database, contracts, bundles,
+container scan and secret scans. The TestFlight workflow's validation passed,
+but its submit job stopped because GitHub has no `EXPO_TOKEN`. The authenticated
+EAS cloud build was blocked by the account's exhausted included build credits.
+No plan upgrade or credential rotation was performed.
+
+The existing documented local EAS/Xcode signing process built the exact merged
+commit as **0.1.4 (10)**. Verification checked the bundle/team identity, App Store
+profile, signature, debugging disabled, production HTTPS API URL and reset UI
+strings inside the packaged bundle. IPA SHA-256:
+`79ca0b5b85b77ae5254320faccf8eae7ae9d1ae6f2493782937e163bf828b94f`.
+The exact verified IPA was uploaded successfully through EAS submission
+`78e47bf5-bfde-4b3e-9b3e-795f071302c6` to App Store Connect app `6825667307`.
+Local release logs and receipts are in `artifacts/qa/testflight-0.1.4/` (ignored).
+The GitHub Expo token remains a separate automation setup item; this release
+used the existing authenticated local signing/submission path.
+
+Apple build `882d1c99-3cd3-4802-9c0d-dc350b751545` was verified at
+2026-10-24 11:49 UTC as **VALID / IN_BETA_TESTING**, available in both existing
+`Internal Testing` and `CivicLens Internal` groups with the existing tester
+present. Release notes describe the discard flow. No new tester invitation or
+external/public release was made. Physical-device installation is not confirmed.
