@@ -57,3 +57,17 @@ test('uses a brief review explanation when authority lookup is unavailable', () 
   expect(screen.queryByText(/Topic hashtags/)).not.toBeOnTheScreen();
   expect(screen.queryByRole('button', { name: 'Confirm location & find authorities' })).not.toBeOnTheScreen();
 });
+
+test.each([
+  ['country_not_covered', 'Verified authority coverage is not available in IN yet.'],
+  ['area_not_covered', 'This location is outside our verified local coverage.'],
+  ['category_not_covered', 'We have not verified an office for this issue type here yet.'],
+  ['review_required', 'A reviewer needs to confirm the responsible office.'],
+])('explains %s without suggesting that GPS failed', async (reason, message) => {
+  (globalThis.fetch as jest.Mock).mockResolvedValueOnce(reply({ status: 'unverified', reason, authorities: [] }));
+  render(<AuthorityPreview token="test-session" category="waste" location={location} available />);
+  fireEvent.press(screen.getByRole('button', { name: 'Confirm location & find authorities' }));
+  expect(await screen.findByText(message)).toBeOnTheScreen();
+  expect(screen.getByText('Your location was checked. You can still submit for review; no office will be tagged until verified.')).toBeOnTheScreen();
+  expect(screen.queryByRole('checkbox')).not.toBeOnTheScreen();
+});

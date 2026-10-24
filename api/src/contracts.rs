@@ -131,8 +131,20 @@ pub struct AuthoritySuggestion {
 }
 
 #[derive(Deserialize, Serialize, TS)]
+#[serde(rename_all = "snake_case")]
+pub enum AuthorityPreviewReason {
+    CountryNotCovered,
+    AreaNotCovered,
+    CategoryNotCovered,
+    ReviewRequired,
+}
+
+#[derive(Deserialize, Serialize, TS)]
 pub struct AuthorityPreview {
     pub status: AuthorityPreviewStatus,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[ts(optional)]
+    pub reason: Option<AuthorityPreviewReason>,
     pub authorities: Vec<AuthoritySuggestion>,
 }
 
@@ -244,6 +256,7 @@ mod tests {
             AssistSuggestion::decl(),
             AuthorityPreviewInput::decl(),
             AuthorityPreviewStatus::decl(),
+            AuthorityPreviewReason::decl(),
             AuthoritySuggestion::decl(),
             AuthorityPreview::decl(),
             User::decl(),

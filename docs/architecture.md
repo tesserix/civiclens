@@ -83,7 +83,10 @@ municipality/police/department and optional parent offices (state leadership, CM
 etc.) only when their boundaries, responsibility, official account and sources
 are verified. Parent escalation is an explicit moderator choice, not mass tagging.
 No fabricated handles, assumed current officers, search-result scraping, or
-countrywide claim of coverage. The initial production directory is empty.
+countrywide claim of coverage. The pilot directory covers City of Melbourne waste
+and litter only; see docs/authority-sources/README.md for evidence, expiry and
+Australia/India expansion. Unverified previews distinguish missing country, area
+or category coverage from records needing review (ADR-0004).
 
 ## Publication and failure behavior
 

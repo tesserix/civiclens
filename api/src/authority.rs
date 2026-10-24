@@ -1,7 +1,7 @@
 use crate::{
     contracts::{
-        AuthorityPreview, AuthorityPreviewInput, AuthorityPreviewStatus, AuthoritySuggestion,
-        Category, Channel, Location,
+        AuthorityPreview, AuthorityPreviewInput, AuthorityPreviewReason, AuthorityPreviewStatus,
+        AuthoritySuggestion, Category, Channel, Location,
     },
     error::Error,
 };
@@ -168,7 +168,32 @@ pub fn preview_for(
             instagram: a.handles.instagram.clone(),
         })
         .collect();
+    let reason = if !authorities.is_empty() {
+        None
+    } else {
+        let country: Vec<_> = directory
+            .iter()
+            .filter(|a| a.country_code == l.country_code)
+            .collect();
+        let area: Vec<_> = country
+            .iter()
+            .filter(|a| {
+                Geometry::try_from(a.boundary.clone())
+                    .is_ok_and(|g| g.contains(&Point::new(l.longitude, l.latitude)))
+            })
+            .collect();
+        Some(if country.is_empty() {
+            AuthorityPreviewReason::CountryNotCovered
+        } else if area.is_empty() {
+            AuthorityPreviewReason::AreaNotCovered
+        } else if !area.iter().any(|a| a.categories.contains(&input.category)) {
+            AuthorityPreviewReason::CategoryNotCovered
+        } else {
+            AuthorityPreviewReason::ReviewRequired
+        })
+    };
     Ok(AuthorityPreview {
+        reason,
         status: if authorities.is_empty() {
             AuthorityPreviewStatus::Unverified
         } else {
@@ -247,6 +272,85 @@ mod preview_tests {
         let mut outside = input();
         outside.location.longitude = 90.0;
         assert!(preview_for(&[office()], &outside, now)
+            .unwrap()
+            .authorities
+            .is_empty());
+    }
+
+    #[test]
+    fn preview_explains_coverage_without_exposing_unverified_offices() {
+        let now = OffsetDateTime::parse("2026-10-24T00:00:00Z", &Rfc3339).unwrap();
+        let mut outside = input();
+        outside.location.longitude = 90.0;
+        let mut unsupported = input();
+        unsupported.category = Category::Roads;
+        let mut expired = office();
+        expired.expires_at = "2026-01-02T00:00:00Z".into();
+        for (directory, request, reason) in [
+            (vec![], input(), "country_not_covered"),
+            (vec![office()], outside, "area_not_covered"),
+            (vec![office()], unsupported, "category_not_covered"),
+            (vec![expired], input(), "review_required"),
+            (vec![office(), office()], input(), "review_required"),
+        ] {
+            let result =
+                serde_json::to_value(preview_for(&directory, &request, now).unwrap()).unwrap();
+            assert_eq!(result["reason"], reason);
+            assert_eq!(result["authorities"], json!([]));
+        }
+        let matched =
+            serde_json::to_value(preview_for(&[office()], &input(), now).unwrap()).unwrap();
+        assert!(matched["reason"].is_null());
+    }
+
+    #[test]
+    fn shipped_directory_routes_melbourne_waste_only_inside_the_official_boundary() {
+        let directory = load(concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/data/authorities.json"
+        ))
+        .unwrap();
+        let now = OffsetDateTime::parse("2026-10-24T12:00:00Z", &Rfc3339).unwrap();
+        let mut request = input();
+        request.location = Location {
+            latitude: -37.814,
+            longitude: 144.9633,
+            country_code: "AU".into(),
+            locality: "Melbourne".into(),
+        };
+        let result = preview_for(&directory, &request, now).unwrap();
+        assert_eq!(result.authorities.len(), 1);
+        assert_eq!(result.authorities[0].id, "au-vic-melbourne");
+        assert_eq!(
+            result.authorities[0].facebook.as_deref(),
+            Some("cityofmelbourne")
+        );
+        request.category = Category::PublicSafety;
+        assert!(preview_for(&directory, &request, now)
+            .unwrap()
+            .authorities
+            .is_empty());
+        request.category = Category::Waste;
+        for (latitude, longitude, country) in [
+            (-37.867, 144.978, "AU"), // St Kilda is a different municipality.
+            (-33.8688, 151.2093, "AU"),
+            (37.7749, -122.4194, "US"),
+            (12.9716, 77.5946, "IN"),
+            (-37.814, 144.9633, "IN"),
+        ] {
+            request.location.latitude = latitude;
+            request.location.longitude = longitude;
+            request.location.country_code = country.into();
+            assert!(preview_for(&directory, &request, now)
+                .unwrap()
+                .authorities
+                .is_empty());
+        }
+        request.location.latitude = -37.814;
+        request.location.longitude = 144.9633;
+        request.location.country_code = "AU".into();
+        let after_review = OffsetDateTime::parse("2027-02-01T00:00:00Z", &Rfc3339).unwrap();
+        assert!(preview_for(&directory, &request, after_review)
             .unwrap()
             .authorities
             .is_empty());
