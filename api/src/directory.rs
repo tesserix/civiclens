@@ -314,7 +314,7 @@ pub async fn load_verified(pool: &PgPool) -> Result<Vec<authority::Authority>, E
 }
 
 pub async fn status(pool: &PgPool) -> Result<serde_json::Value, Error> {
-    let rows = sqlx::query("SELECT DISTINCT ON (i.source_id) i.id,i.source_id,i.source_kind,i.source_url,i.licence_url,i.retrieved_at,i.snapshot_sha256,i.upstream_sha256,i.record_count,(SELECT count(*) FROM authority_directory_imports h WHERE h.source_id=i.source_id) AS versions FROM authority_directory_imports i ORDER BY i.source_id,i.retrieved_at DESC,i.created_at DESC,i.id DESC")
+    let rows = sqlx::query("SELECT DISTINCT ON (i.source_id) i.id,i.source_id,i.source_kind,i.source_url,i.licence_url,i.retrieved_at,i.snapshot_sha256,i.upstream_sha256,i.record_count,i.database_principal,(SELECT count(*) FROM authority_directory_imports h WHERE h.source_id=i.source_id) AS versions FROM authority_directory_imports i ORDER BY i.source_id,i.retrieved_at DESC,i.created_at DESC,i.id DESC")
         .fetch_all(pool).await?;
     let mut sources = Vec::new();
     for row in rows {
@@ -322,7 +322,7 @@ pub async fn status(pool: &PgPool) -> Result<serde_json::Value, Error> {
             "sourceKind":row.try_get::<String,_>("source_kind")?,"sourceUrl":row.try_get::<String,_>("source_url")?,"licenceUrl":row.try_get::<String,_>("licence_url")?,
             "retrievedAt":row.try_get::<OffsetDateTime,_>("retrieved_at")?.format(&Rfc3339).map_err(|_| Error::Internal)?,
             "snapshotSha256":row.try_get::<String,_>("snapshot_sha256")?,"upstreamSha256":row.try_get::<String,_>("upstream_sha256")?,
-            "recordCount":row.try_get::<i32,_>("record_count")?,"versions":row.try_get::<i64,_>("versions")?}));
+            "recordCount":row.try_get::<i32,_>("record_count")?,"databasePrincipal":row.try_get::<String,_>("database_principal")?,"versions":row.try_get::<i64,_>("versions")?}));
     }
     let counts: Vec<(String, i64)> = sqlx::query_as(
         "SELECT kind,count(*) FROM current_authority_directory GROUP BY kind ORDER BY kind",
@@ -457,6 +457,11 @@ pub(crate) mod tests {
             .unwrap();
         assert_eq!(source["recordCount"], 0);
         assert_eq!(source["versions"], 3);
+        let principal: String = sqlx::query_scalar("SELECT current_user")
+            .fetch_one(pool)
+            .await
+            .unwrap();
+        assert_eq!(source["databasePrincipal"], principal);
 
         let path = concat!(env!("CARGO_MANIFEST_DIR"), "/data/authorities.json");
         let reviewed = authority::load(path).unwrap();

@@ -14,7 +14,7 @@ use. Government Directory exports include historical people and appointments.
 
 Store immutable source snapshots and their records in the existing PostgreSQL
 schema. Every import retains source URL, licence, attribution, retrieval time,
-upstream SHA-256 and imported-file SHA-256. The current register is the latest
+upstream SHA-256, imported-file SHA-256 and database import principal. The current register is the latest
 complete snapshot per source; omitted entries leave current coverage but remain
 in history. Import and all records commit atomically under a per-source lock.
 Identical imports are idempotent; older snapshots cannot replace newer ones.

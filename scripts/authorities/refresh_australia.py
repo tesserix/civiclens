@@ -551,3 +551,10 @@ if __name__ == "__main__":
     except (ValueError, KeyError, ET.ParseError) as error:
         print(f"Import preparation rejected: {error}", file=sys.stderr)
         sys.exit(1)
+
+    except OSError:
+        print(
+            "Source refresh unavailable; no database records were changed. Check source and output files before retrying with the downloaded-file options.",
+            file=sys.stderr,
+        )
+        sys.exit(1)

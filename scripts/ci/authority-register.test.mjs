@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtempSync, writeFileSync, readFileSync, rmSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
@@ -128,5 +128,19 @@ test('matches Aboriginal shire and conjunction naming forms to their current sta
     assert.equal(result.status, 0, result.stderr);
     const data = JSON.parse(readFileSync(join(f.dir, 'out/wikidata-councils.json'), 'utf8'));
     assert.deepEqual(data.records.map(r => r.details.absRecordId).sort(), ['32330', '40520']);
+  } finally { rmSync(f.dir, { recursive: true }); }
+});
+
+test('reports an unavailable downloaded source without a traceback or partial replacement', () => {
+  const f = fixture();
+  try {
+    mkdirSync(join(f.dir, 'out'));
+    writeFileSync(join(f.dir, 'out/abs-2026.json'), 'previous snapshot');
+    rmSync(f.government);
+    const result = spawnSync('python3', f.args, { encoding: 'utf8' });
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /Source refresh unavailable; no database records were changed/);
+    assert.ok(!result.stderr.includes('Traceback'));
+    assert.equal(readFileSync(join(f.dir, 'out/abs-2026.json'), 'utf8'), 'previous snapshot');
   } finally { rmSync(f.dir, { recursive: true }); }
 });

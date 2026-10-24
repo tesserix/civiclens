@@ -13,6 +13,7 @@ CREATE TABLE authority_directory_imports (
     snapshot_sha256 text NOT NULL CHECK (snapshot_sha256 ~ '^[a-f0-9]{64}$'),
     record_count integer NOT NULL CHECK (record_count BETWEEN 0 AND 20000),
     created_at timestamptz NOT NULL DEFAULT now(),
+    database_principal text NOT NULL DEFAULT current_user,
     UNIQUE (source_id, snapshot_sha256),
     UNIQUE (id, source_kind),
     CHECK ((source_kind = 'reviewed') = (source_id = 'civiclens-reviewed-authorities'))

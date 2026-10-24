@@ -112,7 +112,7 @@ the upstream hash identifies the original response or saved source file.
 The migration command imports bundled reference manifests and reviewed routing
 records. Reference imports cannot claim reviewed-source identity or routing
 eligibility. `directory-status` reports source versions, hashes, counts and
-regional gaps without printing contact details. Local administrator commands:
+regional gaps and the importing database principal without printing contact details. Local administrator commands:
 
 ```sh
 cargo run -- migrate
