@@ -82,6 +82,7 @@ async fn capabilities(State(state): State<Arc<AppState>>) -> Json<crate::contrac
             whatsapp: false,
         },
         assist: config.assist_configured(),
+        assist_context: true,
         authority_preview: true,
     })
 }

@@ -1,9 +1,8 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { ActivityIndicator, KeyboardAvoidingView, Platform, Pressable, ScrollView, Switch, Text, View, useWindowDimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Image } from 'expo-image';
 import * as ImagePicker from 'expo-image-picker';
-import * as ImageManipulator from 'expo-image-manipulator';
 import * as FileSystem from 'expo-file-system/legacy';
 import { Ionicons } from '@expo/vector-icons';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -11,6 +10,11 @@ import { useFocusEffect, useRouter } from 'expo-router';
 import { Button, Chip, Field, Loading, Notice, Step, Title, Viewfinder, palette } from '../../src/ui';
 import { useSession } from '../../src/session';
 import { useDraft } from '../../src/useDraft';
+import { preparePhoto } from '../../src/report-photo';
+import { photoCoordinates, selectPhotoLocation } from '../../src/photo-location';
+import { captureWithLocation } from '../../src/camera-location';
+import { pointLocation } from '../../src/location';
+import { PlacePicker } from '../../src/place-picker';
 import { useDeviceLocation } from '../../src/useDeviceLocation';
 import { request } from '../../src/api';
 import { WritingAssist } from '../../src/writing-assist';
@@ -41,30 +45,34 @@ export default function Capture() {
     await client.invalidateQueries({ queryKey: ['reports', session?.user.id] });
     router.push('/(tabs)/reports');
   } });
+  const photoGeneration = useRef(0);
   const photo = async (camera: boolean) => {
+    const run = ++photoGeneration.current;
+    const active = () => run === photoGeneration.current;
     setWorking('photo'); setError(null);
     try {
       if (camera) {
         const permission = await ImagePicker.requestCameraPermissionsAsync();
         if (!permission.granted) throw new Error('Camera access is off. You can choose an existing photo instead, or enable access in Settings.');
       }
-      const result = camera ? await ImagePicker.launchCameraAsync({ mediaTypes: ['images'], quality: 0.8, exif: false })
-        : await ImagePicker.launchImageLibraryAsync({ mediaTypes: ['images'], quality: 0.8, exif: false });
+      const captured = camera ? await captureWithLocation(() => ImagePicker.launchCameraAsync({ mediaTypes: ['images'], quality: 0.8, exif: true })) : null;
+      const result = captured ? captured.result : await ImagePicker.launchImageLibraryAsync({ mediaTypes: ['images'], quality: 0.8, exif: true });
+      if (!active()) return;
       if (!result.canceled) {
-        const compressed = await ImageManipulator.manipulateAsync(result.assets[0].uri, [{ resize: { width: 1600 } }], { compress: 0.8, format: ImageManipulator.SaveFormat.JPEG });
-        let uri = compressed.uri;
-        if (Platform.OS !== 'web' && FileSystem.documentDirectory) {
-          uri = `${FileSystem.documentDirectory}civiclens-draft-${session?.user.id}.jpg`;
-          await FileSystem.copyAsync({ from: compressed.uri, to: uri });
-        }
-        update({ photoUri: uri });
+        const metadataPoint = photoCoordinates(result.assets[0].exif);
+        const point = metadataPoint || captured?.point || null;
+        const inferred = point && draft.locationSource !== 'manual' ? await pointLocation(point) : null;
+        if (!active()) return;
+        const uri = await preparePhoto(result.assets[0].uri);
+        if (!active()) return;
+        update({ photoUri: uri, ...selectPhotoLocation(draft, inferred, metadataPoint ? 'photo' : camera ? 'camera' : 'photo') });
       }
     } catch (e) { setError({ step: 'photo', message: e instanceof Error ? e.message : 'Could not open the camera. Please retry.' }); }
     finally { setWorking(''); }
   };
   const [focused, setFocused] = useState(false);
-  useFocusEffect(useCallback(() => { setFocused(true); return () => setFocused(false); }, []));
-  const deviceLocation = useDeviceLocation(ready && focused && !submit.isPending, draft.location, location => update({ location }));
+  useFocusEffect(useCallback(() => { setFocused(true); return () => { setFocused(false); photoGeneration.current++; };  }, []));
+  const deviceLocation = useDeviceLocation(ready && focused && !submit.isPending && working !== 'photo', draft.location, location => update({ location, locationSource: 'device' }), !draft.photoUri);
   if (!ready) return <SafeAreaView className="flex-1 justify-center bg-canvas"><Loading label="Opening your draft" /></SafeAreaView>;
   const located = !!draft.location && /^[A-Z]{2}$/.test(draft.location.countryCode) && draft.location.locality.trim().length > 1;
   const described = draft.description.trim().length >= 10;
@@ -97,12 +105,14 @@ export default function Capture() {
       </Step>
 
       <Step number={3} title="Where is it?" done={located}>
-        {draft.location ? <LocationFields value={draft.location} disabled={locked || deviceLocation.busy} onChange={location => update({ location })} /> : <Text className="text-sm leading-5 text-muted">We detect your device location automatically. Stay near the issue; only the town or city is shown publicly.</Text>}
+        {draft.location ? <LocationFields value={draft.location} disabled={locked || deviceLocation.busy || working === 'photo'} onChange={location => update({ location, locationSource: 'manual' })} /> : <Text className="text-sm leading-5 text-muted">{draft.photoUri ? 'This photo has no usable location. Choose where the issue happened, or use your current location if you are still there.' : 'We detect your device location automatically. Stay near the issue and check the suggested place.'}</Text>}
+        {draft.location ? <Text className="text-xs leading-5 text-muted">{draft.locationSource === 'manual' ? 'Location chosen by you.' : draft.locationSource === 'photo' ? 'Location suggested from photo metadata. Check that it matches the issue.' : draft.locationSource === 'camera' ? 'Device location recorded with this camera photo.' : 'Current device location. Check that this is where the issue happened.'}</Text> : null}
+        <PlacePicker disabled={locked || deviceLocation.busy || working === 'photo'} onChoose={location => update({location, locationSource:'manual'})}/>
         {deviceLocation.busy ? <Text accessibilityLiveRegion="polite" className="text-sm text-muted">Detecting your device location…</Text> : null}
-        <Button title={draft.location ? 'Refresh device location' : 'Retry location'} variant="secondary" compact icon="navigate-outline" busy={deviceLocation.busy} disabled={working === 'photo' || locked} onPress={() => void deviceLocation.locate()} />
+        <Button title="Use current device location" variant="secondary" compact icon="navigate-outline" busy={deviceLocation.busy} disabled={working === 'photo' || locked} onPress={() => void deviceLocation.locate()} />
         {deviceLocation.error ? <Notice>{deviceLocation.error}</Notice> : null}
         {deviceLocation.settingsNeeded && Platform.OS !== 'web' ? <Button title="Open location settings" variant="secondary" onPress={() => void deviceLocation.openSettings()} /> : null}
-        {session ? <AuthorityPreview userId={session.user.id} token={session.token} category={draft.category} location={draft.location} available={capabilities.data?.authorityPreview === true} disabled={locked || working !== '' || deviceLocation.busy} /> : null}
+        {session ? <AuthorityPreview automatic={!!draft.photoUri} userId={session.user.id} token={session.token} category={draft.category} location={draft.location} available={capabilities.data?.authorityPreview === true} disabled={locked || working !== '' || deviceLocation.busy} /> : null}
       </Step>
 
       <Step number={4} title="Describe it" done={described}>
@@ -111,7 +121,7 @@ export default function Capture() {
           onChangeText={description => update({ description })} style={{ minHeight: 120, textAlignVertical: 'top' }} />
         {session ? <WritingAssist userId={session.user.id} token={session.token} category={draft.category} description={draft.description}
           hasPhoto={!!draft.photoUri} readPhoto={readPhoto} onUse={description => update({ description })} disabled={locked || working !== ''}
-          available={capabilities.data?.assist === true} sourceId={draft.key} /> : null}
+          available={capabilities.data?.assist === true} sourceId={draft.key} location={draft.location} contextual={capabilities.data?.assistContext === true} /> : null}
       </Step>
 
       <Step number={5} title="Share after review" done={shared}>

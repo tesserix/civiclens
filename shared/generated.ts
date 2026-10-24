@@ -1,19 +1,21 @@
 // Generated from Rust. Run cargo test export_mobile_contract.
 export type BrokerConfiguration = { issuer: string, organizationId: string, projectId: string, iosClientId: string, androidClientId: string, googleIdpId: string, facebookIdpId: string, appleIdpId: string, };
 export type PublishingCapabilities = { facebook: boolean, instagram: boolean, whatsapp: boolean, };
-export type Capabilities = { google: boolean, facebook: boolean, apple: boolean, auth: BrokerConfiguration, publishing: PublishingCapabilities, assist: boolean, authorityPreview: boolean, };
+export type Capabilities = { google: boolean, facebook: boolean, apple: boolean, auth: BrokerConfiguration, publishing: PublishingCapabilities, assist: boolean, assistContext: boolean, authorityPreview: boolean, };
 export type Category = "waste" | "pollution" | "roads" | "water" | "public_safety";
 export type Channel = "facebook" | "instagram" | "whatsapp";
 export type Location = { latitude: number, longitude: number, countryCode: string, locality: string, };
 export type ReportInput = { category: Category, description: string, location: Location, photoBase64: string, channels: Array<Channel>, consent: boolean, };
 export type AssistMode = "draft" | "correct";
-export type AssistInput = { mode: AssistMode, category: Category, language: string, text: string, photoBase64: string | null, };
+export type AssistTone = "serious" | "satirical" | "balanced";
+export type AssistPlace = { locality: string, countryCode: string, };
+export type AssistInput = { mode: AssistMode, category: Category, language: string, text: string, photoBase64: string | null, tone?: AssistTone, place?: AssistPlace, };
 export type AssistSuggestion = { text: string, };
 export type AuthorityPreviewInput = { category: Category, location: Location, };
 export type AuthorityPreviewStatus = "matched" | "unverified";
 export type AuthorityPreviewReason = "country_not_covered" | "area_not_covered" | "category_not_covered" | "review_required";
 export type AuthoritySuggestion = { id: string, name: string, officialUrl: string, sourceUrl: string, verifiedAt: string, expiresAt: string, facebook: string | null, instagram: string | null, };
-export type AuthorityPreview = { status: AuthorityPreviewStatus, reason?: AuthorityPreviewReason, authorities: Array<AuthoritySuggestion>, };
+export type AuthorityPreview = { status: AuthorityPreviewStatus, reason?: AuthorityPreviewReason, authorities: Array<AuthoritySuggestion>, hashtags?: Array<string>, };
 export type User = { id: string, nickname: string, };
 export type Session = { token: string, user: User, expiresAt: string, };
 export type LoginInput = { token: string, challengeId: string, nickname: string | null, };

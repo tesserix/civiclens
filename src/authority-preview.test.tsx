@@ -71,3 +71,10 @@ test.each([
   expect(screen.getByText('Your location was checked. You can still submit for review; no office will be tagged until verified.')).toBeOnTheScreen();
   expect(screen.queryByRole('checkbox')).not.toBeOnTheScreen();
 });
+
+test('automatically resolves a photo location and shows server-supplied verified tags', async()=>{
+  (globalThis.fetch as jest.Mock).mockResolvedValue(reply({...match,hashtags:['#CivicLens','#CityOfMelbourne']}));
+  render(<AuthorityPreview token="test-session" category="waste" location={location} available automatic/>);
+  expect(await screen.findByText('Test Municipality')).toBeOnTheScreen();
+  expect(screen.getByText('#CivicLens #CityOfMelbourne')).toBeOnTheScreen();
+});

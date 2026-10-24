@@ -24,6 +24,8 @@ pub struct Authority {
     pub expires_at: String,
     pub handles: Handles,
     pub parents: Vec<String>,
+    #[serde(default)]
+    pub topic_tags: Vec<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -50,6 +52,12 @@ pub fn validate(authorities: &[Authority]) -> Result<(), Error> {
             || a.name.contains(['@', '#'])
             || a.country_code.len() != 2
             || a.parents.len() > 5
+            || a.topic_tags.len() > 8
+            || a.topic_tags.iter().any(|tag| {
+                !(2..=81).contains(&tag.len())
+                    || !tag.starts_with('#')
+                    || !tag[1..].bytes().all(|byte| byte.is_ascii_alphanumeric())
+            })
             || OffsetDateTime::parse(&a.verified_at, &Rfc3339).is_err()
             || OffsetDateTime::parse(&a.expires_at, &Rfc3339).is_err()
             || !matches!(
@@ -111,6 +119,38 @@ pub fn route<'a>(
     }
 }
 
+fn hashtags(authorities: &[&Authority], category: Category) -> Vec<String> {
+    let mut tags = vec!["#CivicLens".to_owned(), "#BetterTogether".to_owned()];
+    let topics = match category {
+        Category::Waste => ["#Litter", "#WasteManagement"],
+        Category::Pollution => ["#Pollution", "#Environment"],
+        Category::Roads => ["#RoadMaintenance", "#RoadSafety"],
+        Category::Water => ["#Water", "#WaterManagement"],
+        Category::PublicSafety => ["#PublicSafety", "#CommunitySafety"],
+    };
+    tags.extend(topics.map(str::to_owned));
+    for authority in authorities {
+        for tag in &authority.topic_tags {
+            if !tags.contains(tag) {
+                tags.push(tag.clone());
+            }
+        }
+        let name: String = authority
+            .name
+            .chars()
+            .filter(char::is_ascii_alphanumeric)
+            .take(80)
+            .collect();
+        if !name.is_empty() {
+            let tag = format!("#{name}");
+            if !tags.contains(&tag) {
+                tags.push(tag);
+            }
+        }
+    }
+    tags
+}
+
 pub fn caption(
     nickname: &str,
     description: &str,
@@ -118,6 +158,7 @@ pub fn caption(
     location: &Location,
     authorities: &[&Authority],
     channel: Channel,
+    category: Category,
 ) -> String {
     let clean = |s: &str| {
         s.chars()
@@ -138,8 +179,8 @@ pub fn caption(
         })
         .collect::<Vec<_>>()
         .join(", ");
-    format!("{}\n\n{}\n\nApproximate location: {:.2}, {:.2} ({})\n\nReported by {} via CivicLens. Community report; awaiting official verification.\nResponsible offices: {}\n\n#CivicLens #BetterTogether",
-        clean(locality), clean(description), location.latitude, location.longitude, location.country_code, nickname, offices)
+    format!("{}\n\n{}\n\nApproximate location: {:.2}, {:.2} ({})\n\nReported by {} via CivicLens. Community report; awaiting official verification.\nResponsible offices: {}\n\n{}",
+        clean(locality), clean(description), location.latitude, location.longitude, location.country_code, nickname, offices, hashtags(authorities, category).join(" "))
 }
 
 pub fn preview_for(
@@ -160,7 +201,13 @@ pub fn preview_for(
             "Confirm a valid location before looking up authorities.",
         ));
     }
-    let authorities: Vec<_> = route(directory, l, input.category, now)
+    let routed = route(directory, l, input.category, now);
+    let tags = if routed.is_empty() {
+        vec![]
+    } else {
+        hashtags(&routed, input.category)
+    };
+    let authorities: Vec<_> = routed
         .into_iter()
         .map(|a| AuthoritySuggestion {
             id: a.id.clone(),
@@ -205,6 +252,7 @@ pub fn preview_for(
             AuthorityPreviewStatus::Matched
         },
         authorities,
+        hashtags: Some(tags),
     })
 }
 
@@ -273,6 +321,7 @@ mod preview_tests {
             let result = preview_for(&directory, &input(), now).unwrap();
             assert!(matches!(result.status, AuthorityPreviewStatus::Unverified));
             assert!(result.authorities.is_empty());
+            assert_eq!(result.hashtags, Some(vec![]));
         }
         let mut outside = input();
         outside.location.longitude = 90.0;

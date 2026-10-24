@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { AppState, Linking } from 'react-native';
 import * as Device from 'expo-location';
+import { deadline, pointLocation } from './location';
+import { deviceCoordinates } from './photo-location';
 import type { Location } from '../shared/contracts';
 
-export function useDeviceLocation(enabled: boolean, value: Location | null, onChange: (location: Location) => void) {
+export function useDeviceLocation(enabled: boolean, value: Location | null, onChange: (location: Location) => void, automatic = true) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const [settingsNeeded, setSettingsNeeded] = useState(false);
@@ -32,22 +34,15 @@ export function useDeviceLocation(enabled: boolean, value: Location | null, onCh
       }
       const position = await deadline(Device.getCurrentPositionAsync({ accuracy: Device.Accuracy.High }), 15000);
       if (!active()) return;
-      const { latitude, longitude, accuracy } = position.coords;
-      if (!Number.isFinite(latitude) || !Number.isFinite(longitude) || Math.abs(latitude) > 90 || Math.abs(longitude) > 180
-        || !Number.isFinite(position.timestamp) || Math.abs(Date.now() - position.timestamp) > 120000
-        || accuracy === null || !Number.isFinite(accuracy) || accuracy < 0 || accuracy > 100) {
+      const point = deviceCoordinates(position, Date.now());
+      if (!point) {
         setError('A precise current location is needed. Enable Precise Location, move to an open area and retry.');
         setSettingsNeeded(true); return;
       }
-      let countryCode = ''; let locality = '';
-      try {
-        const [place] = await deadline(Device.reverseGeocodeAsync({ latitude, longitude }), 8000);
-        countryCode = place?.isoCountryCode?.toUpperCase() || '';
-        locality = [place?.city || place?.district, place?.region].filter(Boolean).join(', ');
-      } catch { /* Coordinates remain usable when address lookup is unavailable. */ }
+      const location = await pointLocation(point);
       if (!active()) return;
-      if (!/^[A-Z]{2}$/.test(countryCode) || !locality.trim()) setError('Device location detected. Enter the town or city and two-letter country code below.');
-      current.current.onChange({ latitude, longitude, countryCode, locality });
+      if (!/^[A-Z]{2}$/.test(location.countryCode) || !location.locality.trim()) setError('Device location detected. Enter the town or city and two-letter country code below.');
+      current.current.onChange(location);
     } catch {
       if (active()) setError('Could not get your current device location. Move to an open area and retry.');
     } finally {
@@ -56,21 +51,14 @@ export function useDeviceLocation(enabled: boolean, value: Location | null, onCh
   }, []);
   const hasLocation = value !== null;
   useEffect(() => {
-    if (enabled && !hasLocation) void locate(false);
+    if (enabled && automatic && !hasLocation) void locate(false);
     else setBusy(false);
     const subscription = AppState.addEventListener('change', state => {
       if (state === 'background') { generation.current++; inFlight.current = false; setBusy(false); }
-      if (state === 'active' && enabled && !hasLocation) void locate(false);
+      if (state === 'active' && enabled && automatic && !hasLocation) void locate(false);
     });
     return () => { generation.current++; inFlight.current = false; subscription.remove(); };
-  }, [enabled, hasLocation, locate]);
+  }, [enabled, hasLocation, automatic, locate]);
   const openSettings = () => Linking.openSettings().catch(() => setError('Open your device Settings and allow CivicLens to use your precise location.'));
   return { busy: enabled && busy, error, settingsNeeded, locate, openSettings };
-}
-
-async function deadline<T>(operation: Promise<T>, ms: number): Promise<T> {
-  let timer: ReturnType<typeof setTimeout> | undefined;
-  try {
-    return await Promise.race([operation, new Promise<never>((_, reject) => { timer = setTimeout(() => reject(new Error('Location timed out')), ms); })]);
-  } finally { clearTimeout(timer); }
 }

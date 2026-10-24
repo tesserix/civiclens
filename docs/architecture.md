@@ -43,6 +43,16 @@ uses an HMAC of issuer + subject with a dedicated runtime application key.
 Nicknames are unique case-insensitively; auto names have random suffixes and a
 database uniqueness constraint. Provider linking belongs to the broker's verified identity policy; the API never links by email. Loss/rotation of the HMAC key needs a planned account migration.
 
+## Photo location
+
+Before resizing a selected photo, read only its validated GPS metadata. Camera
+capture samples fresh foreground device GPS while the native camera is open.
+An explicit user-selected point takes precedence; a gallery photo with no usable
+GPS clears an unrelated device point and asks for a location. Native place search
+moves the point used for council-boundary routing. Editing town/country labels
+alone does not move it. Precise coordinates remain private; writing assist receives
+only the chosen town/city and country. See ADR-0006 for deadlines and failure paths.
+
 ## Writing assist
 
 Optional help with the description, through the Tesserix private AI gateway
@@ -50,13 +60,52 @@ Optional help with the description, through the Tesserix private AI gateway
 in the reporter's chosen language; "Fix spelling" corrects text without
 translating it. The API calls the logical model `civiclens-compose` at the
 dedicated in-cluster `civiclens-ai` gateway with a product client key; the gateway owns the
-provider, quotas and model choice. Suggestions are never applied without the
+provider, quotas and model choice. New clients offer Serious, Light satire and Balanced tones when `assistContext`
+is advertised. Omitted tone defaults to Serious. Humour remains factual, constructive
+and free of personal attacks or unsupported blame. Draft replies must explicitly
+confirm the selected issue is visible and identifying details are absent; missing
+or malformed verdicts fail closed. Model checks cannot establish photo authenticity
+or replace human review. Verified routing records supply authority mentions and
+topic tags separately from generated prose. Suggestions are never applied without the
 reporter's tap and still pass normal description validation and human review.
 Limits: 20 requests per account per 15 minutes per replica, 15 s deadline, 64 KB
 reply cap. Logs record mode, language, latency and outcome, never text or photos.
 When the gateway or key is missing, capabilities report `assist: false` and the
 app disables the actions with an explanation; a gateway failure returns 503 and leaves the text as is.
 Native keyboard spellcheck stays on for typing.
+
+### Caption style and tagging rules
+
+All drafting tones use the reporter's preferred language. English should sound
+like a local person talking: familiar words, natural contractions and readable
+sentences. Keep useful visible detail; a caption need not be shortened for humour.
+Avoid stiff official phrasing, forced jokes and stock slogans. Serious stays clear
+and direct; Light satire can be noticeably funny and playfully sarcastic about
+the mess; Balanced combines a witty observation with facts and a serious request
+for action. Encourage shared responsibility without identifying or inventing a
+culprit. Criticism of service delivery must not invent a history of neglect or blame.
+
+For example, a litter caption could say: “Lovely, the grass has started its own
+rubbish collection. Blue and white litter is scattered around this patch of
+Melbourne, giving the place a look nobody ordered. Can we get a clean-up here?
+And for the next round, let’s give the bins a go.” This is a style example, not a
+verified incident. Describe only supported details in an actual report.
+
+The model writes prose; it must not invent hashtags, mentions, council names or
+contact details. The API separately adds fixed issue-topic hashtags and the
+matched authority's reviewed topic tags and name hashtag. Reviewed topic tags
+cover applicable city, region and country identities. Do not derive city tags from
+an editable locality label, scrape result or model guess. The same helper supplies
+the preview and reviewed public caption. No verified match means no authority or
+place tags. Relevant groups, agencies, ministers and mayors require reviewed
+responsibility and account evidence before mentions; parent escalation remains a
+moderator decision. Hashtags are topic labels, not proof that an account was
+notified or a Facebook group received the post.
+
+Every tone retains profanity/harassment checks, photo privacy checks, factuality,
+reporter approval and moderator review before publishing. Exact coordinates stay
+out of model context and public hashtags. Emulator fixtures must be visibly labelled
+and their results kept distinct from live-provider evaluation.
 
 ## Geography and responsibility
 

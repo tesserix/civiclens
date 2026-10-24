@@ -131,3 +131,12 @@ test('does not begin acquisition if the app mounts in the background', async () 
   view.unmount(); AppState.currentState = state;
   expect(calls).toBe(0);
 });
+
+test('does not silently substitute current GPS for an uploaded photo with no metadata', async () => {
+  const changed = jest.fn();
+  const view = renderHook(() => useDeviceLocation(true, null, changed, false));
+  await act(async () => {});
+  expect(Device.getCurrentPositionAsync).not.toHaveBeenCalled();
+  await act(async () => { await view.result.current.locate(); });
+  expect(changed).toHaveBeenCalledWith(place);
+});

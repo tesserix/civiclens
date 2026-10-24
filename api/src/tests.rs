@@ -35,6 +35,8 @@ fn assist_input(mode: contracts::AssistMode, language: &str, text: &str) -> cont
         language: language.into(),
         text: text.into(),
         photo_base64: Some("photo".into()),
+        tone: None,
+        place: None,
     }
 }
 
@@ -124,9 +126,16 @@ async fn gateway_replying(status: StatusCode, content: &str) -> (String, Capture
 #[tokio::test]
 async fn draft_assist_sends_the_logical_model_language_and_photo_to_the_gateway() {
     let thai = "ถนนมีหลุมขนาดใหญ่หน้าตลาด รถจักรยานยนต์เสี่ยงล้ม";
-    let reply = json!({ "text": format!("  {thai}\n") }).to_string();
+    let reply =
+        json!({ "text": format!("  {thai}\n"), "issueVisible":true, "identifyingDetails":false })
+            .to_string();
     let (gateway, captured) = gateway_replying(StatusCode::OK, &reply).await;
-    let input = assist_input(contracts::AssistMode::Draft, "th", "near the market");
+    let mut input = assist_input(contracts::AssistMode::Draft, "th", "near the market");
+    input.tone = Some(contracts::AssistTone::Balanced);
+    input.place = Some(contracts::AssistPlace {
+        locality: "Melbourne, VIC".into(),
+        country_code: "AU".into(),
+    });
     let suggestion = assist::complete(
         &reqwest::Client::new(),
         &gateway,
@@ -158,7 +167,7 @@ async fn draft_assist_sends_the_logical_model_language_and_photo_to_the_gateway(
         serde_json::from_str(body["messages"][1]["content"][0]["text"].as_str().unwrap()).unwrap();
     assert_eq!(
         task,
-        json!({"category":"roads","language":"th","notes":"near the market"})
+        json!({"category":"roads","language":"th","notes":"near the market","tone":"balanced","place":{"locality":"Melbourne, VIC","countryCode":"AU"}})
     );
     assert_eq!(
         body["messages"][1]["content"][1]["image_url"]["url"],
@@ -270,6 +279,7 @@ fn public_caption_uses_reviewed_text_pseudonym_and_approximate_location() {
         &location,
         &[&office],
         contracts::Channel::Facebook,
+        contracts::Category::Waste,
     );
     assert!(caption.contains("RiverFox"));
     assert!(caption.contains("15.12, 75.99"));
@@ -1108,8 +1118,11 @@ async fn draft_assist_rejects_model_generated_mentions_and_links() {
         "Contact https://unknown.invalid for help",
         "Email private@example.invalid about this",
     ] {
-        let (gateway, _) =
-            gateway_replying(StatusCode::OK, &json!({"text":text}).to_string()).await;
+        let (gateway, _) = gateway_replying(
+            StatusCode::OK,
+            &json!({"text":text,"issueVisible":true,"identifyingDetails":false}).to_string(),
+        )
+        .await;
         assert!(
             matches!(
                 assist::complete(
@@ -1124,5 +1137,151 @@ async fn draft_assist_rejects_model_generated_mentions_and_links() {
             ),
             "accepted unverified contact: {text}"
         );
+    }
+}
+
+#[test]
+fn writing_accepts_only_known_tones_and_coarse_place_context() {
+    let value = json!({"mode":"draft","category":"waste","language":"en","text":"","photoBase64":"photo","tone":"balanced","place":{"locality":"Melbourne, VIC","countryCode":"AU"}});
+    let input: contracts::AssistInput = serde_json::from_value(value.clone()).unwrap();
+    assert!(assist::validate(&input).is_ok());
+    let mut bad = value.clone();
+    bad["tone"] = json!("insult people");
+    assert!(serde_json::from_value::<contracts::AssistInput>(bad).is_err());
+    for tone in ["serious", "satirical", "balanced"] {
+        let mut valid = value.clone();
+        valid["tone"] = json!(tone);
+        assert!(assist::validate(&serde_json::from_value(valid).unwrap()).is_ok());
+    }
+    for locality in ["", "\nMelbourne", &"x".repeat(121)] {
+        let mut bad = value.clone();
+        bad["place"]["locality"] = json!(locality);
+        assert!(assist::validate(&serde_json::from_value(bad).unwrap()).is_err());
+    }
+    let mut precise = value.clone();
+    precise["place"]["latitude"] = json!(-37.814);
+    assert!(serde_json::from_value::<contracts::AssistInput>(precise).is_err());
+    let mut bad = value;
+    bad["place"]["countryCode"] = json!("Australia");
+    assert!(assist::validate(&serde_json::from_value(bad).unwrap()).is_err());
+}
+
+#[tokio::test]
+async fn photo_drafting_holds_unclear_or_identifying_images() {
+    for (visible, identifying) in [(false, false), (true, true)] {
+        let reply = json!({"text":"Rubbish is visible in a public area.","issueVisible":visible,"identifyingDetails":identifying}).to_string();
+        let (gateway, _) = gateway_replying(StatusCode::OK, &reply).await;
+        let result = assist::complete(
+            &reqwest::Client::new(),
+            &gateway,
+            "test-key",
+            &assist_input(contracts::AssistMode::Draft, "en", ""),
+            Some(b"jpeg"),
+        )
+        .await;
+        assert!(
+            matches!(result, Err(error::Error::PhotoRejected(_))),
+            "unsafe or unclear image produced a usable caption"
+        );
+    }
+}
+
+#[test]
+fn council_topic_tags_come_from_verified_routing_and_are_shared_with_the_public_caption() {
+    let directory = authority::load(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/data/authorities.json"
+    ))
+    .unwrap();
+    let now = time::OffsetDateTime::parse(
+        "2026-10-24T12:00:00Z",
+        &time::format_description::well_known::Rfc3339,
+    )
+    .unwrap();
+    let mut input = contracts::AuthorityPreviewInput {
+        category: contracts::Category::Waste,
+        location: contracts::Location {
+            latitude: -37.814,
+            longitude: 144.9633,
+            country_code: "AU".into(),
+            locality: "Sydney, @UnverifiedGroup".into(),
+        },
+    };
+    let preview =
+        serde_json::to_value(authority::preview_for(&directory, &input, now).unwrap()).unwrap();
+    let tags = preview["hashtags"].as_array().unwrap();
+    for tag in [
+        "#CityofMelbourne",
+        "#Melbourne",
+        "#Victoria",
+        "#Australia",
+        "#Litter",
+        "#WasteManagement",
+    ] {
+        assert!(tags.contains(&json!(tag)), "missing relevant tag {tag}");
+    }
+    let routed = authority::route(&directory, &input.location, input.category, now);
+    let caption = authority::caption(
+        "RiverFox",
+        "Litter is scattered on the grass.",
+        "Melbourne",
+        &input.location,
+        &routed,
+        contracts::Channel::Facebook,
+        contracts::Category::Waste,
+    );
+    for tag in tags {
+        assert!(caption.contains(tag.as_str().unwrap()));
+    }
+    assert!(!caption.contains("#Sydney"));
+    assert!(!caption.contains("#UnverifiedGroup"));
+    assert!(caption.contains("@cityofmelbourne"));
+    input.location.latitude = -33.8688;
+    input.location.longitude = 151.2093;
+    let absent =
+        serde_json::to_value(authority::preview_for(&directory, &input, now).unwrap()).unwrap();
+    assert!(absent["hashtags"]
+        .as_array()
+        .is_none_or(|tags| tags.is_empty()));
+}
+
+#[tokio::test]
+async fn photo_drafting_fails_closed_when_model_verdict_is_missing_or_malformed() {
+    for reply in [
+        json!({"text":"Rubbish is visible beside the path."}),
+        json!({"text":"Rubbish is visible beside the path.","issueVisible":"yes","identifyingDetails":false}),
+        json!({"text":"Rubbish is visible beside the path.","issueVisible":true,"identifyingDetails":null}),
+    ] {
+        let (gateway, _) = gateway_replying(StatusCode::OK, &reply.to_string()).await;
+        let result = assist::complete(
+            &reqwest::Client::new(),
+            &gateway,
+            "test-key",
+            &assist_input(contracts::AssistMode::Draft, "en", ""),
+            Some(b"jpeg"),
+        )
+        .await;
+        assert!(matches!(result, Err(error::Error::Unavailable)));
+    }
+}
+
+#[test]
+fn reviewed_topic_tags_reject_mentions_links_and_unbounded_lists() {
+    let directory = authority::load(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/data/authorities.json"
+    ))
+    .unwrap();
+    for tags in [
+        vec!["@UnverifiedGroup".to_string()],
+        vec!["#City https://example.invalid".to_string()],
+        vec!["#Bad#Tag".to_string()],
+        vec!["#".to_string()],
+        vec!["#Good".to_string(); 9],
+        vec![format!("#{}", "x".repeat(81))],
+    ] {
+        let mut bad = directory.clone();
+        bad[0].topic_tags = tags;
+        assert!(authority::validate(&bad).is_err());
     }
 }
