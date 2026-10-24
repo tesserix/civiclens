@@ -272,14 +272,13 @@ fn public_caption_uses_reviewed_text_pseudonym_and_approximate_location() {
         locality: "Private exact address".into(),
     };
     let office = office("test");
+    let report = caption_report(location.clone());
     let caption = authority::caption(
-        "RiverFox",
+        &report,
         "Rubbish blocking a footpath @privateperson",
         "Test city",
-        &location,
         &[&office],
         contracts::Channel::Facebook,
-        contracts::Category::Waste,
     );
     assert!(caption.contains("RiverFox"));
     assert!(caption.contains("15.12, 75.99"));
@@ -297,6 +296,18 @@ async fn send(
     body: Value,
     key: Option<uuid::Uuid>,
 ) -> (StatusCode, Value) {
+    send_from(app, method, path, token, body, key, None).await
+}
+
+async fn send_from(
+    app: &axum::Router,
+    method: &str,
+    path: &str,
+    token: Option<&str>,
+    body: Value,
+    key: Option<uuid::Uuid>,
+    address: Option<std::net::SocketAddr>,
+) -> (StatusCode, Value) {
     let mut builder = Request::builder()
         .method(method)
         .uri(path)
@@ -306,6 +317,9 @@ async fn send(
     }
     if let Some(key) = key {
         builder = builder.header("idempotency-key", key.to_string());
+    }
+    if let Some(address) = address {
+        builder = builder.extension(axum::extract::ConnectInfo(address));
     }
     let response = app
         .clone()
@@ -570,6 +584,7 @@ async fn database_enforces_ownership_roles_idempotency_and_transactional_publica
         .encode(&[20, 90, 60], 1, 1, image::ExtendedColorType::Rgb8)
         .unwrap();
     let body = json!({"category":"waste","description":"Private original description, not a public caption.","location":{"latitude":15.123456,"longitude":75.123456,"countryCode":"IN","locality":"Private address"},"photoBase64":STANDARD.encode(jpeg),"channels":["facebook","instagram","whatsapp"],"consent":true});
+    let hashtag_report_body = body.clone();
     let key = uuid::Uuid::new_v4();
     let busy = state
         .photo_slots
@@ -1023,6 +1038,98 @@ async fn database_enforces_ownership_roles_idempotency_and_transactional_publica
         .0,
         StatusCode::UNPROCESSABLE_ENTITY
     );
+    let mut chosen_body = hashtag_report_body.clone();
+    chosen_body["hashtags"] = json!(["#Litter"]);
+    let chosen_key = uuid::Uuid::new_v4();
+    let chosen_address = Some("192.0.2.74:1234".parse().unwrap());
+    let (chosen_status, chosen_report) = send_from(
+        &app,
+        "POST",
+        "/v1/reports",
+        Some(&users[1].1),
+        chosen_body.clone(),
+        Some(chosen_key),
+        chosen_address,
+    )
+    .await;
+    assert_eq!(chosen_status, StatusCode::OK, "{chosen_report}");
+    assert_eq!(chosen_report["hashtags"], json!(["#Litter"]));
+    let (repeated_status, repeated_report) = send_from(
+        &app,
+        "POST",
+        "/v1/reports",
+        Some(&users[1].1),
+        chosen_body,
+        Some(chosen_key),
+        chosen_address,
+    )
+    .await;
+    assert_eq!(repeated_status, StatusCode::OK);
+    assert_eq!(repeated_report, chosen_report);
+    let mut no_tags = hashtag_report_body.clone();
+    no_tags["hashtags"] = json!([]);
+    assert_eq!(
+        send_from(
+            &app,
+            "POST",
+            "/v1/reports",
+            Some(&users[1].1),
+            no_tags.clone(),
+            Some(chosen_key),
+            chosen_address
+        )
+        .await
+        .0,
+        StatusCode::CONFLICT
+    );
+    let (empty_status, empty_report) = send_from(
+        &app,
+        "POST",
+        "/v1/reports",
+        Some(&users[1].1),
+        no_tags,
+        Some(uuid::Uuid::new_v4()),
+        chosen_address,
+    )
+    .await;
+    assert_eq!(empty_status, StatusCode::OK);
+    assert_eq!(empty_report["hashtags"], json!([]));
+    for tags in [
+        json!(["#InventedCouncil"]),
+        json!(["#Melbourne"]),
+        json!(["#Litter", "#Litter"]),
+        json!(["#"]),
+        json!(vec!["#Litter"; 65]),
+    ] {
+        let mut invalid_tags = hashtag_report_body.clone();
+        invalid_tags["hashtags"] = tags;
+        let (status, _) = send_from(
+            &app,
+            "POST",
+            "/v1/reports",
+            Some(&users[1].1),
+            invalid_tags,
+            Some(uuid::Uuid::new_v4()),
+            chosen_address,
+        )
+        .await;
+        assert_eq!(status, StatusCode::BAD_REQUEST);
+    }
+    let chosen_path = format!("/v1/reports/{}", chosen_report["id"].as_str().unwrap());
+    assert_eq!(
+        send_from(
+            &app,
+            "GET",
+            &chosen_path,
+            Some(&users[0].1),
+            json!({}),
+            None,
+            chosen_address
+        )
+        .await
+        .0,
+        StatusCode::NOT_FOUND
+    );
     drop(app);
     let state = Arc::get_mut(&mut state).unwrap();
     state.config.publishing_enabled = true;
@@ -1221,14 +1328,13 @@ fn council_topic_tags_come_from_verified_routing_and_are_shared_with_the_public_
         assert!(tags.contains(&json!(tag)), "missing relevant tag {tag}");
     }
     let routed = authority::route(&directory, &input.location, input.category, now);
+    let report = caption_report(input.location.clone());
     let caption = authority::caption(
-        "RiverFox",
+        &report,
         "Litter is scattered on the grass.",
         "Melbourne",
-        &input.location,
         &routed,
         contracts::Channel::Facebook,
-        contracts::Category::Waste,
     );
     for tag in tags {
         assert!(caption.contains(tag.as_str().unwrap()));
@@ -1284,4 +1390,51 @@ fn reviewed_topic_tags_reject_mentions_links_and_unbounded_lists() {
         bad[0].topic_tags = tags;
         assert!(authority::validate(&bad).is_err());
     }
+}
+
+fn caption_report(location: contracts::Location) -> contracts::Report {
+    contracts::Report {
+        id: "qa-report".into(),
+        nickname: "RiverFox".into(),
+        category: contracts::Category::Waste,
+        description: "Litter on the grass.".into(),
+        location,
+        created_at: "2026-10-24T00:00:00Z".into(),
+        status: "pending_review".into(),
+        routing: contracts::Routing {
+            status: "matched".into(),
+            authority_names: vec![],
+        },
+        publications: vec![],
+        hashtags: None,
+    }
+}
+
+#[test]
+fn public_caption_honours_selected_or_empty_tags_and_drops_unverified_tags() {
+    let office = office("test");
+    let mut report = caption_report(contracts::Location {
+        latitude: 15.0,
+        longitude: 75.0,
+        country_code: "IN".into(),
+        locality: "Test city".into(),
+    });
+    let generate = |report: &contracts::Report| {
+        authority::caption(
+            report,
+            "Rubbish is visible on the grass.",
+            "Test city",
+            &[&office],
+            contracts::Channel::Facebook,
+        )
+    };
+    assert!(generate(&report).contains("#TestMunicipality"));
+    report.hashtags = Some(vec!["#Litter".into(), "#UnverifiedGroup".into()]);
+    let caption = generate(&report);
+    assert!(caption.ends_with("#Litter"));
+    assert!(!caption.contains("#UnverifiedGroup"));
+    assert!(!caption.contains("#BetterTogether"));
+    assert!(caption.contains("@TestMunicipality"));
+    report.hashtags = Some(vec![]);
+    assert!(!generate(&report).contains('#'));
 }

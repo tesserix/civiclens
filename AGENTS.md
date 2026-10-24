@@ -20,4 +20,7 @@ Keep profanity, privacy, factuality and human-review safeguards in every tone.
 Derive issue hashtags on the server and city/region/council tags from reviewed
 directory data. Mention only verified relevant accounts; never invent groups,
 handles, officials, responsibility or blame. Recheck tags when category/location changes.
+Show selectable hashtag suggestions beside generated prose and in Description.
+Persist the selected subset separately; explicit Clear means no hashtags.
+Reset on context changes and validate again against reviewed routing on the server.
 Label model fixtures explicitly and never present emulator fixtures as live AI results.

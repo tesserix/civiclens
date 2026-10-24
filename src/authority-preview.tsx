@@ -5,34 +5,34 @@ import type { AuthorityPreview as Preview, Category, Location } from '../shared/
 import { request } from './api';
 import { Button, Notice, palette } from './ui';
 
-type Props = { userId?: string; token: string; category: Category; location: Location | null; available: boolean; disabled?: boolean; automatic?: boolean };
+type Props = { userId?: string; token: string; category: Category; location: Location | null; available: boolean; disabled?: boolean; automatic?: boolean; retryKey?: number; onResolve?: (preview: Preview | null, error?: boolean) => void };
 
 export function AuthorityPreview(props: Props) {
   if (!props.location) return null;
   if (!props.available) return <View className="flex-row items-center gap-2"><Ionicons name="shield-checkmark-outline" size={15} color={palette.muted} /><Text className="flex-1 text-xs leading-5 text-muted">A reviewer will verify the responsible office before sharing.</Text></View>;
-  return <Lookup key={JSON.stringify([props.userId, props.token, props.category, props.location])} {...props} />;
+  return <Lookup key={JSON.stringify([props.userId, props.token, props.category, props.location, props.retryKey])} {...props} />;
 }
 
-function Lookup({ token, category, location, disabled, automatic }: Props) {
+function Lookup({ token, category, location, disabled, automatic, onResolve }: Props) {
   const [result, setResult] = useState<Preview | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const [confirmed, setConfirmed] = useState(false);
   const valid = location && /^[A-Z]{2}$/.test(location.countryCode) && location.locality.trim().length >= 2;
   const pending = useRef<AbortController | null>(null);
-  useEffect(() => () => pending.current?.abort(), []);
+  useEffect(() => () => { pending.current?.abort(); pending.current=null; }, []);
   const lookup = useCallback(async () => {
     pending.current?.abort();
     const controller = new AbortController();
     pending.current = controller;
     const timer = setTimeout(() => controller.abort(), 25000);
-    setBusy(true); setError(''); setResult(null); setConfirmed(false);
+    setBusy(true); setError(''); setResult(null); setConfirmed(false); onResolve?.(null);
     try {
       const preview = await request<Preview>('/v1/authorities/preview', { token, method: 'POST', body: { category, location }, signal: controller.signal });
-      if (!controller.signal.aborted) setResult(preview);
-    } catch { if (pending.current === controller) setError('Could not check authorities. Retry when connected; your draft is safe.'); }
+      if (!controller.signal.aborted) { setResult(preview); onResolve?.(preview); }
+    } catch { if (pending.current === controller) { setError('Could not check authorities. Retry when connected; your draft is safe.'); onResolve?.(null, true); } }
     finally { clearTimeout(timer); if (pending.current === controller) setBusy(false); }
-  }, [token, category, location]);
+  }, [token, category, location, onResolve]);
   useEffect(() => {
     if (automatic && valid && !disabled) void lookup();
   }, [automatic, valid, disabled, lookup]);

@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, KeyboardAvoidingView, Platform, Pressable, ScrollView, Switch, Text, View, useWindowDimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Image } from 'expo-image';
@@ -18,9 +18,10 @@ import { PlacePicker } from '../../src/place-picker';
 import { useDeviceLocation } from '../../src/useDeviceLocation';
 import { request } from '../../src/api';
 import { WritingAssist } from '../../src/writing-assist';
+import {HashtagSelect} from '../../src/hashtag-select';
 import { AuthorityPreview } from '../../src/authority-preview';
 import { CategorySelect, LocationFields } from '../../src/report-details';
-import { channels, type Capabilities, type Report } from '../../shared/contracts';
+import { channels, type AuthorityPreview as Preview, type Capabilities, type Report } from '../../shared/contracts';
 
 const channelIcons = { facebook: 'logo-facebook', instagram: 'logo-instagram', whatsapp: 'logo-whatsapp' } as const;
 const channelLabels = { facebook: 'Facebook', instagram: 'Instagram', whatsapp: 'WhatsApp' } as const;
@@ -33,13 +34,30 @@ export default function Capture() {
   const [error, setError] = useState<{ step: 'photo'; message: string } | null>(null);
   const client = useQueryClient(); const router = useRouter();
   const capabilities = useQuery({ queryKey: ['capabilities'], queryFn: ({ signal }) => request<Capabilities>('/v1/capabilities', { signal }) });
+  const [authorityRetry,setAuthorityRetry]=useState(0);
+  const authorityScope=JSON.stringify([session?.user.id,draft.category,draft.location,authorityRetry]);
+  const [resolvedAuthority,setResolvedAuthority]=useState<{scope:string;result:Preview|null;error:boolean}|null>(null);
+  const authorityResolved=useCallback((result:Preview|null,error=false)=>setResolvedAuthority({scope:authorityScope,result,error}),[authorityScope]);
+  const suggestions=resolvedAuthority?.scope===authorityScope ? resolvedAuthority : null;
+  const hashtagOptions=suggestions?.result?.status==='matched' ? suggestions.result.hashtags || [] : [];
+  const hashtagsBusy=!!draft.photoUri && !!draft.location && capabilities.data?.authorityPreview===true && !suggestions?.result && !suggestions?.error;
+  useEffect(()=>{
+    const result=suggestions?.result;
+    if (!result || draft.hashtags===undefined) return;
+    const allowed=result.status==='matched' ? result.hashtags || [] : [];
+    const next=allowed.filter(tag=>draft.hashtags?.includes(tag));
+    if (JSON.stringify(next)!==JSON.stringify(draft.hashtags)) update({hashtags:next});
+  },[suggestions?.result,draft.hashtags,update]);
+  const retryHashtags=()=>setAuthorityRetry(value=>value+1);
+  const chooseHashtags=(hashtags:string[])=>update({hashtags});
   const readPhoto = () => Platform.OS === 'web' ? webBase64(draft.photoUri) : FileSystem.readAsStringAsync(draft.photoUri, { encoding: FileSystem.EncodingType.Base64 });
   const submit = useMutation({ mutationFn: async () => {
     if (!session || !draft.location) throw new Error('Sign in and confirm the location first.');
+    if (draft.hashtags !== undefined && capabilities.data?.hashtagSelection !== true) throw new Error('Hashtag choices can’t be saved right now. Please retry shortly.');
     await save();
     const photoBase64 = await readPhoto();
     return request<Report>('/v1/reports', { token: session.token, method: 'POST', key: draft.key,
-      body: { category: draft.category, description: draft.description, location: draft.location, photoBase64, channels: draft.channels, consent: draft.consent } });
+      body: { category: draft.category, description: draft.description, location: draft.location, photoBase64, channels: draft.channels, consent: draft.consent, ...(draft.hashtags === undefined ? {} : {hashtags:draft.hashtags}) } });
   }, onSuccess: async () => {
     await reset();
     await client.invalidateQueries({ queryKey: ['reports', session?.user.id] });
@@ -112,16 +130,17 @@ export default function Capture() {
         <Button title="Use current device location" variant="secondary" compact icon="navigate-outline" busy={deviceLocation.busy} disabled={working === 'photo' || locked} onPress={() => void deviceLocation.locate()} />
         {deviceLocation.error ? <Notice>{deviceLocation.error}</Notice> : null}
         {deviceLocation.settingsNeeded && Platform.OS !== 'web' ? <Button title="Open location settings" variant="secondary" onPress={() => void deviceLocation.openSettings()} /> : null}
-        {session ? <AuthorityPreview automatic={!!draft.photoUri} userId={session.user.id} token={session.token} category={draft.category} location={draft.location} available={capabilities.data?.authorityPreview === true} disabled={locked || working !== '' || deviceLocation.busy} /> : null}
+        {session ? <AuthorityPreview retryKey={authorityRetry} onResolve={authorityResolved} automatic={!!draft.photoUri} userId={session.user.id} token={session.token} category={draft.category} location={draft.location} available={capabilities.data?.authorityPreview === true} disabled={locked || working !== '' || deviceLocation.busy} /> : null}
       </Step>
 
       <Step number={4} title="Describe it" done={described}>
         <Field label="Description" hint={`${draft.description.trim().length} of 1000 characters, at least 10. Don’t name private individuals.`}
           placeholder="What did you see, and where exactly?" multiline maxLength={1000} autoCorrect spellCheck value={draft.description} editable={!locked}
           onChangeText={description => update({ description })} style={{ minHeight: 120, textAlignVertical: 'top' }} />
+        <HashtagSelect suggestions={hashtagOptions} selected={draft.hashtags} onChange={chooseHashtags} loading={hashtagsBusy} error={suggestions?.error} onRetry={retryHashtags} disabled={locked || working !== '' || deviceLocation.busy}/>
         {session ? <WritingAssist userId={session.user.id} token={session.token} category={draft.category} description={draft.description}
           hasPhoto={!!draft.photoUri} readPhoto={readPhoto} onUse={description => update({ description })} disabled={locked || working !== ''}
-          available={capabilities.data?.assist === true} sourceId={draft.key} location={draft.location} contextual={capabilities.data?.assistContext === true} /> : null}
+          available={capabilities.data?.assist === true} sourceId={draft.photoUri} location={draft.location} contextual={capabilities.data?.assistContext === true} suggestedHashtags={hashtagOptions} selectedHashtags={draft.hashtags} onHashtagsChange={chooseHashtags} hashtagsBusy={hashtagsBusy} hashtagsError={suggestions?.error} onHashtagsRetry={retryHashtags} /> : null}
       </Step>
 
       <Step number={5} title="Share after review" done={shared}>

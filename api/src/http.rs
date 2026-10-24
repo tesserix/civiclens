@@ -83,6 +83,7 @@ async fn capabilities(State(state): State<Arc<AppState>>) -> Json<crate::contrac
         },
         assist: config.assist_configured(),
         assist_context: true,
+        hashtag_selection: true,
         authority_preview: true,
     })
 }
