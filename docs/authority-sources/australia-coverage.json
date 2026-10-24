@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-10-24T05:25:59.721291+00:00",
-  "validation": "isolated PostgreSQL; production import pending",
+  "validation": "Source snapshots validated in isolated PostgreSQL; live deployment evidence is recorded on the delivery pull request.",
   "migration": "0005_authority_directory",
   "recordsByKind": {
     "officeholder": 21,
