@@ -19,6 +19,7 @@ pub const PRIVATE_AI_GATEWAY: &str =
 
 pub struct Config {
     pub secrets: Secrets,
+    pub media_bucket: Option<String>,
     pub facebook_page_id: Option<String>,
     pub graph_version: String,
     pub allowed_origin: Option<String>,
@@ -61,6 +62,18 @@ impl Config {
             && !self.oidc_organization_id.is_empty()
             && !self.oidc_ios_client_id.is_empty()
             && !self.oidc_android_client_id.is_empty()
+    }
+
+    #[cfg(test)]
+    pub fn for_test(database_url: &str) -> Self {
+        Self::from_source(|key| match key {
+            "DATABASE_URL" => Some(database_url.into()),
+            "CIVICLENS_IDENTITY_KEY" => {
+                Some("local-test-identity-key-at-least-32-characters".into())
+            }
+            _ => None,
+        })
+        .unwrap()
     }
 
     pub fn load() -> Result<Self, Error> {
@@ -116,7 +129,21 @@ impl Config {
         let ai_gateway_url = get("CIVICLENS_AI_GATEWAY_URL")
             .map(|url| ai_gateway_url(&url, production))
             .transpose()?;
+        let media_bucket = get("CIVICLENS_MEDIA_BUCKET").filter(|s| !s.is_empty());
+        if media_bucket.as_ref().is_some_and(|bucket| {
+            !bucket.starts_with("civiclens-")
+                || bucket.len() > 63
+                || !bucket
+                    .bytes()
+                    .all(|b| b.is_ascii_lowercase() || b.is_ascii_digit() || b == b'-')
+                || bucket.ends_with('-')
+        }) {
+            return Err(Error::Invalid(
+                "Use a civiclens-prefixed private media bucket.",
+            ));
+        }
         Ok(Self {
+            media_bucket,
             secrets,
             facebook_page_id: get("CIVICLENS_FACEBOOK_PAGE_ID").filter(|s| !s.is_empty()),
             graph_version,

@@ -433,6 +433,7 @@ async fn database_enforces_ownership_roles_idempotency_and_transactional_publica
             facebook_page_token: None,
             ai_gateway_key: None,
         },
+        media_bucket: None,
         facebook_page_id: None,
         graph_version: "v26.0".into(),
         allowed_origin: None,
@@ -455,6 +456,8 @@ async fn database_enforces_ownership_roles_idempotency_and_transactional_publica
         authorities: vec![office("test")],
         rate_limits: Mutex::new(HashMap::new()),
         photo_slots: Arc::new(tokio::sync::Semaphore::new(2)),
+        report_slots: Arc::new(tokio::sync::Semaphore::new(1)),
+        media: None,
         assist_limits: Mutex::new(HashMap::new()),
     });
     let app = http::router(state.clone()).unwrap();
@@ -583,7 +586,7 @@ async fn database_enforces_ownership_roles_idempotency_and_transactional_publica
     image::codecs::jpeg::JpegEncoder::new(&mut jpeg)
         .encode(&[20, 90, 60], 1, 1, image::ExtendedColorType::Rgb8)
         .unwrap();
-    let body = json!({"category":"waste","description":"Private original description, not a public caption.","location":{"latitude":15.123456,"longitude":75.123456,"countryCode":"IN","locality":"Private address"},"photoBase64":STANDARD.encode(jpeg),"channels":["facebook","instagram","whatsapp"],"consent":true});
+    let body = json!({"category":"waste","description":"Private original description, not a public caption.","location":{"latitude":15.123456,"longitude":75.123456,"countryCode":"IN","locality":"Private address"},"photoBase64":STANDARD.encode(jpeg),"channels":["facebook","instagram","whatsapp"],"consent":true,"communityRulesVersion":contracts::COMMUNITY_RULES_VERSION,"locationSource":"photo"});
     let hashtag_report_body = body.clone();
     let key = uuid::Uuid::new_v4();
     let busy = state
@@ -624,6 +627,7 @@ async fn database_enforces_ownership_roles_idempotency_and_transactional_publica
     assert_eq!(status, StatusCode::OK, "{report}");
     let id = report["id"].as_str().unwrap();
     assert_eq!(report["nickname"], "RiverFox");
+    assert_eq!(report["locationSource"], "photo");
     let (_, repeated) = send(
         &app,
         "POST",
@@ -723,6 +727,7 @@ async fn database_enforces_ownership_roles_idempotency_and_transactional_publica
     .await;
     assert_eq!(status, StatusCode::OK, "{approved}");
     assert_eq!(approved["status"], "approved");
+
     assert_eq!(
         send(
             &app,
@@ -1394,6 +1399,7 @@ fn reviewed_topic_tags_reject_mentions_links_and_unbounded_lists() {
 
 fn caption_report(location: contracts::Location) -> contracts::Report {
     contracts::Report {
+        sharing_mode: None,
         id: "qa-report".into(),
         nickname: "RiverFox".into(),
         category: contracts::Category::Waste,
@@ -1406,6 +1412,9 @@ fn caption_report(location: contracts::Location) -> contracts::Report {
             authority_names: vec![],
         },
         publications: vec![],
+        photo_count: Some(1),
+        location_source: None,
+        community_rules_version: None,
         hashtags: None,
     }
 }

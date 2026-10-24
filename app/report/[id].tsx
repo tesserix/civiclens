@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Ionicons } from '@expo/vector-icons';
 import { useSession } from '../../src/session';
 import { Button, Loading, Notice, Status, categoryIcons, palette } from '../../src/ui';
+import {UserSharing} from '../../src/user-sharing';
 import { request } from '../../src/api';
 import { categoryLabels, type Channel, type PublicationStatus, type Report } from '../../shared/contracts';
 
@@ -28,7 +29,7 @@ export default function Receipt() {
       <View className="gap-2">
         <View className="h-11 w-11 items-center justify-center rounded-full bg-brand"><Ionicons name="checkmark" size={24} color="#FFFFFF" /></View>
         <Text accessibilityRole="header" className="text-[28px] font-bold leading-9 tracking-tight text-ink">Report received</Text>
-        <Text className="text-[15px] leading-[22px] text-muted">Each destination’s delivery status appears below as it changes.</Text>
+        <Text className="text-[15px] leading-[22px] text-muted">{report.sharingMode==='manual' ? 'Your report stays private until review. You choose where to share the approved post.' : 'Each destination’s delivery status appears below as it changes.'}</Text>
       </View>
       <View className="gap-3 rounded-2xl border border-line bg-surface p-4">
         <View className="flex-row items-center gap-2"><Ionicons name={categoryIcons[report.category]} size={16} color={palette.brand} /><Text className="text-sm font-semibold text-brand">{categoryLabels[report.category]}</Text></View>
@@ -43,19 +44,20 @@ export default function Receipt() {
         <Text className="text-sm leading-5 text-muted">{report.routing.authorityNames.length ? report.routing.authorityNames.join(', ') : 'The local authority needs verification. Your report is safely held for review.'}</Text>
       </View>
       <View className="gap-2">
-        <Text accessibilityRole="header" className="text-[17px] font-semibold text-ink">Where your report stands</Text>
+        <Text accessibilityRole="header" className="text-[17px] font-semibold text-ink">{report.sharingMode==='manual' ? 'Your sharing choices' : 'Where your report stands'}</Text>
         <View className="overflow-hidden rounded-2xl border border-line bg-surface">
           {report.publications.map((p, i) => <View key={p.channel} className={`gap-1.5 p-4 ${i ? 'border-t border-line' : ''}`}>
             <View className="flex-row items-center gap-2.5">
               <Ionicons name={channelIcons[p.channel]} size={18} color={palette.ink} />
               <Text className="flex-1 text-[15px] font-semibold capitalize text-ink">{p.channel}</Text>
-              <Status label={statuses[p.status][0]} color={statuses[p.status][1]} />
+              <Status label={report.sharingMode==='manual' && report.status==='approved' ? 'Ready for you to share' : statuses[p.status][0]} color={statuses[p.status][1]} />
             </View>
-            {p.reason ? <Text className="text-sm leading-5 text-muted">{p.reason}</Text> : null}
+            {p.reason && !(report.sharingMode==='manual' && report.status==='approved') ? <Text className="text-sm leading-5 text-muted">{p.reason}</Text> : null}
             {p.providerId ? <Text selectable className="text-xs text-muted">Provider reference: {p.providerId}</Text> : null}
           </View>)}
         </View>
       </View>
+      {session ? <UserSharing report={report} token={session.token}/> : null}
       <Notice>Review and publication do not guarantee that an authority has seen or acted on the report. For urgent danger, contact local emergency services.</Notice>
     </> : null}
   </ScrollView></SafeAreaView>;

@@ -28,3 +28,15 @@ Label model fixtures explicitly and never present emulator fixtures as live AI r
 ## Device verification
 
 Use Apple simulators for app verification. Do not start or use Android emulators.
+
+## User-owned sharing and release gate
+
+New report flows use users' own social accounts and communities; do not offer
+CivicLens country-Page posting controls. Allow one, several or all destinations,
+with an explicit native handoff for each and no invented delivery receipt.
+Keep real names out of CivicLens captions; explain the external platform's
+sender identity before sharing. Never bypass independent photo/authority review.
+Use real API-connected builds for TestFlight. Do not ship demo paths or fixtures.
+Public Apple App Store and Google Play releases require the user's explicit
+confirmation after their TestFlight testing. TestFlight approval is not approval
+for a public store release or an unapproved backend migration/cloud rollout.

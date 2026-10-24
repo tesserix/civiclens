@@ -2,7 +2,7 @@
 name = "civiclens-api"
 version = "0.1.0"
 edition = "2021"
-rust-version = "1.88"
+rust-version = "1.91"
 
 [dependencies]
 axum.workspace = true
@@ -28,6 +28,7 @@ geo.workspace = true
 geojson.workspace = true
 ts-rs.workspace = true
 dotenvy.workspace = true
+google-cloud-auth.workspace = true
 
 [dev-dependencies]
 tower.workspace = true

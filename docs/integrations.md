@@ -23,36 +23,65 @@ Apple on iOS, cancellation, nonce replay, wrong organization, and expired tokens
 A configured connector ID or Ready claim alone does not prove a social provider's
 external app approval, callback allowlist, or Services ID is working.
 
-## Public social publishing
+## User-owned social sharing
 
-| Destination | Implementation | Required activation |
-| --- | --- | --- |
-| Facebook Page | Official Graph API photo upload; result requires a provider ID | Approved Meta app, Page permissions/token, Page ID, tested Graph version, runtime OpenBao secret, explicit enablement |
-| Instagram | Jobs are held; no adapter yet | Supported professional account and official content-publishing access; implement durable container creation, poll/publish and approved public image URL delivery |
-| WhatsApp group | Jobs are held; no adapter yet | Verify current official Groups API account eligibility and group support; implement only that supported API, or provide explicit user-initiated sharing |
+Users own their Facebook groups/Pages, WhatsApp groups/Channels and Instagram
+accounts, and manage invites/members in those services. CivicLens offers only
+user-owned sharing in the new report UI; no country-Page mode or demo path is
+shipped. Google/Facebook/Apple sign-in remains separate from sharing. Users need
+no additional login or publishing token in CivicLens for the native share sheet.
+Do not merge Google and Meta identities by matching email addresses.
 
-An ordinary WhatsApp group invite is not a publishing credential. Do not use
-unofficial WhatsApp Web automation. Account login permissions do not grant Page
-or Instagram publishing rights. Facebook textual `@handle` references are not a
-guarantee of a tag, notification or delivery to an official; platform-specific
-mention rules must be verified. Neither the app nor this repo sends actual posts
-without account configuration and live publishing enabled.
+After independent moderation, an owner can prepare reviewed content for any one,
+several or all selected channels. `POST /v1/reports/{id}/share-package` validates
+owner identity in SQL, current rules, selected channel, all-photo privacy review,
+fresh verified authorities and content safety. It returns only the approved
+caption and 1–5 metadata-stripped photos. The client repeats this check immediately
+before each handoff. Manual approval creates no automated publisher jobs.
 
-The reviewed caption contains the pseudonym, reviewed description/locality,
-approximate coordinates and verified institutional accounts. It never copies
-profile names, emails, raw provider claims or the unreviewed description. Requests
-that time out or return ambiguous provider errors become uncertain; an operator
-checks the Page before any retry. The receipt reports each destination separately.
+Each platform gets its own reviewed caption preview and explicit handoff button.
+The OS opens one app at a time; users select the matching account/group/Channel
+and confirm there. Share-sheet completion or cancellation is never recorded as
+provider delivery. External apps may omit caption text, limit attachments or offer
+no group/Channel destination. Users must inspect the final content and destination.
+CivicLens cannot promise that every installed app supports every destination.
 
-Official references to recheck during activation:
+Only the nickname is included in CivicLens captions. The external platform may
+show a profile name, username, Page name or phone number; users acknowledge this
+before preparing the post. Never claim that CivicLens can replace a platform's
+sender identity. Existing managed publication records remain readable for API
+compatibility. Managed publishing remains disabled in the rollout configuration;
+new clients cannot request it through the UI. No new country Page credentials,
+Graph staging workflow or country-publication migration is part of this release.
 
-- https://developers.facebook.com/docs/pages-api/posts/
-- https://developers.facebook.com/docs/instagram-platform/content-publishing/
-- https://developers.facebook.com/docs/whatsapp/
-- https://zitadel.com/docs/guides/integrate/identity-providers/
+### Verified platform boundaries
 
-These references document provider contracts; they are not a claim that the
-corresponding accounts or permissions have been granted to CivicLens.
+Official Meta documentation checked in Chrome on 25 October 2026:
+
+- [Graph API v19 announcement](https://developers.facebook.com/blog/post/2024/01/23/introducing-facebook-graph-and-marketing-api-v19/):
+  Facebook Groups publishing API and its permissions were removed across versions.
+  User ownership/admin status does not restore automatic third-party posting.
+- [Instagram API with Instagram Login](https://developers.facebook.com/documentation/instagram-platform/instagram-api-with-instagram-login):
+  automated publishing requires an authorized business/creator professional
+  account. This login path does not require a linked Facebook Page. Scopes include
+  `instagram_business_basic` and `instagram_business_content_publish`.
+- [WhatsApp Groups API](https://developers.facebook.com/documentation/business-messaging/whatsapp/groups/),
+  updated 15 October 2026: Official Business Account required, invite-only,
+  at most eight participants, per-message pricing. Ordinary group invites are
+  not credentials. Automated country Channel publishing remains unverified.
+
+User-owned native sharing does not remove the requirements for a future automated
+provider adapter. That would still require a working CivicLens Meta app, supported
+assets/scopes, explicit owner-bound OAuth state/PKCE, owner-scoped OpenBao token
+storage, refresh/revocation/deletion and reliable provider receipts. The existing
+Meta wizard cannot select the restricted Tesserix business portfolio, whose appeal
+is in review. No dedicated CivicLens Meta app or new provider credentials have
+been issued. Do not bypass the restriction with replacement identities.
+
+All deployed application credentials stay in environment-specific OpenBao paths
+with civiclens-prefixed names. The existing broker/database/identity/AI paths are
+unchanged. Private GCS uses Workload Identity, not a static key. Native sharing
+adds no Facebook/Instagram/WhatsApp credentials to the mobile app or backend.
 
 ## Writing assist gateway
 

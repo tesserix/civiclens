@@ -1,0 +1,72 @@
+import {fireEvent,render,screen,waitFor} from '@testing-library/react-native';
+import {QueryClient,QueryClientProvider} from '@tanstack/react-query';
+import * as SecureStore from 'expo-secure-store';
+import * as ImagePicker from 'expo-image-picker';
+import {SessionProvider,useSession} from './session';
+import {communityRulesVersion} from '../shared/generated';
+import Capture from '../app/(tabs)/index';
+
+jest.mock('expo-router',()=>({useRouter:()=>({push:jest.fn()}),useFocusEffect:()=>{}}));
+jest.mock('expo-crypto',()=>{let id=0;return {randomUUID:()=>`photo-${++id}`};});
+jest.mock('expo-file-system/legacy',()=>({documentDirectory:'file:///drafts/',EncodingType:{Base64:'base64'},copyAsync:jest.fn(async()=>{}),deleteAsync:jest.fn(async()=>{}),readAsStringAsync:jest.fn(async()=>'cGhvdG8=')}));
+jest.mock('expo-image-manipulator',()=>({SaveFormat:{JPEG:'jpeg'},manipulateAsync:jest.fn(async(uri:string)=>({uri:`processed:${uri}`}))}));
+jest.mock('expo-image-picker',()=>({launchImageLibraryAsync:jest.fn(),requestCameraPermissionsAsync:jest.fn()}));
+jest.mock('expo-location',()=>({reverseGeocodeAsync:jest.fn(async()=>[{city:'Melbourne',region:'VIC',isoCountryCode:'AU'}])}));
+const stored=new Map<string,string>();
+function SignedIn(){return useSession().loading ? null : <Capture/>;}
+function open(){const client=new QueryClient({defaultOptions:{mutations:{gcTime:0},queries:{retry:false,gcTime:0}}});return render(<QueryClientProvider client={client}><SessionProvider><SignedIn/></SessionProvider></QueryClientProvider>);}
+beforeEach(()=>{
+  jest.clearAllMocks();stored.clear();
+  stored.set('civiclens-session-v1',JSON.stringify({token:'synthetic-session',expiresAt:'2099-01-01',user:{id:'qa-photo',nickname:'SampleFox'}}));
+  jest.mocked(SecureStore.getItemAsync).mockImplementation(async key=>stored.get(key)||null);
+  jest.mocked(SecureStore.setItemAsync).mockImplementation(async(key,value)=>{stored.set(key,value);});
+  jest.mocked(SecureStore.deleteItemAsync).mockImplementation(async key=>{stored.delete(key);});
+  globalThis.fetch=jest.fn().mockImplementation(async(url)=>({ok:true,json:async()=>String(url).endsWith('/v1/capabilities') ? {assist:false,authorityPreview:false,manualSharing:true,maxPhotos:5,communityRulesVersion,facebookCountries:['AU'],publishing:{facebook:true}} : {id:'sample-report'}}));
+  jest.mocked(ImagePicker.launchImageLibraryAsync).mockResolvedValue({canceled:false,assets:Array.from({length:5},(_,i)=>({uri:`library-${i}.jpg`,width:1600,height:1200,exif:{GPSLatitude:-37.814,GPSLongitude:144.9633}}))});
+});
+
+test('uploads five photos with the original photo GPS, country destination and explicit current rules acceptance',async()=>{
+  open();await screen.findByLabelText('Description');
+  fireEvent.press(screen.getByRole('button',{name:'Choose from photos'}));
+  expect(await screen.findByText('5 of 5 photos')).toBeOnTheScreen();
+  expect(screen.getByText(/You choose the group, Channel or account/)).toBeOnTheScreen();
+  expect(screen.getByText(/Location suggested from photo metadata/)).toBeOnTheScreen();
+  expect(ImagePicker.launchImageLibraryAsync).toHaveBeenCalledWith(expect.objectContaining({exif:true,allowsMultipleSelection:true,selectionLimit:5}));
+  fireEvent.changeText(screen.getByLabelText('Description'),'Litter is scattered beside the public path.');
+  fireEvent(screen.getByLabelText('Consent to reviewed public sharing'),'valueChange',true);
+  expect(screen.getByRole('button',{name:'Submit report'})).toBeDisabled();
+  fireEvent(screen.getByLabelText('Accept community rules'),'valueChange',true);
+  fireEvent.press(screen.getByRole('button',{name:'Submit report'}));
+  await waitFor(()=>expect(jest.mocked(fetch).mock.calls.some(([url])=>String(url).endsWith('/v1/reports'))).toBe(true));
+  const call=jest.mocked(fetch).mock.calls.find(([url])=>String(url).endsWith('/v1/reports'))!;
+  const body=JSON.parse(call[1]!.body as string);
+  expect(body.additionalPhotosBase64).toHaveLength(4);
+  expect(body.location).toEqual({latitude:-37.814,longitude:144.9633,countryCode:'AU',locality:'Melbourne, VIC'});
+  expect(body.sharingMode).toBe('manual');expect(body.locationSource).toBe('photo');expect(body.communityRulesVersion).toBe(communityRulesVersion);
+});
+
+test('preserves a manually selected place when importing a photo with different GPS',async()=>{
+  const location={latitude:-33.8688,longitude:151.2093,countryCode:'AU',locality:'Sydney'};
+  stored.set('civiclens-draft-qa-photo',JSON.stringify({key:'manual',photoUri:'',category:'waste',description:'Litter beside the public path.',location,locationSource:'manual',channels:['facebook'],consent:false}));
+  open();await screen.findByDisplayValue('Sydney');
+  fireEvent.press(screen.getByRole('button',{name:'Choose from photos'}));
+  await screen.findByText('5 of 5 photos');
+  expect(screen.getByDisplayValue('Sydney')).toBeOnTheScreen();
+  fireEvent(screen.getByLabelText('Consent to reviewed public sharing'),'valueChange',true);
+  fireEvent(screen.getByLabelText('Accept community rules'),'valueChange',true);
+  fireEvent.press(screen.getByRole('button',{name:'Submit report'}));
+  await waitFor(()=>expect(jest.mocked(fetch).mock.calls.some(([url])=>String(url).endsWith('/v1/reports'))).toBe(true));
+  const call=jest.mocked(fetch).mock.calls.find(([url])=>String(url).endsWith('/v1/reports'))!;
+  expect(JSON.parse(call[1]!.body as string)).toMatchObject({location,locationSource:'manual'});
+});
+
+
+test('offers user-owned destinations without a CivicLens country-Page mode',async()=>{
+  open();await screen.findByLabelText('Description');
+  expect(screen.queryByRole('radio',{name:'CivicLens country Pages'})).toBeNull();
+  expect(screen.queryByRole('radio',{name:'Share using my own apps'})).toBeNull();
+  expect(screen.getByText(/You choose the group, Channel or account/)).toBeOnTheScreen();
+  fireEvent.press(screen.getByRole('checkbox',{name:'Instagram'}));
+  fireEvent.press(screen.getByRole('checkbox',{name:'WhatsApp'}));
+  for(const name of ['Facebook','Instagram','WhatsApp'])expect(screen.getByRole('checkbox',{name})).toBeChecked();
+});

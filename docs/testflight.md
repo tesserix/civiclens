@@ -98,3 +98,36 @@ IPA SHA-256: `de0d4f514bd26e138d54532d4b28e62b594481f6935032ca577d6daa7aff35ce`.
 
 This build is an internal preview, not production compliance clearance. See
 [the store readiness audit](store-readiness.md) before any public release.
+
+
+## User-owned sharing build — prepared 25 October 2026
+
+The requested target is a real API-connected internal TestFlight build. The user
+cancelled the temporary demo approach and removed the country-Page option.
+Users select one, several or all of Facebook/Instagram/WhatsApp and explicitly
+confirm each native handoff after independent review. Social apps control sender
+identity and may omit captions or restrict attachments. Completion is unverified.
+No additional provider login, email-based account linking or demo fallback exists.
+
+A signed production-profile **0.1.5 (12)** IPA is prepared locally using the existing
+approved signing process. Store profile/team/bundle, debugging disabled and strict
+signature verification passed. Its bundle contains the production HTTPS API and
+multi-selection controls, and no demo identifiers or country-Page selector.
+SHA-256: `3bd1e33695faccec0d286fa995f45ad4df4c42517052d55adcf1b4a5646c7c80`.
+Local artifact/receipt: ignored `artifacts/qa/testflight-real-0.1.5/` in the isolated
+feature worktree. No new upload has occurred. The cancelled demo build reserved 11;
+that build was never uploaded. Current available TestFlight remains 0.1.4 (10).
+
+Before upload, obtain explicit approval for the named backend rollout, create the
+private media bucket/Workload Identity grants through the prepared Terraform plan,
+back up and apply additive migration 0006 through GitOps, and verify the real API
+capabilities, privacy and owner-only reviewed exports. Native AMD64 image CI is
+required; local Linux ARM64 container/TLS/migration smoke passed. The prepared
+rollout is in the owning infra repo's `docs/civiclens-user-owned-sharing-rollout.md`.
+
+Upload only this verified IPA after the backend is ready, wait for Apple VALID,
+and confirm existing internal-group availability. Do not publish to App Store,
+Google Play or an external/public beta. The user will explicitly confirm any
+later public store release after testing on their device. End-to-end public
+provider delivery and broad reviewed authority coverage are not claims of this
+local verification.

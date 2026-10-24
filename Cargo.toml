@@ -27,3 +27,4 @@ geo = "0.33"
 geojson = { version = "1", features = ["geo-types"] }
 ts-rs = { version = "11", features = ["serde-json-impl"] }
 dotenvy = "0.15"
+google-cloud-auth = "1.18"
