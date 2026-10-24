@@ -1,0 +1,1432 @@
+{
+  "sourceId": "au-vic-councils-mav",
+  "sourceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+  "licenceUrl": "https://www.viccouncils.asn.au/copyright",
+  "attribution": "Council names and official/leadership website references from Municipal Association of Victoria, Vic Councils. No contact details or page prose retained; source copyright applies.",
+  "retrievedAt": "2026-10-24T05:08:49.035818+00:00",
+  "upstreamSha256": "3778946bd01cc16c3f36e6d9841d309c40a7d207dd465ea91fb818ba978cfb9a",
+  "records": [
+    {
+      "id": "20110",
+      "kind": "organisation",
+      "name": "Alpine Shire Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.alpineshire.vic.gov.au/",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "20110",
+        "councillorsUrl": "https://www.alpineshire.vic.gov.au/about-us/our-council/meet-your-council",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "20260",
+      "kind": "organisation",
+      "name": "Ararat Rural City Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.ararat.vic.gov.au/",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "20260",
+        "councillorsUrl": "https://www.ararat.vic.gov.au/council/meet-councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "20570",
+      "kind": "organisation",
+      "name": "Ballarat City Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.ballarat.vic.gov.au/",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "20570",
+        "councillorsUrl": "https://www.ballarat.vic.gov.au/about-us/councillors-and-wards",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "20660",
+      "kind": "organisation",
+      "name": "Banyule City Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.banyule.vic.gov.au/Home",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "20660",
+        "councillorsUrl": "https://www.banyule.vic.gov.au/About-us/Councillors-and-Council-meetings/Councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "20740",
+      "kind": "organisation",
+      "name": "Bass Coast Shire Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.basscoast.vic.gov.au/",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "20740",
+        "councillorsUrl": "https://www.basscoast.vic.gov.au/about-council/councillors-and-elections",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "20830",
+      "kind": "organisation",
+      "name": "Baw Baw Shire Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.bawbawshire.vic.gov.au/Home",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "20830",
+        "councillorsUrl": "https://www.bawbawshire.vic.gov.au/About-Council/Our-Councillors/Mayor-and-Councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "20910",
+      "kind": "organisation",
+      "name": "Bayside City Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.bayside.vic.gov.au/",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "20910",
+        "councillorsUrl": "https://www.bayside.vic.gov.au/council/councillors-and-committees/our-councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "21010",
+      "kind": "organisation",
+      "name": "Benalla Rural City Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.benalla.vic.gov.au/",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "21010",
+        "councillorsUrl": "https://www.benalla.vic.gov.au/council/councillor-info-and-council-meetings/councillor-information/",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "21110",
+      "kind": "organisation",
+      "name": "Boroondara City Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.boroondara.vic.gov.au/",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "21110",
+        "councillorsUrl": "https://www.boroondara.vic.gov.au/your-council/councillors-and-meetings/mayor-councillors-and-wards",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "21180",
+      "kind": "organisation",
+      "name": "Brimbank City Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.brimbank.vic.gov.au/",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "21180",
+        "councillorsUrl": "https://www.brimbank.vic.gov.au/about-council/your-council/your-councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "21270",
+      "kind": "organisation",
+      "name": "Buloke Shire Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.buloke.vic.gov.au/",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "21270",
+        "councillorsUrl": "https://www.buloke.vic.gov.au/councillors1",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "21370",
+      "kind": "organisation",
+      "name": "Campaspe Shire Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.campaspe.vic.gov.au/Home",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "21370",
+        "councillorsUrl": "https://www.campaspe.vic.gov.au/council/about-council/councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "21450",
+      "kind": "organisation",
+      "name": "Cardinia Shire Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.cardinia.vic.gov.au/",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "21450",
+        "councillorsUrl": "https://www.cardinia.vic.gov.au/about-council/your-council/meet-your-councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "21610",
+      "kind": "organisation",
+      "name": "Casey City Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.casey.vic.gov.au/",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "21610",
+        "councillorsUrl": "https://www.casey.vic.gov.au/councillors-wards",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "21670",
+      "kind": "organisation",
+      "name": "Central Goldfields Shire Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.centralgoldfields.vic.gov.au/Home",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "21670",
+        "councillorsUrl": "https://www.centralgoldfields.vic.gov.au/About-Us/Council-Information/Council-People/Our-Councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "21750",
+      "kind": "organisation",
+      "name": "Colac Otway Shire Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.colacotway.vic.gov.au/Home",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "21750",
+        "councillorsUrl": "https://www.colacotway.vic.gov.au/Council-the-shire/Our-Council/Councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "21830",
+      "kind": "organisation",
+      "name": "Corangamite Shire Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.corangamite.vic.gov.au/Home",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "21830",
+        "councillorsUrl": "https://www.corangamite.vic.gov.au/Council/Inside-Council/MeetTheCouncillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "21890",
+      "kind": "organisation",
+      "name": "Darebin City Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.darebin.vic.gov.au/Home",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "21890",
+        "councillorsUrl": "https://www.darebin.vic.gov.au/About-council/Council-structure-and-performance/Councillors/Mayor-and-Councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "22110",
+      "kind": "organisation",
+      "name": "East Gippsland Shire Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.eastgippsland.vic.gov.au/",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "22110",
+        "councillorsUrl": "https://www.eastgippsland.vic.gov.au/our-council/councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "22170",
+      "kind": "organisation",
+      "name": "Frankston City Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.frankston.vic.gov.au/Home",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "22170",
+        "councillorsUrl": "https://www.frankston.vic.gov.au/Council/Current-Councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "22250",
+      "kind": "organisation",
+      "name": "Gannawarra Shire Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.gannawarra.vic.gov.au/Home",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "22250",
+        "councillorsUrl": "https://www.gannawarra.vic.gov.au/Your-Council/Councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "22310",
+      "kind": "organisation",
+      "name": "Glen Eira City Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.gleneira.vic.gov.au/",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "22310",
+        "councillorsUrl": "https://www.gleneira.vic.gov.au/about-council/councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "22410",
+      "kind": "organisation",
+      "name": "Glenelg Shire Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.glenelg.vic.gov.au/Home",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "22410",
+        "councillorsUrl": "https://www.glenelg.vic.gov.au/Our-Council/Meet-your-Mayor-and-Councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "22490",
+      "kind": "organisation",
+      "name": "Golden Plains Shire Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.goldenplains.vic.gov.au/",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "22490",
+        "councillorsUrl": "https://www.goldenplains.vic.gov.au/about-council/councillors/my-councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "22620",
+      "kind": "organisation",
+      "name": "Greater Bendigo City Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.bendigo.vic.gov.au/",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "22620",
+        "councillorsUrl": "https://www.bendigo.vic.gov.au/about-us/council/our-councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "22670",
+      "kind": "organisation",
+      "name": "Greater Dandenong City Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.greaterdandenong.vic.gov.au/",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "22670",
+        "councillorsUrl": "https://www.greaterdandenong.vic.gov.au/councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "22750",
+      "kind": "organisation",
+      "name": "Greater Geelong City Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.geelongcity.vic.gov.au/",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "22750",
+        "councillorsUrl": "https://www.geelongcity.vic.gov.au/council/mayor-and-councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "22830",
+      "kind": "organisation",
+      "name": "Greater Shepparton City Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://greatershepparton.com.au/",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "22830",
+        "councillorsUrl": "https://greatershepparton.com.au/council/mayor-councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "22910",
+      "kind": "organisation",
+      "name": "Hepburn Shire Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.hepburn.vic.gov.au/Home",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "22910",
+        "councillorsUrl": "https://www.hepburn.vic.gov.au/Council/About-Council/Mayor-and-Councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "22980",
+      "kind": "organisation",
+      "name": "Hindmarsh Shire Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.hindmarsh.vic.gov.au/Home",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "22980",
+        "councillorsUrl": "https://www.hindmarsh.vic.gov.au/Council/Councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "23110",
+      "kind": "organisation",
+      "name": "Hobsons Bay City Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.hobsonsbay.vic.gov.au/Home",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "23110",
+        "councillorsUrl": "https://www.hobsonsbay.vic.gov.au/Council/Mayor-and-councillors/Your-elected-Councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "23190",
+      "kind": "organisation",
+      "name": "Horsham Rural City Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.hrcc.vic.gov.au/Home",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "23190",
+        "councillorsUrl": "https://www.hrcc.vic.gov.au/Our-Council/Inside-Council/Our-Councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "23270",
+      "kind": "organisation",
+      "name": "Hume City Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.hume.vic.gov.au/Home",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "23270",
+        "councillorsUrl": "https://www.hume.vic.gov.au/Your-Council/Your-Councillors-and-Wards",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "23350",
+      "kind": "organisation",
+      "name": "Indigo Shire Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.indigoshire.vic.gov.au/Home",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "23350",
+        "councillorsUrl": "https://www.indigoshire.vic.gov.au/About-Council/Your-Councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "23430",
+      "kind": "organisation",
+      "name": "Kingston City Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.kingston.vic.gov.au/Home",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "23430",
+        "councillorsUrl": "https://www.kingston.vic.gov.au/council/your-council/councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "23670",
+      "kind": "organisation",
+      "name": "Knox City Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.knox.vic.gov.au/",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "23670",
+        "councillorsUrl": "https://www.knox.vic.gov.au/our-council/councillors-and-meetings/mayor-and-councillors/current-mayor-and-councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "23810",
+      "kind": "organisation",
+      "name": "Latrobe City Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.latrobe.vic.gov.au/",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "23810",
+        "councillorsUrl": "https://www.latrobe.vic.gov.au/Council/Our_Council/Councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "23940",
+      "kind": "organisation",
+      "name": "Loddon Shire Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.loddon.vic.gov.au/Home",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "23940",
+        "councillorsUrl": "https://www.loddon.vic.gov.au/Our-Council/Council/Councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "24130",
+      "kind": "organisation",
+      "name": "Macedon Ranges Shire Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.mrsc.vic.gov.au/Home",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "24130",
+        "councillorsUrl": "https://www.mrsc.vic.gov.au/About-Council/Our-Council/Councillors-Wards",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "24210",
+      "kind": "organisation",
+      "name": "Manningham City Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.manningham.vic.gov.au/",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "24210",
+        "councillorsUrl": "https://www.manningham.vic.gov.au/about-council/how-council-works/find-your-local-councillor-and-ward",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "24250",
+      "kind": "organisation",
+      "name": "Mansfield Shire Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.mansfield.vic.gov.au/",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "24250",
+        "councillorsUrl": "https://www.mansfield.vic.gov.au/council/councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "24330",
+      "kind": "organisation",
+      "name": "Maribyrnong City Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.maribyrnong.vic.gov.au/Home",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "24330",
+        "councillorsUrl": "https://www.maribyrnong.vic.gov.au/About/Your-Councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "24410",
+      "kind": "organisation",
+      "name": "Maroondah City Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.maroondah.vic.gov.au/Home",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "24410",
+        "councillorsUrl": "https://www.maroondah.vic.gov.au/About-Council/Councillors-and-wards/Your-Councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "24600",
+      "kind": "organisation",
+      "name": "Melbourne City Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.melbourne.vic.gov.au/",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "24600",
+        "councillorsUrl": "https://www.melbourne.vic.gov.au/lord-mayor-and-councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "24650",
+      "kind": "organisation",
+      "name": "Melton City Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.melton.vic.gov.au/Home",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "24650",
+        "councillorsUrl": "https://www.melton.vic.gov.au/Council/About-Council/Councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "24700",
+      "kind": "organisation",
+      "name": "Merri-bek City Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.merri-bek.vic.gov.au/",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "24700",
+        "councillorsUrl": "https://www.merri-bek.vic.gov.au/my-council/about-council/councillors/",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "24780",
+      "kind": "organisation",
+      "name": "Mildura Rural City Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.mildura.vic.gov.au/Mildura-Rural-City-Council",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "24780",
+        "councillorsUrl": "https://www.mildura.vic.gov.au/Council/Councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "24850",
+      "kind": "organisation",
+      "name": "Mitchell Shire Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.mitchellshire.vic.gov.au/",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "24850",
+        "councillorsUrl": "https://www.mitchellshire.vic.gov.au/council/councillors-and-elections/meet-our-mayor-and-councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "24900",
+      "kind": "organisation",
+      "name": "Moira Shire Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.moira.vic.gov.au/Home",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "24900",
+        "councillorsUrl": "https://www.moira.vic.gov.au/Our-Council/Panel-of-Administrators",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "24970",
+      "kind": "organisation",
+      "name": "Monash City Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.monash.vic.gov.au/Home",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "24970",
+        "councillorsUrl": "https://www.monash.vic.gov.au/About-Us/Council/Councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "25060",
+      "kind": "organisation",
+      "name": "Moonee Valley City Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://mvcc.vic.gov.au/",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "25060",
+        "councillorsUrl": "https://mvcc.vic.gov.au/my-council/councillors/",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "25150",
+      "kind": "organisation",
+      "name": "Moorabool Shire Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.moorabool.vic.gov.au/Home",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "25150",
+        "councillorsUrl": "https://www.moorabool.vic.gov.au/About-Council/Councillors/Meet-your-Councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "25340",
+      "kind": "organisation",
+      "name": "Mornington Peninsula Shire Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.mornpen.vic.gov.au/Home",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "25340",
+        "councillorsUrl": "https://www.mornpen.vic.gov.au/About-Us/About-Our-Council/Our-Councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "25430",
+      "kind": "organisation",
+      "name": "Mount Alexander Shire Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.mountalexander.vic.gov.au/Home",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "25430",
+        "councillorsUrl": "https://www.mountalexander.vic.gov.au/Council/Council-information/Meet-your-Councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "25490",
+      "kind": "organisation",
+      "name": "Moyne Shire Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.moyne.vic.gov.au/Home",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "25490",
+        "councillorsUrl": "https://www.moyne.vic.gov.au/Your-council/Council-and-councillors/Councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "25620",
+      "kind": "organisation",
+      "name": "Murrindindi Shire Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.murrindindi.vic.gov.au/Home",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "25620",
+        "councillorsUrl": "https://www.murrindindi.vic.gov.au/Council/Who-We-Are/Councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "25710",
+      "kind": "organisation",
+      "name": "Nillumbik Shire Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.nillumbik.vic.gov.au/Home",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "25710",
+        "councillorsUrl": "https://www.nillumbik.vic.gov.au/Council/Councillors-wards-and-elections/Councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "25810",
+      "kind": "organisation",
+      "name": "Northern Grampians Shire Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.ngshire.vic.gov.au/Home",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "25810",
+        "councillorsUrl": "https://www.ngshire.vic.gov.au/Council/Councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "25900",
+      "kind": "organisation",
+      "name": "Port Phillip City Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.portphillip.vic.gov.au/",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "25900",
+        "councillorsUrl": "https://www.portphillip.vic.gov.au/about-the-council/who-we-are/your-councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "25990",
+      "kind": "organisation",
+      "name": "Pyrenees Shire Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.pyrenees.vic.gov.au/Home",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "25990",
+        "councillorsUrl": "https://www.pyrenees.vic.gov.au/About-Pyrenees-Shire-Council/Councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "26080",
+      "kind": "organisation",
+      "name": "Queenscliffe Borough Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.queenscliffe.vic.gov.au/Home",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "26080",
+        "councillorsUrl": "https://www.queenscliffe.vic.gov.au/Your-Council/Elected-members",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "26170",
+      "kind": "organisation",
+      "name": "South Gippsland Shire Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.southgippsland.vic.gov.au/",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "26170",
+        "councillorsUrl": "https://www.southgippsland.vic.gov.au/info/20004/your_council/389/councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "26260",
+      "kind": "organisation",
+      "name": "Southern Grampians Shire Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.sthgrampians.vic.gov.au/Home",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "26260",
+        "councillorsUrl": "https://www.sthgrampians.vic.gov.au/About-Council/Councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "26350",
+      "kind": "organisation",
+      "name": "Stonnington City Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.stonnington.vic.gov.au/Home",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "26350",
+        "councillorsUrl": "https://www.stonnington.vic.gov.au/About/About-Council/Mayor-and-Councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "26430",
+      "kind": "organisation",
+      "name": "Strathbogie Shire Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.strathbogie.vic.gov.au/",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "26430",
+        "councillorsUrl": "https://www.strathbogie.vic.gov.au/council/our-council/mayor-and-councillors/",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "26490",
+      "kind": "organisation",
+      "name": "Surf Coast Shire Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.surfcoast.vic.gov.au/Home",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "26490",
+        "councillorsUrl": "https://www.surfcoast.vic.gov.au/About-us/Council/Councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "26610",
+      "kind": "organisation",
+      "name": "Swan Hill Rural City Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.swanhill.vic.gov.au/Home",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "26610",
+        "councillorsUrl": "https://www.swanhill.vic.gov.au/Our-Council/Councillors-and-meetings/Mayor-and-Councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "26670",
+      "kind": "organisation",
+      "name": "Towong Shire Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.towong.vic.gov.au/",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "26670",
+        "councillorsUrl": "https://www.towong.vic.gov.au/1-council/about-council/meet-your-councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "26700",
+      "kind": "organisation",
+      "name": "Wangaratta Rural City Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.wangaratta.vic.gov.au/Home",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "26700",
+        "councillorsUrl": "https://www.wangaratta.vic.gov.au/Your-Council/Council/Councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "26730",
+      "kind": "organisation",
+      "name": "Warrnambool City Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.warrnambool.vic.gov.au/",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "26730",
+        "councillorsUrl": "https://www.warrnambool.vic.gov.au/councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "26810",
+      "kind": "organisation",
+      "name": "Wellington Shire Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.wellington.vic.gov.au/",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "26810",
+        "councillorsUrl": "https://www.wellington.vic.gov.au/council/current-councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "26890",
+      "kind": "organisation",
+      "name": "West Wimmera Shire Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.westwimmera.vic.gov.au/Home",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "26890",
+        "councillorsUrl": "https://www.westwimmera.vic.gov.au/Council/Inside-council/Mayor-and-Councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "26980",
+      "kind": "organisation",
+      "name": "Whitehorse City Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.whitehorse.vic.gov.au/",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "26980",
+        "councillorsUrl": "https://www.whitehorse.vic.gov.au/about-whitehorse/administration/councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "27070",
+      "kind": "organisation",
+      "name": "Whittlesea City Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.whittlesea.vic.gov.au/Home",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "27070",
+        "councillorsUrl": "https://www.whittlesea.vic.gov.au/About-us/Council/Councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "27170",
+      "kind": "organisation",
+      "name": "Wodonga City Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.wodonga.vic.gov.au/",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "27170",
+        "councillorsUrl": "https://www.wodonga.vic.gov.au/About-Council/Our-Council/Your-Councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "27260",
+      "kind": "organisation",
+      "name": "Wyndham City Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.wyndham.vic.gov.au/",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "27260",
+        "councillorsUrl": "https://www.wyndham.vic.gov.au/about-council/councillors-wards/know-your-councillor-and-ward",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "27350",
+      "kind": "organisation",
+      "name": "Yarra City Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.yarracity.vic.gov.au/",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "27350",
+        "councillorsUrl": "https://www.yarracity.vic.gov.au/about-us/council-mayor-and-councillors/councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "27450",
+      "kind": "organisation",
+      "name": "Yarra Ranges Shire Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.yarraranges.vic.gov.au/Home",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "27450",
+        "councillorsUrl": "https://www.yarraranges.vic.gov.au/Our-Council/Councillors-executive-team/Councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    },
+    {
+      "id": "27630",
+      "kind": "organisation",
+      "name": "Yarriambiack Shire Council",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.yarriambiack.vic.gov.au/Home",
+      "evidenceUrl": "https://www.viccouncils.asn.au/find-your-council/council-contacts-list",
+      "verificationStatus": "reference",
+      "details": {
+        "absSourceId": "au-abs-lga-2026",
+        "absRecordId": "27630",
+        "councillorsUrl": "https://www.yarriambiack.vic.gov.au/Your-Council/Meet-Your-Councillors",
+        "mayorVerified": false,
+        "responsibilityNotVerified": true,
+        "sourceCopyrightUrl": "https://www.viccouncils.asn.au/copyright"
+      }
+    }
+  ]
+}

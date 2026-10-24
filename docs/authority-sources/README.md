@@ -28,6 +28,10 @@ when coverage is missing. A report can still enter private moderation.
 - Review expires 22 January 2027 (90 days). Verification means the listed sources
   were checked, not council endorsement or a guarantee of response.
 
+For the audited Australian reference register, source coverage and maintenance
+commands, see [Australian authority register](australia.md). Reference imports do
+not change the verified routing scope above.
+
 ## Australia and India expansion
 
 Seed government identities and boundaries first, then review responsibility and

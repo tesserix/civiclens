@@ -6,6 +6,7 @@ mod authority;
 mod config;
 mod content_safety;
 mod contracts;
+mod directory;
 mod error;
 mod http;
 mod nickname;
@@ -59,6 +60,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             .execute(&pool)
             .await?;
         admin::migrate(&pool, std::path::Path::new("api/migrations")).await?;
+        directory::import_bundled(&pool, std::path::Path::new("api/data")).await?;
         tracing::info!(event = "migration_complete");
         return Ok(());
     }
@@ -69,13 +71,24 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         tracing::info!(event="role_granted",user_id=%user,role);
         return Ok(());
     }
-    if command.is_some() {
-        return Err("supported commands: migrate, grant-role; no command starts the API".into());
+    if command.as_deref() == Some("import-directory") {
+        let path = std::env::args()
+            .nth(2)
+            .ok_or("source snapshot path required")?;
+        let bytes = directory::read_bounded(std::path::Path::new(&path))?;
+        let id = directory::import_reference(&pool, &bytes).await?;
+        tracing::info!(event="directory_import_complete",%id);
+        return Ok(());
     }
-    let authorities = authority::load(
-        &std::env::var("CIVICLENS_AUTHORITIES_FILE")
-            .unwrap_or_else(|_| "api/data/authorities.json".into()),
-    )?;
+    if command.as_deref() == Some("directory-status") {
+        serde_json::to_writer_pretty(std::io::stdout(), &directory::status(&pool).await?)?;
+        std::io::Write::write_all(&mut std::io::stdout(), b"\n")?;
+        return Ok(());
+    }
+    if command.is_some() {
+        return Err("supported commands: migrate, grant-role, import-directory, directory-status; no command starts the API".into());
+    }
+    let authorities = directory::load_verified(&pool).await?;
     let bind = config.bind.clone();
     let state = Arc::new(AppState {
         pool,
