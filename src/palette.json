@@ -1,0 +1,14 @@
+{
+  "canvas": "#F1F3F2",
+  "surface": "#FFFFFF",
+  "ink": "#1E2428",
+  "muted": "#5F6A73",
+  "faint": "#8A939B",
+  "line": "#DCE1DF",
+  "brand": "#0B6E58",
+  "mint": "#E2F0EB",
+  "hivis": "#F2B705",
+  "caution": "#7A4B00",
+  "notice": "#FFF4DC",
+  "danger": "#B42318"
+}

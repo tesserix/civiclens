@@ -82,6 +82,13 @@ pub async fn tick(state: &AppState) -> Result<bool, Error> {
         Outcome::Blocked("This channel requires an approved platform integration; no post was sent")
     } else if !state.config.publishing_enabled {
         Outcome::Blocked("Live publishing is disabled; no post was sent")
+    } else if let Err(error) = crate::content_safety::check_publication(state, &caption).await {
+        Outcome::Blocked(match error {
+            Error::ContentRejected => {
+                "Caption failed the respectful-language safety check; no post was sent"
+            }
+            _ => "Content safety could not be verified; no post was sent",
+        })
     } else if let (Some(page), Some(token)) = (
         &state.config.facebook_page_id,
         &state.config.secrets.facebook_page_token,

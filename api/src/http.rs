@@ -40,7 +40,7 @@ async fn rate_limit(State(state): State<Arc<AppState>>, request: Request, next: 
         }
     };
     if !allowed {
-        return (StatusCode::TOO_MANY_REQUESTS,Json(json!({"code":"RATE_LIMITED","message":"Please wait a minute and retry.","request_id":uuid::Uuid::new_v4().to_string()}))).into_response();
+        return Error::RateLimited("Please wait a minute and retry.").into_response();
     }
     next.run(request).await
 }
@@ -81,6 +81,8 @@ async fn capabilities(State(state): State<Arc<AppState>>) -> Json<crate::contrac
             instagram: false,
             whatsapp: false,
         },
+        assist: config.assist_configured(),
+        authority_preview: true,
     })
 }
 
@@ -120,6 +122,8 @@ pub fn router(state: Arc<AppState>) -> Result<Router, Error> {
         )
         .route("/v1/auth/logout", post(auth::logout))
         .route("/v1/reports", get(reports::list).post(reports::create))
+        .route("/v1/assist", post(crate::assist::assist))
+        .route("/v1/authorities/preview", post(crate::authority::preview))
         .route("/v1/reports/{id}", get(reports::get))
         .route("/v1/moderation/reports", get(reports::moderation_list))
         .route("/v1/moderation/reports/{id}/photo", get(reports::photo))

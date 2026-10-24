@@ -69,6 +69,11 @@ verified Google/Facebook connector IDs from Tesserix identity configuration. Set
 the `CIVICLENS_OIDC_*` and `CIVICLENS_*_IDP_ID` values in the API environment.
 Unconfigured providers remain disabled. Do not borrow another product's client ID.
 
+Writing assist (draft from photo, fix spelling) is off until `CIVICLENS_AI_GATEWAY_URL`
+and `CIVICLENS_AI_GATEWAY_KEY` are set. Development accepts only a loopback URL,
+such as a port-forward of the `civiclens-ai` gateway; production always uses the
+private cluster gateway. See [ADR-0003](docs/adr/0003-writing-assist.md).
+
 ## Verify
 
 ```sh

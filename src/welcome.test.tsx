@@ -7,7 +7,7 @@ test('offers an optional nickname and holds sign-in when providers are unconfigu
   globalThis.fetch = jest.fn().mockResolvedValue({ ok: true, json: async () => ({ google: false, facebook: false, publishing: { facebook: false, instagram: false, whatsapp: false } }) });
   const client = new QueryClient({ defaultOptions: { queries: { retry: false, gcTime: 0 } } });
   render(<QueryClientProvider client={client}><SessionProvider><Welcome /></SessionProvider></QueryClientProvider>);
-  const field = await screen.findByLabelText('Public nickname · optional', {}, { timeout: 5000 });
+  const field = await screen.findByLabelText('Public nickname (optional)', {}, { timeout: 5000 });
   fireEvent.changeText(field, 'RiverFox');
   expect(field.props.value).toBe('RiverFox');
   expect(screen.getByText('Leave it blank and we’ll assign a unique nickname for you.')).toBeOnTheScreen();

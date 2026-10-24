@@ -18,6 +18,10 @@ use std::{collections::HashSet, io::Cursor, sync::Arc};
 use time::{format_description::well_known::Rfc3339, OffsetDateTime};
 use uuid::Uuid;
 
+pub fn description_valid(text: &str) -> bool {
+    (10..=1000).contains(&text.trim().chars().count())
+}
+
 fn validate(input: &ReportInput) -> Result<(), Error> {
     let l = &input.location;
     if !l.latitude.is_finite()
@@ -27,7 +31,7 @@ fn validate(input: &ReportInput) -> Result<(), Error> {
         || l.country_code.len() != 2
         || !l.country_code.bytes().all(|b| b.is_ascii_uppercase())
         || !(2..=120).contains(&l.locality.trim().len())
-        || !(10..=1000).contains(&input.description.trim().len())
+        || !description_valid(&input.description)
         || !input.consent
         || input.channels.is_empty()
         || input.channels.len() > 3
@@ -44,7 +48,7 @@ fn validate(input: &ReportInput) -> Result<(), Error> {
     Ok(())
 }
 
-fn sanitize_photo(encoded: &str) -> Result<Vec<u8>, Error> {
+pub fn sanitize_photo(encoded: &str, edge: u32) -> Result<Vec<u8>, Error> {
     if encoded.len() > 8_000_000 {
         return Err(Error::Invalid("Photo is too large."));
     }
@@ -71,7 +75,7 @@ fn sanitize_photo(encoded: &str) -> Result<Vec<u8>, Error> {
     let decoded = reader
         .decode()
         .map_err(|_| Error::Invalid("Photo could not be decoded or exceeds image limits."))?;
-    let rgb = decoded.thumbnail(1600, 1600).to_rgb8();
+    let rgb = decoded.thumbnail(edge, edge).to_rgb8();
     let mut output = Vec::new();
     image::codecs::jpeg::JpegEncoder::new_with_quality(&mut output, 85)
         .encode_image(&rgb)
@@ -115,7 +119,7 @@ pub async fn create(
         .map_err(|_| Error::Unavailable)?;
     let photo = tokio::task::spawn_blocking(move || {
         let _permit = permit;
-        sanitize_photo(&input.photo_base64)
+        sanitize_photo(&input.photo_base64, 1600)
     })
     .await
     .map_err(|_| Error::Internal)??;
@@ -272,7 +276,7 @@ pub async fn approve(
     Json(input): Json<Approval>,
 ) -> Result<Json<Report>, Error> {
     if !input.photo_privacy_reviewed
-        || !(10..=1000).contains(&input.public_description.trim().len())
+        || !description_valid(&input.public_description)
         || !(2..=120).contains(&input.public_locality.trim().len())
     {
         return Err(Error::Invalid(
