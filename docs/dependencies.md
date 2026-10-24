@@ -1,6 +1,6 @@
 # Dependency review, 22 October 2026
 
-The reusable CI gate rejects new high-severity npm advisories. Two explicitly
+The reusable CI gate rejects new high-severity npm advisories. Three explicitly
 reviewed, currently unfixed tooling advisories expire on **21 November 2026** in
 `.audit-ci.jsonc`. These are exceptions, not fixes or a claim of a clean raw audit.
 
@@ -15,6 +15,11 @@ reviewed, currently unfixed tooling advisories expire on **21 November 2026** in
   does not configure Expo OTA updates/code-signing; Google/Facebook identity tokens
   are validated by the Rust service using AWS-LC. Apple native signing is a different
   toolchain. Reassess before enabling OTA or exposing a development server publicly.
+- **GHSA-mrhx-c7xc-m3w5** (added 24 October 2026), zod <4.6.6: unbounded issue
+  accumulation on oversized arrays. Expo CLI 57 pins zod ^3.25.76 and no 3.x fix
+  exists; forcing zod 4 breaks the CLI. Only the local dev server uses it, for
+  DevTools plugin schemas. The app bundle and the Rust API do not include zod.
+  Reassess before exposing a development server publicly.
 
 The raw npm audit also reports moderate issues in URI decoding, PostCSS selectors
 and sprintf tooling; the shared high-severity gate retains its standard threshold.
