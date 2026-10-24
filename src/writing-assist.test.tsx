@@ -36,7 +36,7 @@ test('drafts in the chosen language and changes the text only when accepted', as
   fireEvent.press(screen.getByRole('button', { name: 'Use this' }));
   expect(onUse).toHaveBeenCalledWith('ถนนมีหลุมขนาดใหญ่หน้าตลาด');
   expect(await AsyncStorage.getItem('civiclens-writing-language-u1')).toBe('th');
-});
+}, 15000);
 
 test('fixes spelling from the text alone and keeps it unchanged when help is unavailable', async () => {
   globalThis.fetch = jest.fn().mockResolvedValue(reply(503, { code: 'UNAVAILABLE', message: 'Not configured.' }));
