@@ -14,6 +14,13 @@
         "expiry": "2026-11-21T00:00:00Z",
         "notes": "Unfixed node-forge <=1.4.0 in Expo CLI code-signing tooling. OTA updates/code-signing are not configured. Identity JWT verification is Rust/AWS-LC and native store signing uses Apple tooling. Recheck before enabling OTA; see docs/dependencies.md."
       }
+    },
+    {
+      "GHSA-mrhx-c7xc-m3w5": {
+        "active": true,
+        "expiry": "2026-11-21T00:00:00Z",
+        "notes": "zod <4.6.6 pinned ^3.25.76 by Expo CLI, no 3.x fix. Used only by the local dev server's DevTools plugin schemas; not in the app bundle or API. Recheck before exposing a dev server; see docs/dependencies.md."
+      }
     }
   ]
 }

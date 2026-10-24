@@ -17,8 +17,12 @@ pub enum Error {
     NotFound,
     #[error("conflict")]
     Conflict(&'static str),
+    #[error("rate limited")]
+    RateLimited(&'static str),
     #[error("dependency unavailable")]
     Unavailable,
+    #[error("content rejected")]
+    ContentRejected,
     #[error(transparent)]
     Database(#[from] sqlx::Error),
     #[error("internal error")]
@@ -41,10 +45,16 @@ impl IntoResponse for Error {
             ),
             Self::NotFound => (StatusCode::NOT_FOUND, "NOT_FOUND", "Report not found."),
             Self::Conflict(message) => (StatusCode::CONFLICT, "CONFLICT", message),
+            Self::RateLimited(message) => (StatusCode::TOO_MANY_REQUESTS, "RATE_LIMITED", message),
             Self::Unavailable => (
                 StatusCode::SERVICE_UNAVAILABLE,
                 "UNAVAILABLE",
                 "This service is not configured or is temporarily unavailable.",
+            ),
+            Self::ContentRejected => (
+                StatusCode::UNPROCESSABLE_ENTITY,
+                "CONTENT_REJECTED",
+                "Please use respectful, factual language without profanity, insults, threats or private details.",
             ),
             Self::Database(_) | Self::Internal => (
                 StatusCode::INTERNAL_SERVER_ERROR,

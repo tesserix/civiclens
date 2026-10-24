@@ -4,3 +4,4 @@ jest.mock('expo-secure-store', () => ({
 }));
 jest.mock('expo-web-browser', () => ({ maybeCompleteAuthSession: jest.fn() }));
 jest.mock('expo-router', () => ({ Redirect: () => null, useRouter: () => ({ push: jest.fn(), replace: jest.fn() }) }));
+jest.mock('@react-native-async-storage/async-storage', () => require('@react-native-async-storage/async-storage/jest/async-storage-mock'));

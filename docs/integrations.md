@@ -54,6 +54,21 @@ Official references to recheck during activation:
 These references document provider contracts; they are not a claim that the
 corresponding accounts or permissions have been granted to CivicLens.
 
+## Writing assist gateway
+
+The API reaches the model only through the dedicated agentgateway at
+`http://civiclens-ai.agentgateway-system.svc.cluster.local:8080`, using the
+OpenAI-compatible `/v1/chat/completions` contract and logical model
+`civiclens-compose`. Production rejects any other URL. `tesserix-k8s` owns the
+gateway (`charts/apps/civiclens-ai-gateway`): Vertex Gemini in
+`tesseracthub-480811` through the `agentgateway-llm` Workload Identity binding,
+strict API-key authentication with rate and token limits, an Istio policy and
+NetworkPolicy admitting only the `civiclens-api` service account, and an egress
+policy on the API side. The client key lives in OpenBao as
+`civiclens/prod/app/civiclens-ai-gateway-key` and reaches both the gateway and the
+API through namespace-bound readers. Rotate it by writing a new version and restarting the
+API; no code change. Without the key the feature is simply hidden.
+
 ## Authority directory
 
 `api/data/authorities.json` starts empty. It is a reviewed, versioned list of

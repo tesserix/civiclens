@@ -43,6 +43,21 @@ uses an HMAC of issuer + subject with a dedicated runtime application key.
 Nicknames are unique case-insensitively; auto names have random suffixes and a
 database uniqueness constraint. Provider linking belongs to the broker's verified identity policy; the API never links by email. Loss/rotation of the HMAC key needs a planned account migration.
 
+## Writing assist
+
+Optional help with the description, through the Tesserix private AI gateway
+(ADR-0003). "Write it for me" drafts from the re-encoded photo, category and notes
+in the reporter's chosen language; "Fix spelling" corrects text without
+translating it. The API calls the logical model `civiclens-compose` at the
+dedicated in-cluster `civiclens-ai` gateway with a product client key; the gateway owns the
+provider, quotas and model choice. Suggestions are never applied without the
+reporter's tap and still pass normal description validation and human review.
+Limits: 20 requests per account per 15 minutes per replica, 15 s deadline, 64 KB
+reply cap. Logs record mode, language, latency and outcome, never text or photos.
+When the gateway or key is missing, capabilities report `assist: false` and the
+app disables the actions with an explanation; a gateway failure returns 503 and leaves the text as is.
+Native keyboard spellcheck stays on for typing.
+
 ## Geography and responsibility
 
 Coordinates support any country. Device geocoding is a location suggestion,
@@ -87,7 +102,7 @@ silently sent after logout or to another account.
 ## Threat model and launch boundary
 
 Assets: private provider subjects, session credentials, photos, exact location,
-moderator authority and social credentials. Attackers include unauthenticated
+moderator authority, social credentials and the AI gateway client key. Attackers include unauthenticated
 clients, other reporters, abusive uploaders and compromised moderators. Validate
 all API boundaries; scope every report read to its authenticated owner, returning
 404 otherwise. Moderator/operator endpoints require server-managed account roles; reporters
@@ -120,3 +135,10 @@ Future GitOps rollout needs a schema migration/rollback plan and explicit approv
 Development cost is local compute; production estimate at pilot scale: roughly
 $50–150/month API/database plus photo storage/egress, provider charges and moderation
 labor. This is an assumption for budgeting, not a quoted or provisioned service.
+
+Authority preview uses the same verified directory as publication routing and
+requires an authenticated, explicit lookup of the confirmed location. AI captions
+are checked for respectful language before and after generation. The publisher
+also checks the final caption and holds it when safety cannot be established,
+including during a model outage. These controls do not replace photo privacy
+review or platform-policy review; see ADR-0003 for boundaries and evaluation.

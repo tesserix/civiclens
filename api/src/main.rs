@@ -1,8 +1,10 @@
 mod account_deletion;
 mod admin;
+mod assist;
 mod auth;
 mod authority;
 mod config;
+mod content_safety;
 mod contracts;
 mod error;
 mod http;
@@ -28,6 +30,7 @@ pub struct AppState {
     authorities: Vec<authority::Authority>,
     rate_limits: Mutex<HashMap<String, (Instant, u32)>>,
     photo_slots: Arc<tokio::sync::Semaphore>,
+    assist_limits: Mutex<HashMap<uuid::Uuid, (Instant, u32)>>,
 }
 
 #[tokio::main]
@@ -84,6 +87,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             .build()?,
         rate_limits: Mutex::new(HashMap::new()),
         photo_slots: Arc::new(tokio::sync::Semaphore::new(2)),
+        assist_limits: Mutex::new(HashMap::new()),
     });
     let router = http::router(state.clone())?;
     let listener = tokio::net::TcpListener::bind(&bind).await?;

@@ -7,24 +7,31 @@ import * as ImageManipulator from 'expo-image-manipulator';
 import * as LocationService from 'expo-location';
 import * as FileSystem from 'expo-file-system/legacy';
 import { Ionicons } from '@expo/vector-icons';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
-import { Brand, Button, Field, Notice } from '../../src/ui';
+import { Button, Chip, Field, Loading, Notice, Step, Title, Viewfinder, categoryIcons, palette } from '../../src/ui';
 import { useSession } from '../../src/session';
 import { useDraft } from '../../src/useDraft';
 import { request } from '../../src/api';
-import { categories, categoryLabels, channels, type Report } from '../../shared/contracts';
+import { WritingAssist } from '../../src/writing-assist';
+import { AuthorityPreview } from '../../src/authority-preview';
+import { categories, categoryLabels, channels, type Capabilities, type Report } from '../../shared/contracts';
+
+const channelIcons = { facebook: 'logo-facebook', instagram: 'logo-instagram', whatsapp: 'logo-whatsapp' } as const;
+const channelLabels = { facebook: 'Facebook', instagram: 'Instagram', whatsapp: 'WhatsApp' } as const;
 
 export default function Capture() {
   const { session } = useSession();
   const { draft, update, ready, error: draftError, save, reset } = useDraft(session?.user.id || '');
-  const [working, setWorking] = useState('');
-  const [error, setError] = useState('');
+  const [working, setWorking] = useState<'photo' | 'location' | ''>('');
+  const [error, setError] = useState<{ step: 'photo' | 'location'; message: string } | null>(null);
   const client = useQueryClient(); const router = useRouter();
+  const capabilities = useQuery({ queryKey: ['capabilities'], queryFn: ({ signal }) => request<Capabilities>('/v1/capabilities', { signal }) });
+  const readPhoto = () => Platform.OS === 'web' ? webBase64(draft.photoUri) : FileSystem.readAsStringAsync(draft.photoUri, { encoding: FileSystem.EncodingType.Base64 });
   const submit = useMutation({ mutationFn: async () => {
     if (!session || !draft.location) throw new Error('Sign in and confirm the location first.');
     await save();
-    const photoBase64 = Platform.OS === 'web' ? await webBase64(draft.photoUri) : await FileSystem.readAsStringAsync(draft.photoUri, { encoding: FileSystem.EncodingType.Base64 });
+    const photoBase64 = await readPhoto();
     return request<Report>('/v1/reports', { token: session.token, method: 'POST', key: draft.key,
       body: { category: draft.category, description: draft.description, location: draft.location, photoBase64, channels: draft.channels, consent: draft.consent } });
   }, onSuccess: async () => {
@@ -33,7 +40,7 @@ export default function Capture() {
     router.push('/(tabs)/reports');
   } });
   const photo = async (camera: boolean) => {
-    setWorking('photo'); setError('');
+    setWorking('photo'); setError(null);
     try {
       if (camera) {
         const permission = await ImagePicker.requestCameraPermissionsAsync();
@@ -50,11 +57,11 @@ export default function Capture() {
         }
         update({ photoUri: uri });
       }
-    } catch (e) { setError(e instanceof Error ? e.message : 'Could not open the camera. Please retry.'); }
+    } catch (e) { setError({ step: 'photo', message: e instanceof Error ? e.message : 'Could not open the camera. Please retry.' }); }
     finally { setWorking(''); }
   };
   const locate = async () => {
-    setWorking('location'); setError('');
+    setWorking('location'); setError(null);
     try {
       const permission = await LocationService.requestForegroundPermissionsAsync();
       if (!permission.granted) throw new Error('Location access is off. Enable it in Settings to attach the issue’s location.');
@@ -63,37 +70,83 @@ export default function Capture() {
       try {
         const [place] = await LocationService.reverseGeocodeAsync(position.coords);
         countryCode = place?.isoCountryCode || ''; locality = [place?.city || place?.district, place?.region].filter(Boolean).join(', ');
-      } catch { setError('Location captured. Please enter the locality and two-letter country code below.'); }
+      } catch { setError({ step: 'location', message: 'Location captured. Enter the town or city and two-letter country code below.' }); }
       update({ location: { latitude: position.coords.latitude, longitude: position.coords.longitude, countryCode, locality } });
-    } catch (e) { setError(e instanceof Error ? e.message : 'Could not capture location. Please retry.'); }
+    } catch (e) { setError({ step: 'location', message: e instanceof Error ? e.message : 'Could not capture location. Please retry.' }); }
     finally { setWorking(''); }
   };
-  if (!ready) return <SafeAreaView className="flex-1 items-center justify-center bg-canvas"><ActivityIndicator color="#3858F5" /></SafeAreaView>;
-  const valid = draft.photoUri && draft.location && /^[A-Z]{2}$/.test(draft.location.countryCode) && draft.location.locality.trim().length > 1 && draft.description.trim().length >= 10 && draft.consent && draft.channels.length > 0;
-  return <SafeAreaView edges={['top','left','right']} className="flex-1 bg-canvas"><KeyboardAvoidingView className="flex-1" behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-    <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ padding: 24, gap: 24, paddingBottom: 40 }}>
-      <View className="flex-row items-center justify-between"><Brand /><View className="flex-row items-center gap-1.5 rounded-full bg-tint px-3 py-2"><Ionicons name="shield-checkmark" size={13} color="#3858F5" /><Text className="text-xs font-semibold text-primary">Nickname only</Text></View></View>
-      <View className="gap-2"><Text className="text-[32px] font-bold tracking-tight text-ink">What did you spot?</Text><Text className="text-base leading-6 text-muted">One photo. A little context. A better place.</Text></View>
-      {draft.photoUri ? <View className="gap-3"><Image source={{ uri: draft.photoUri }} contentFit="cover" style={{ height: 260, borderRadius: 24 }} accessibilityLabel="Your report photo" /><Button title="Retake photo" secondary icon="camera-outline" onPress={() => void photo(true)} disabled={submit.isPending} /></View>
-        : <Pressable accessibilityRole="button" accessibilityLabel="Take a photo" disabled={working !== '' || submit.isPending} onPress={() => void photo(true)} className="min-h-64 items-center justify-center gap-4 rounded-[28px] border border-dashed border-blue-200 bg-tint px-6 py-10" style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}>
-          <View className="h-20 w-20 items-center justify-center rounded-full bg-primary">{working === 'photo' ? <ActivityIndicator color="#FFF" /> : <Ionicons name="camera-outline" size={34} color="#FFF" />}</View>
-          <View className="gap-1"><Text className="text-center text-xl font-semibold text-ink">Take a photo</Text><Text className="text-center text-sm leading-6 text-muted">Show the issue from a safe distance.</Text></View>
-        </Pressable>}
-      <Button title="Choose from photos" secondary icon="images-outline" disabled={working !== '' || submit.isPending} onPress={() => void photo(false)} />
-      <View className="gap-3"><Text className="text-lg font-semibold text-ink">What needs attention?</Text><View className="flex-row flex-wrap gap-2">{categories.map(category => <Pressable key={category} accessibilityRole="radio" accessibilityState={{ checked: draft.category === category }} disabled={submit.isPending} onPress={() => update({ category })}
-        className={`min-h-12 justify-center rounded-full border px-4 py-3 ${draft.category === category ? 'border-primary bg-tint' : 'border-line bg-white'}`}><Text className={`text-sm ${draft.category === category ? 'font-semibold text-primary' : 'text-muted'}`}>{categoryLabels[category]}</Text></Pressable>)}</View></View>
-      <Field label="A little context" placeholder="What did you see? Describe the issue, without naming private individuals." multiline maxLength={500} value={draft.description} editable={!submit.isPending} onChangeText={description => update({ description })} />
-      <View className="gap-3 rounded-2xl border border-line bg-white p-5"><View className="flex-row items-center gap-2"><Ionicons name="location-outline" size={22} color="#3858F5" /><Text className="text-lg font-semibold text-ink">Where is it?</Text></View><Text className="text-sm leading-6 text-muted">Capture your current location at the issue. Confirm the suggested place before submitting.</Text>
-        <Button title={draft.location ? 'Update current location' : 'Use current location'} secondary busy={working === 'location'} disabled={submit.isPending} onPress={() => void locate()} />
-        {draft.location ? <><Text className="text-xs text-muted">{draft.location.latitude.toFixed(5)}, {draft.location.longitude.toFixed(5)} · exact coordinates stay private</Text><Field label="Locality / city" value={draft.location.locality} maxLength={120} editable={!submit.isPending} onChangeText={locality => update({ location: { ...draft.location!, locality } })} /><Field label="Country code" placeholder="IN, AU, GB…" autoCapitalize="characters" maxLength={2} value={draft.location.countryCode} editable={!submit.isPending} onChangeText={countryCode => update({ location: { ...draft.location!, countryCode: countryCode.toUpperCase() } })} /></> : null}
+  if (!ready) return <SafeAreaView className="flex-1 justify-center bg-canvas"><Loading label="Opening your draft" /></SafeAreaView>;
+  const located = !!draft.location && /^[A-Z]{2}$/.test(draft.location.countryCode) && draft.location.locality.trim().length > 1;
+  const described = draft.description.trim().length >= 10;
+  const shared = draft.consent && draft.channels.length > 0;
+  const locked = submit.isPending;
+  const stepError = (step: 'photo' | 'location') => error?.step === step ? <Notice>{error.message}</Notice> : null;
+  return <SafeAreaView edges={['top', 'left', 'right']} className="flex-1 bg-canvas"><KeyboardAvoidingView className="flex-1" behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+    <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ padding: 20, gap: 32, paddingBottom: 40 }}>
+      <Title subtitle="Nothing is shared until a reviewer has checked it.">Report an issue</Title>
+
+      <Step number={1} title="Take a photo" done={!!draft.photoUri}>
+        <Viewfinder className="p-2">
+          {draft.photoUri ? <Image source={{ uri: draft.photoUri }} contentFit="cover" style={{ height: 240, borderRadius: 12 }} accessibilityLabel="Your report photo" />
+            : <Pressable accessibilityRole="button" accessibilityLabel="Take a photo" disabled={working !== '' || locked} onPress={() => void photo(true)}
+              className="h-56 items-center justify-center gap-3 rounded-xl bg-ink px-6" style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}>
+              {working === 'photo' ? <ActivityIndicator color={palette.hivis} /> : <Ionicons name="camera" size={34} color={palette.hivis} />}
+              <Text className="text-lg font-semibold text-white">Take a photo</Text>
+              <Text className="text-center text-sm leading-5 text-white/70">Keep a safe distance. Leave faces and number plates out of frame.</Text>
+            </Pressable>}
+        </Viewfinder>
+        <View className="flex-row gap-2">
+          {draft.photoUri ? <View className="flex-1"><Button title="Retake" variant="secondary" compact icon="camera-outline" disabled={working !== '' || locked} onPress={() => void photo(true)} /></View> : null}
+          <View className="flex-1"><Button title="Choose from photos" variant="secondary" compact icon="images-outline" disabled={working !== '' || locked} onPress={() => void photo(false)} /></View>
+        </View>
+        {stepError('photo')}
+      </Step>
+
+      <Step number={2} title="What kind of issue?" done>
+        <View accessibilityRole="radiogroup" className="flex-row flex-wrap gap-2">
+          {categories.map(category => <Chip key={category} label={categoryLabels[category]} icon={categoryIcons[category]} selected={draft.category === category} disabled={locked} onPress={() => update({ category })} />)}
+        </View>
+      </Step>
+
+      <Step number={3} title="Where is it?" done={located}>
+        {draft.location ? <>
+          <View className="flex-row gap-3">
+            <View className="flex-1"><Field label="Town or city" value={draft.location.locality} maxLength={120} editable={!locked} onChangeText={locality => update({ location: { ...draft.location!, locality } })} /></View>
+            <View className="w-24"><Field label="Country code" placeholder="IN" autoCapitalize="characters" maxLength={2} value={draft.location.countryCode} editable={!locked} onChangeText={countryCode => update({ location: { ...draft.location!, countryCode: countryCode.toUpperCase() } })} /></View>
+          </View>
+          <View className="flex-row items-center gap-1.5"><Ionicons name="lock-closed-outline" size={13} color={palette.muted} /><Text className="flex-1 text-xs text-muted" style={{ fontVariant: ['tabular-nums'] }}>{draft.location.latitude.toFixed(5)}, {draft.location.longitude.toFixed(5)} stays private</Text></View>
+        </> : <Text className="text-sm leading-5 text-muted">Stand near the issue and use your current location. Only the town or city is shown publicly.</Text>}
+        <Button title={draft.location ? 'Update location' : 'Use current location'} variant="secondary" icon="navigate-outline" busy={working === 'location'} disabled={working === 'photo' || locked} onPress={() => void locate()} />
+        {stepError('location')}
+        {session ? <AuthorityPreview userId={session.user.id} token={session.token} category={draft.category} location={draft.location} available={capabilities.data?.authorityPreview === true} disabled={locked || working !== ''} /> : null}
+      </Step>
+
+      <Step number={4} title="Describe it" done={described}>
+        <Field label="Description" hint={`${draft.description.trim().length} of 1000 characters, at least 10. Don’t name private individuals.`}
+          placeholder="What did you see, and where exactly?" multiline maxLength={1000} autoCorrect spellCheck value={draft.description} editable={!locked}
+          onChangeText={description => update({ description })} style={{ minHeight: 120, textAlignVertical: 'top' }} />
+        {session ? <WritingAssist userId={session.user.id} token={session.token} category={draft.category} description={draft.description}
+          hasPhoto={!!draft.photoUri} readPhoto={readPhoto} onUse={description => update({ description })} disabled={locked || working !== ''}
+          available={capabilities.data?.assist === true} sourceId={draft.key} /> : null}
+      </Step>
+
+      <Step number={5} title="Share after review" done={shared}>
+        <Text className="text-sm leading-5 text-muted">Pick where it should be posted. Posting starts after review, through a connected, supported account.</Text>
+        <View className="flex-row flex-wrap gap-2">
+          {channels.map(channel => <Chip key={channel} role="checkbox" label={channelLabels[channel]} icon={channelIcons[channel]} selected={draft.channels.includes(channel)} disabled={locked}
+            onPress={() => update({ channels: draft.channels.includes(channel) ? draft.channels.filter(c => c !== channel) : [...draft.channels, channel] })} />)}
+        </View>
+        <View className="flex-row items-start gap-3 rounded-xl border border-line bg-surface p-4">
+          <Text className="flex-1 text-sm leading-5 text-ink">I agree to public sharing after review, using my nickname and an approximate location. I’ve checked the photo for identifying details.</Text>
+          <Switch accessibilityLabel="Consent to reviewed public sharing" value={draft.consent} disabled={locked} onValueChange={consent => update({ consent })} trackColor={{ true: palette.brand }} />
+        </View>
+      </Step>
+
+      <View className="gap-3">
+        {draftError || submit.error ? <Notice>{draftError || submit.error?.message}</Notice> : null}
+        <Button title="Submit report" icon="send" busy={locked} disabled={!draft.photoUri || !located || !described || !shared || working !== ''} onPress={() => submit.mutate()} />
+        <Text className="text-center text-xs leading-5 text-muted">{Platform.OS === 'web' ? 'Browser drafts last while this page stays open.' : 'Your draft stays on this device until you submit.'}{`\n`}In immediate danger? Contact local emergency services.</Text>
       </View>
-      <View className="gap-3"><Text className="text-lg font-semibold text-ink">Share after review</Text><Text className="text-sm leading-6 text-muted">Choose requested destinations. Posting starts after review and requires a connected, supported account.</Text><View className="flex-row flex-wrap gap-2">{channels.map(channel => <Pressable key={channel} accessibilityRole="checkbox" accessibilityState={{ checked: draft.channels.includes(channel) }} disabled={submit.isPending}
-        onPress={() => update({ channels: draft.channels.includes(channel) ? draft.channels.filter(c => c !== channel) : [...draft.channels, channel] })}
-        className={`min-h-12 flex-row items-center gap-2 rounded-full border px-4 py-3 ${draft.channels.includes(channel) ? 'border-primary bg-tint' : 'border-line bg-white'}`}><Ionicons name={channel === 'facebook' ? 'logo-facebook' : channel === 'instagram' ? 'logo-instagram' : 'logo-whatsapp'} size={18} color="#3858F5" /><Text className="text-sm capitalize text-primary">{channel}</Text></Pressable>)}</View></View>
-      <View className="flex-row items-start gap-3 rounded-2xl bg-tint p-4"><Switch accessibilityLabel="Consent to reviewed public sharing" value={draft.consent} disabled={submit.isPending} onValueChange={consent => update({ consent })} trackColor={{ true: '#3858F5' }} /><Text className="flex-1 text-sm leading-6 text-primary">I agree to public sharing after review, using my nickname and an approximate location. I have checked the photo for identifying details.</Text></View>
-      {draftError || error || submit.error ? <Notice>{draftError || error || submit.error?.message}</Notice> : null}
-      <Button title="Submit report" icon="arrow-forward" busy={submit.isPending} disabled={!valid || working !== ''} onPress={() => submit.mutate()} />
-      <Text className="text-center text-xs leading-5 text-muted">{Platform.OS === 'web' ? 'Browser drafts last while this page stays open.' : 'Your draft stays on this device until you submit.'}{`\n`}In immediate danger? Contact local emergency services.</Text>
     </ScrollView>
   </KeyboardAvoidingView></SafeAreaView>;
 }

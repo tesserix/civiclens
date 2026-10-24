@@ -28,6 +28,9 @@ pub struct Capabilities {
     pub apple: bool,
     pub auth: BrokerConfiguration,
     pub publishing: PublishingCapabilities,
+    pub assist: bool,
+    #[serde(rename = "authorityPreview")]
+    pub authority_preview: bool,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, TS)]
@@ -76,6 +79,61 @@ pub struct ReportInput {
     pub photo_base64: String,
     pub channels: Vec<Channel>,
     pub consent: bool,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, TS)]
+#[serde(rename_all = "snake_case")]
+pub enum AssistMode {
+    Draft,
+    Correct,
+}
+
+#[derive(Deserialize, Serialize, TS)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct AssistInput {
+    pub mode: AssistMode,
+    pub category: Category,
+    pub language: String,
+    pub text: String,
+    pub photo_base64: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, TS)]
+pub struct AssistSuggestion {
+    pub text: String,
+}
+
+#[derive(Deserialize, Serialize, TS)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct AuthorityPreviewInput {
+    pub category: Category,
+    pub location: Location,
+}
+
+#[derive(Deserialize, Serialize, TS)]
+#[serde(rename_all = "snake_case")]
+pub enum AuthorityPreviewStatus {
+    Matched,
+    Unverified,
+}
+
+#[derive(Deserialize, Serialize, TS)]
+#[serde(rename_all = "camelCase")]
+pub struct AuthoritySuggestion {
+    pub id: String,
+    pub name: String,
+    pub official_url: String,
+    pub source_url: String,
+    pub verified_at: String,
+    pub expires_at: String,
+    pub facebook: Option<String>,
+    pub instagram: Option<String>,
+}
+
+#[derive(Deserialize, Serialize, TS)]
+pub struct AuthorityPreview {
+    pub status: AuthorityPreviewStatus,
+    pub authorities: Vec<AuthoritySuggestion>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, TS)]
@@ -181,6 +239,13 @@ mod tests {
             Channel::decl(),
             Location::decl(),
             ReportInput::decl(),
+            AssistMode::decl(),
+            AssistInput::decl(),
+            AssistSuggestion::decl(),
+            AuthorityPreviewInput::decl(),
+            AuthorityPreviewStatus::decl(),
+            AuthoritySuggestion::decl(),
+            AuthorityPreview::decl(),
             User::decl(),
             Session::decl(),
             LoginInput::decl(),
