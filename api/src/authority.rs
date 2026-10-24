@@ -37,8 +37,13 @@ pub fn load(path: &str) -> Result<Vec<Authority>, Error> {
     let bytes = std::fs::read(path).map_err(|_| Error::Internal)?;
     let authorities: Vec<Authority> =
         serde_json::from_slice(&bytes).map_err(|_| Error::Internal)?;
+    validate(&authorities)?;
+    Ok(authorities)
+}
+
+pub fn validate(authorities: &[Authority]) -> Result<(), Error> {
     let mut ids = std::collections::HashSet::new();
-    for a in &authorities {
+    for a in authorities {
         if !ids.insert(&a.id)
             || !a.official_url.starts_with("https://")
             || !a.source_url.starts_with("https://")
@@ -68,7 +73,7 @@ pub fn load(path: &str) -> Result<Vec<Authority>, Error> {
             }
         }
     }
-    Ok(authorities)
+    Ok(())
 }
 
 pub fn matches(

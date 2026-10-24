@@ -88,6 +88,13 @@ and litter only; see docs/authority-sources/README.md for evidence, expiry and
 Australia/India expansion. Unverified previews distinguish missing country, area
 or category coverage from records needing review (ADR-0004).
 
+PostgreSQL now retains immutable authority-source imports and record history
+(ADR-0005). Free national reference data is kept separate from reviewed routing
+data. The API loads only the current reviewed source at startup; reference
+imports cannot become routing records. Source hashes, licences, retrieval times,
+regional coverage gaps and old versions remain available for maintenance. See
+docs/authority-sources/australia.md for refresh and verification procedures.
+
 ## Publication and failure behavior
 
 Report submission commits before any social network I/O. Repeated submission

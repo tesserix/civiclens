@@ -1,6 +1,7 @@
 # ADR-0004: Verified authority coverage grows by municipality
 
-Status: accepted for pilot, 24 October 2026.
+Status: accepted for pilot, 24 October 2026. Storage is superseded by
+[ADR-0005](0005-authority-register.md); verification and preview rules remain.
 
 The directory was empty, so every valid preview returned the same unverified
 message. Global coordinate support does not establish service responsibility.

@@ -342,6 +342,7 @@ async fn database_enforces_ownership_roles_idempotency_and_transactional_publica
     )
     .await
     .unwrap();
+    crate::directory::tests::assert_register_database_behaviour(&pool).await;
     for (table, privilege, granted) in [
         ("users", "INSERT", true),
         ("users", "UPDATE", false),

@@ -1,0 +1,282 @@
+{
+  "sourceId": "au-state-service-directories",
+  "sourceUrl": "https://github.com/tesserix/civiclens/blob/main/docs/authority-sources/australia.md",
+  "licenceUrl": "https://creativecommons.org/licenses/by/4.0/",
+  "attribution": "CivicLens compilation of official Australian state and territory public service directory links; underlying agency content retains its own licence. No source page text reproduced.",
+  "retrievedAt": "2026-10-24T05:06:25.881316Z",
+  "upstreamSha256": "53043c8c1551e4b30bffdb1fb80b15d9827f5724ee81a08cd9067b4506376e24",
+  "records": [
+    {
+      "id": "au-act-environment",
+      "kind": "service_directory",
+      "name": "ACT Government environment services",
+      "countryCode": "AU",
+      "regionCode": "AU-ACT",
+      "officialUrl": "https://www.environment.act.gov.au/",
+      "evidenceUrl": "https://www.environment.act.gov.au/",
+      "verificationStatus": "reference",
+      "details": {
+        "serviceType": "environment",
+        "responsibilityNotVerified": true,
+        "httpStatus": 403,
+        "sourceSha256": "2938e9f1284180959e33ab1718d0793a72ff6e4cdb8108c34dcd14e69446de5c",
+        "retrievedAt": "2026-10-24T05:06:24.460593Z"
+      }
+    },
+    {
+      "id": "au-act-police",
+      "kind": "service_directory",
+      "name": "ACT Policing",
+      "countryCode": "AU",
+      "regionCode": "AU-ACT",
+      "officialUrl": "https://www.police.act.gov.au/",
+      "evidenceUrl": "https://www.police.act.gov.au/",
+      "verificationStatus": "reference",
+      "details": {
+        "serviceType": "police",
+        "responsibilityNotVerified": true,
+        "httpStatus": 403,
+        "sourceSha256": "73f0f2d7cb22e25742a91c664089604fdecf8dd198f83b6f854a10dad5d98724",
+        "retrievedAt": "2026-10-24T05:06:25.239883Z"
+      }
+    },
+    {
+      "id": "au-nsw-environment",
+      "kind": "service_directory",
+      "name": "NSW Environment Protection Authority",
+      "countryCode": "AU",
+      "regionCode": "AU-NSW",
+      "officialUrl": "https://www.epa.nsw.gov.au/",
+      "evidenceUrl": "https://www.epa.nsw.gov.au/",
+      "verificationStatus": "reference",
+      "details": {
+        "serviceType": "environment",
+        "responsibilityNotVerified": true,
+        "httpStatus": 403,
+        "sourceSha256": "2938e9f1284180959e33ab1718d0793a72ff6e4cdb8108c34dcd14e69446de5c",
+        "retrievedAt": "2026-10-24T05:06:24.007961Z"
+      }
+    },
+    {
+      "id": "au-nsw-police",
+      "kind": "service_directory",
+      "name": "NSW Police Force",
+      "countryCode": "AU",
+      "regionCode": "AU-NSW",
+      "officialUrl": "https://www.police.nsw.gov.au/",
+      "evidenceUrl": "https://www.police.nsw.gov.au/",
+      "verificationStatus": "reference",
+      "details": {
+        "serviceType": "police",
+        "responsibilityNotVerified": true,
+        "httpStatus": 403,
+        "sourceSha256": "431233ae547ff22116aa40e0e8778668f8786eaa8cdd62a6cf75235d9b050488",
+        "retrievedAt": "2026-10-24T05:06:24.437264Z"
+      }
+    },
+    {
+      "id": "au-nt-environment",
+      "kind": "service_directory",
+      "name": "Northern Territory Environment Protection Authority",
+      "countryCode": "AU",
+      "regionCode": "AU-NT",
+      "officialUrl": "https://ntepa.nt.gov.au/",
+      "evidenceUrl": "https://ntepa.nt.gov.au/",
+      "verificationStatus": "reference",
+      "details": {
+        "serviceType": "environment",
+        "responsibilityNotVerified": true,
+        "httpStatus": 403,
+        "sourceSha256": "0f261f7bc8a15afe95cd6be4d4ef9de3620d258cf9a4786210c284323f7db2fd",
+        "retrievedAt": "2026-10-24T05:06:24.210692Z"
+      }
+    },
+    {
+      "id": "au-nt-police",
+      "kind": "service_directory",
+      "name": "Northern Territory Police",
+      "countryCode": "AU",
+      "regionCode": "AU-NT",
+      "officialUrl": "https://pfes.nt.gov.au/",
+      "evidenceUrl": "https://pfes.nt.gov.au/",
+      "verificationStatus": "reference",
+      "details": {
+        "serviceType": "police",
+        "responsibilityNotVerified": true,
+        "httpStatus": 200,
+        "sourceSha256": "5b99323255bccbcddddb59aa990cd91d27ce21c39ace9909d37a7f238556c025",
+        "retrievedAt": "2026-10-24T05:06:25.299087Z"
+      }
+    },
+    {
+      "id": "au-qld-environment",
+      "kind": "service_directory",
+      "name": "Queensland Government environment services",
+      "countryCode": "AU",
+      "regionCode": "AU-QLD",
+      "officialUrl": "https://www.qld.gov.au/environment",
+      "evidenceUrl": "https://www.qld.gov.au/environment",
+      "verificationStatus": "reference",
+      "details": {
+        "serviceType": "environment",
+        "responsibilityNotVerified": true,
+        "httpStatus": 403,
+        "sourceSha256": "2938e9f1284180959e33ab1718d0793a72ff6e4cdb8108c34dcd14e69446de5c",
+        "retrievedAt": "2026-10-24T05:06:24.045989Z"
+      }
+    },
+    {
+      "id": "au-qld-police",
+      "kind": "service_directory",
+      "name": "Queensland Police Service",
+      "countryCode": "AU",
+      "regionCode": "AU-QLD",
+      "officialUrl": "https://www.police.qld.gov.au/",
+      "evidenceUrl": "https://www.police.qld.gov.au/",
+      "verificationStatus": "reference",
+      "details": {
+        "serviceType": "police",
+        "responsibilityNotVerified": true,
+        "httpStatus": 200,
+        "sourceSha256": "d02032286070b4dd9d8fbd985a7bdca8af8edf52b89ff177db3bfcb2c8a9c43d",
+        "retrievedAt": "2026-10-24T05:06:24.619825Z"
+      }
+    },
+    {
+      "id": "au-sa-environment",
+      "kind": "service_directory",
+      "name": "South Australia Environment Protection Authority",
+      "countryCode": "AU",
+      "regionCode": "AU-SA",
+      "officialUrl": "https://www.epa.sa.gov.au/",
+      "evidenceUrl": "https://www.epa.sa.gov.au/",
+      "verificationStatus": "reference",
+      "details": {
+        "serviceType": "environment",
+        "responsibilityNotVerified": true,
+        "httpStatus": 403,
+        "sourceSha256": "9961606f17383daa8a0bd982749f935797c199953204a91828909f6b723bece1",
+        "retrievedAt": "2026-10-24T05:06:24.058355Z"
+      }
+    },
+    {
+      "id": "au-sa-police",
+      "kind": "service_directory",
+      "name": "South Australia Police",
+      "countryCode": "AU",
+      "regionCode": "AU-SA",
+      "officialUrl": "https://www.police.sa.gov.au/",
+      "evidenceUrl": "https://www.police.sa.gov.au/",
+      "verificationStatus": "reference",
+      "details": {
+        "serviceType": "police",
+        "responsibilityNotVerified": true,
+        "httpStatus": 403,
+        "sourceSha256": "ec24f5a6dbc8a95d0647fff9fface58bf33bc7465249e569dcf27382556412b7",
+        "retrievedAt": "2026-10-24T05:06:24.783506Z"
+      }
+    },
+    {
+      "id": "au-tas-environment",
+      "kind": "service_directory",
+      "name": "Environment Protection Authority Tasmania",
+      "countryCode": "AU",
+      "regionCode": "AU-TAS",
+      "officialUrl": "https://epa.tas.gov.au/",
+      "evidenceUrl": "https://epa.tas.gov.au/",
+      "verificationStatus": "reference",
+      "details": {
+        "serviceType": "environment",
+        "responsibilityNotVerified": true,
+        "httpStatus": 200,
+        "sourceSha256": "24ccae5c26614ad3b90b65b3d0254b405468db5f0df0a273d3d75eb8a6214a13",
+        "retrievedAt": "2026-10-24T05:06:24.785017Z"
+      }
+    },
+    {
+      "id": "au-tas-police",
+      "kind": "service_directory",
+      "name": "Tasmania Police",
+      "countryCode": "AU",
+      "regionCode": "AU-TAS",
+      "officialUrl": "https://www.police.tas.gov.au/",
+      "evidenceUrl": "https://www.police.tas.gov.au/",
+      "verificationStatus": "reference",
+      "details": {
+        "serviceType": "police",
+        "responsibilityNotVerified": true,
+        "httpStatus": 200,
+        "sourceSha256": "6c3558ec7acd923abe7e12cd021073286472c725730fdd3a9cdfc73bfc6c5fb4",
+        "retrievedAt": "2026-10-24T05:06:25.484310Z"
+      }
+    },
+    {
+      "id": "au-vic-environment",
+      "kind": "service_directory",
+      "name": "Environment Protection Authority Victoria",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.epa.vic.gov.au/",
+      "evidenceUrl": "https://www.epa.vic.gov.au/",
+      "verificationStatus": "reference",
+      "details": {
+        "serviceType": "environment",
+        "responsibilityNotVerified": true,
+        "httpStatus": 200,
+        "sourceSha256": "94f935eb013f4e88867f0fee7238baf78b26e68b350a65d971c3db45bad1a29a",
+        "retrievedAt": "2026-10-24T05:06:24.210406Z"
+      }
+    },
+    {
+      "id": "au-vic-police",
+      "kind": "service_directory",
+      "name": "Victoria Police",
+      "countryCode": "AU",
+      "regionCode": "AU-VIC",
+      "officialUrl": "https://www.police.vic.gov.au/",
+      "evidenceUrl": "https://www.police.vic.gov.au/",
+      "verificationStatus": "reference",
+      "details": {
+        "serviceType": "police",
+        "responsibilityNotVerified": true,
+        "httpStatus": 200,
+        "sourceSha256": "56dd963d19e125b48829c180533acff120261593dca58fdfb8e79ba0c40c9847",
+        "retrievedAt": "2026-10-24T05:06:24.668692Z"
+      }
+    },
+    {
+      "id": "au-wa-environment",
+      "kind": "service_directory",
+      "name": "Western Australia Department of Water and Environmental Regulation",
+      "countryCode": "AU",
+      "regionCode": "AU-WA",
+      "officialUrl": "https://www.wa.gov.au/organisation/department-of-water-and-environmental-regulation",
+      "evidenceUrl": "https://www.wa.gov.au/organisation/department-of-water-and-environmental-regulation",
+      "verificationStatus": "reference",
+      "details": {
+        "serviceType": "environment",
+        "responsibilityNotVerified": true,
+        "httpStatus": 200,
+        "sourceSha256": "36c31114a09a4117c4824f3df105133a8fce0045f3b4bcb5199561f89cbd5d51",
+        "retrievedAt": "2026-10-24T05:06:25.115585Z"
+      }
+    },
+    {
+      "id": "au-wa-police",
+      "kind": "service_directory",
+      "name": "Western Australia Police Force",
+      "countryCode": "AU",
+      "regionCode": "AU-WA",
+      "officialUrl": "https://www.police.wa.gov.au/",
+      "evidenceUrl": "https://www.police.wa.gov.au/",
+      "verificationStatus": "reference",
+      "details": {
+        "serviceType": "police",
+        "responsibilityNotVerified": true,
+        "httpStatus": 200,
+        "sourceSha256": "d4a89d1a9b5a7b98db126868256e782834024fd351e0c7cbb6bcd02bae8a50a2",
+        "retrievedAt": "2026-10-24T05:06:25.879286Z"
+      }
+    }
+  ]
+}
