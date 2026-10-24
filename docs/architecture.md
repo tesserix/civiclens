@@ -60,6 +60,21 @@ Native keyboard spellcheck stays on for typing.
 
 ## Geography and responsibility
 
+New reports request foreground device location automatically while the report
+screen is active. Existing draft locations are preserved until the reporter taps
+Update location. The native OS provides a high-accuracy fix; the app does not use
+an IP-geolocation service or select coordinates from a VPN exit address. This
+is not VPN detection or a guarantee against device-location spoofing. Browsers
+choose their own geolocation provider; emulators use their configured simulated
+location rather than the host computer's physical position.
+
+Fixes must have valid coordinates, a timestamp within two minutes, and reported
+accuracy of 100 metres or better. Location acquisition times out after 15 seconds;
+address lookup times out after eight seconds and leaves town/country editable.
+Permission denial and disabled Location Services show settings/retry actions.
+Backgrounded or unfocused requests cannot overwrite a draft, and returning from
+Settings retries a missing location. No background location permission is used.
+
 Coordinates support any country. Device geocoding is a location suggestion,
 confirmed by the reporter; it is not evidence of legal jurisdiction. Only a
 reviewed, source-backed authority directory can route to an office. Match country,

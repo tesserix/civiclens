@@ -1,17 +1,17 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { ActivityIndicator, KeyboardAvoidingView, Platform, Pressable, ScrollView, Switch, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Image } from 'expo-image';
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
-import * as LocationService from 'expo-location';
 import * as FileSystem from 'expo-file-system/legacy';
 import { Ionicons } from '@expo/vector-icons';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useRouter } from 'expo-router';
+import { useFocusEffect, useRouter } from 'expo-router';
 import { Button, Chip, Field, Loading, Notice, Step, Title, Viewfinder, categoryIcons, palette } from '../../src/ui';
 import { useSession } from '../../src/session';
 import { useDraft } from '../../src/useDraft';
+import { useDeviceLocation } from '../../src/useDeviceLocation';
 import { request } from '../../src/api';
 import { WritingAssist } from '../../src/writing-assist';
 import { AuthorityPreview } from '../../src/authority-preview';
@@ -23,8 +23,8 @@ const channelLabels = { facebook: 'Facebook', instagram: 'Instagram', whatsapp: 
 export default function Capture() {
   const { session } = useSession();
   const { draft, update, ready, error: draftError, save, reset } = useDraft(session?.user.id || '');
-  const [working, setWorking] = useState<'photo' | 'location' | ''>('');
-  const [error, setError] = useState<{ step: 'photo' | 'location'; message: string } | null>(null);
+  const [working, setWorking] = useState<'photo' | ''>('');
+  const [error, setError] = useState<{ step: 'photo'; message: string } | null>(null);
   const client = useQueryClient(); const router = useRouter();
   const capabilities = useQuery({ queryKey: ['capabilities'], queryFn: ({ signal }) => request<Capabilities>('/v1/capabilities', { signal }) });
   const readPhoto = () => Platform.OS === 'web' ? webBase64(draft.photoUri) : FileSystem.readAsStringAsync(draft.photoUri, { encoding: FileSystem.EncodingType.Base64 });
@@ -60,27 +60,15 @@ export default function Capture() {
     } catch (e) { setError({ step: 'photo', message: e instanceof Error ? e.message : 'Could not open the camera. Please retry.' }); }
     finally { setWorking(''); }
   };
-  const locate = async () => {
-    setWorking('location'); setError(null);
-    try {
-      const permission = await LocationService.requestForegroundPermissionsAsync();
-      if (!permission.granted) throw new Error('Location access is off. Enable it in Settings to attach the issue’s location.');
-      const position = await LocationService.getCurrentPositionAsync({ accuracy: LocationService.Accuracy.Balanced });
-      let countryCode = ''; let locality = '';
-      try {
-        const [place] = await LocationService.reverseGeocodeAsync(position.coords);
-        countryCode = place?.isoCountryCode || ''; locality = [place?.city || place?.district, place?.region].filter(Boolean).join(', ');
-      } catch { setError({ step: 'location', message: 'Location captured. Enter the town or city and two-letter country code below.' }); }
-      update({ location: { latitude: position.coords.latitude, longitude: position.coords.longitude, countryCode, locality } });
-    } catch (e) { setError({ step: 'location', message: e instanceof Error ? e.message : 'Could not capture location. Please retry.' }); }
-    finally { setWorking(''); }
-  };
+  const [focused, setFocused] = useState(false);
+  useFocusEffect(useCallback(() => { setFocused(true); return () => setFocused(false); }, []));
+  const deviceLocation = useDeviceLocation(ready && focused && !submit.isPending, draft.location, location => update({ location }));
   if (!ready) return <SafeAreaView className="flex-1 justify-center bg-canvas"><Loading label="Opening your draft" /></SafeAreaView>;
   const located = !!draft.location && /^[A-Z]{2}$/.test(draft.location.countryCode) && draft.location.locality.trim().length > 1;
   const described = draft.description.trim().length >= 10;
   const shared = draft.consent && draft.channels.length > 0;
   const locked = submit.isPending;
-  const stepError = (step: 'photo' | 'location') => error?.step === step ? <Notice>{error.message}</Notice> : null;
+  const stepError = (step: 'photo') => error?.step === step ? <Notice>{error.message}</Notice> : null;
   return <SafeAreaView edges={['top', 'left', 'right']} className="flex-1 bg-canvas"><KeyboardAvoidingView className="flex-1" behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
     <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ padding: 20, gap: 32, paddingBottom: 40 }}>
       <Title subtitle="Nothing is shared until a reviewer has checked it.">Report an issue</Title>
@@ -111,14 +99,16 @@ export default function Capture() {
       <Step number={3} title="Where is it?" done={located}>
         {draft.location ? <>
           <View className="flex-row gap-3">
-            <View className="flex-1"><Field label="Town or city" value={draft.location.locality} maxLength={120} editable={!locked} onChangeText={locality => update({ location: { ...draft.location!, locality } })} /></View>
-            <View className="w-24"><Field label="Country code" placeholder="IN" autoCapitalize="characters" maxLength={2} value={draft.location.countryCode} editable={!locked} onChangeText={countryCode => update({ location: { ...draft.location!, countryCode: countryCode.toUpperCase() } })} /></View>
+            <View className="flex-1"><Field label="Town or city" value={draft.location.locality} maxLength={120} editable={!locked && !deviceLocation.busy} onChangeText={locality => update({ location: { ...draft.location!, locality } })} /></View>
+            <View className="w-24"><Field label="Country code" placeholder="IN" autoCapitalize="characters" maxLength={2} value={draft.location.countryCode} editable={!locked && !deviceLocation.busy} onChangeText={countryCode => update({ location: { ...draft.location!, countryCode: countryCode.toUpperCase() } })} /></View>
           </View>
           <View className="flex-row items-center gap-1.5"><Ionicons name="lock-closed-outline" size={13} color={palette.muted} /><Text className="flex-1 text-xs text-muted" style={{ fontVariant: ['tabular-nums'] }}>{draft.location.latitude.toFixed(5)}, {draft.location.longitude.toFixed(5)} stays private</Text></View>
-        </> : <Text className="text-sm leading-5 text-muted">Stand near the issue and use your current location. Only the town or city is shown publicly.</Text>}
-        <Button title={draft.location ? 'Update location' : 'Use current location'} variant="secondary" icon="navigate-outline" busy={working === 'location'} disabled={working === 'photo' || locked} onPress={() => void locate()} />
-        {stepError('location')}
-        {session ? <AuthorityPreview userId={session.user.id} token={session.token} category={draft.category} location={draft.location} available={capabilities.data?.authorityPreview === true} disabled={locked || working !== ''} /> : null}
+        </> : <Text className="text-sm leading-5 text-muted">We detect your device location automatically. Stay near the issue; only the town or city is shown publicly.</Text>}
+        {deviceLocation.busy ? <Text accessibilityLiveRegion="polite" className="text-sm text-muted">Detecting your device location…</Text> : null}
+        <Button title={draft.location ? 'Update location' : 'Retry location'} variant="secondary" icon="navigate-outline" busy={deviceLocation.busy} disabled={working === 'photo' || locked} onPress={() => void deviceLocation.locate()} />
+        {deviceLocation.error ? <Notice>{deviceLocation.error}</Notice> : null}
+        {deviceLocation.settingsNeeded && Platform.OS !== 'web' ? <Button title="Open location settings" variant="secondary" onPress={() => void deviceLocation.openSettings()} /> : null}
+        {session ? <AuthorityPreview userId={session.user.id} token={session.token} category={draft.category} location={draft.location} available={capabilities.data?.authorityPreview === true} disabled={locked || working !== '' || deviceLocation.busy} /> : null}
       </Step>
 
       <Step number={4} title="Describe it" done={described}>
@@ -144,7 +134,7 @@ export default function Capture() {
 
       <View className="gap-3">
         {draftError || submit.error ? <Notice>{draftError || submit.error?.message}</Notice> : null}
-        <Button title="Submit report" icon="send" busy={locked} disabled={!draft.photoUri || !located || !described || !shared || working !== ''} onPress={() => submit.mutate()} />
+        <Button title="Submit report" icon="send" busy={locked} disabled={!draft.photoUri || !located || !described || !shared || working !== '' || deviceLocation.busy} onPress={() => submit.mutate()} />
         <Text className="text-center text-xs leading-5 text-muted">{Platform.OS === 'web' ? 'Browser drafts last while this page stays open.' : 'Your draft stays on this device until you submit.'}{`\n`}In immediate danger? Contact local emergency services.</Text>
       </View>
     </ScrollView>
