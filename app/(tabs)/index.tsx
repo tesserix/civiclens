@@ -30,6 +30,10 @@ export default function Capture() {
   const { width, fontScale } = useWindowDimensions();
   const { session } = useSession();
   const { draft, update, ready, error: draftError, save, reset } = useDraft(session?.user.id || '');
+  const [confirmDiscard, setConfirmDiscard] = useState(false);
+  const [discarding, setDiscarding] = useState(false);
+  const [discardError, setDiscardError] = useState('');
+  const [formVersion, setFormVersion] = useState(0);
   const [working, setWorking] = useState<'photo' | ''>('');
   const [error, setError] = useState<{ step: 'photo'; message: string } | null>(null);
   const client = useQueryClient(); const router = useRouter();
@@ -90,16 +94,33 @@ export default function Capture() {
   };
   const [focused, setFocused] = useState(false);
   useFocusEffect(useCallback(() => { setFocused(true); return () => { setFocused(false); photoGeneration.current++; };  }, []));
-  const deviceLocation = useDeviceLocation(ready && focused && !submit.isPending && working !== 'photo', draft.location, location => update({ location, locationSource: 'device' }), !draft.photoUri);
+  const deviceLocation = useDeviceLocation(ready && focused && !submit.isPending && !confirmDiscard && !discarding && working !== 'photo', draft.location, location => update({ location, locationSource: 'device' }), !draft.photoUri);
+  const discard = async () => {
+    setDiscarding(true); setDiscardError(''); photoGeneration.current++;
+    try {
+      await reset();
+      setError(null); submit.reset(); setResolvedAuthority(null);
+      setAuthorityRetry(0); setFormVersion(value => value + 1); setConfirmDiscard(false);
+    } catch { setDiscardError('Could not discard your draft. Please retry.'); }
+    finally { setDiscarding(false); }
+  };
   if (!ready) return <SafeAreaView className="flex-1 justify-center bg-canvas"><Loading label="Opening your draft" /></SafeAreaView>;
   const located = !!draft.location && /^[A-Z]{2}$/.test(draft.location.countryCode) && draft.location.locality.trim().length > 1;
   const described = draft.description.trim().length >= 10;
   const shared = draft.consent && draft.channels.length > 0;
-  const locked = submit.isPending;
+  const locked = submit.isPending || discarding || confirmDiscard;
   const stepError = (step: 'photo') => error?.step === step ? <Notice>{error.message}</Notice> : null;
   return <SafeAreaView edges={['top', 'left', 'right']} className="flex-1 bg-canvas"><KeyboardAvoidingView className="flex-1" behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-    <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ padding: 20, gap: 32, paddingBottom: 40, width: '100%', maxWidth: 680, alignSelf: 'center' }}>
+    <ScrollView key={formVersion} keyboardShouldPersistTaps="handled" contentContainerStyle={{ padding: 20, gap: 32, paddingBottom: 40, width: '100%', maxWidth: 680, alignSelf: 'center' }}>
       <Title subtitle="Nothing is shared until a reviewer has checked it.">Report an issue</Title>
+
+      {confirmDiscard ? <View className="gap-3 rounded-xl border border-line bg-surface p-4">
+        <Text accessibilityRole="header" className="text-lg font-semibold text-ink">Discard this draft?</Text>
+        <Text className="text-sm leading-5 text-muted">This removes the draft photo, description, location and sharing choices from CivicLens on this device. Your original photo and submitted reports are kept.</Text>
+        {discardError ? <Notice>{discardError}</Notice> : null}
+        <Button title="Discard and start again" busy={discarding} onPress={() => void discard()} />
+        <Button title="Keep draft" variant="secondary" disabled={discarding} onPress={() => { setConfirmDiscard(false); setDiscardError(''); }} />
+      </View> : <Button title="Discard draft" variant="quiet" icon="trash-outline" disabled={submit.isPending || working !== ''} onPress={() => setConfirmDiscard(true)} />}
 
       <Step number={1} title="Take a photo" done={!!draft.photoUri}>
         <Viewfinder className="p-2">
@@ -157,8 +178,8 @@ export default function Capture() {
 
       <View className="gap-3">
         {draftError || submit.error ? <Notice>{draftError || submit.error?.message}</Notice> : null}
-        <Button title="Submit report" icon="send" busy={locked} disabled={!draft.photoUri || !located || !described || !shared || working !== '' || deviceLocation.busy} onPress={() => submit.mutate()} />
-        <Text className="text-center text-xs leading-5 text-muted">{Platform.OS === 'web' ? 'Browser drafts last while this page stays open.' : 'Your draft stays on this device until you submit.'}{`\n`}In immediate danger? Contact local emergency services.</Text>
+        <Button title="Submit report" icon="send" busy={submit.isPending} disabled={locked || !draft.photoUri || !located || !described || !shared || working !== '' || deviceLocation.busy} onPress={() => submit.mutate()} />
+        <Text className="text-center text-xs leading-5 text-muted">{Platform.OS === 'web' ? 'Browser drafts last while this page stays open.' : 'Your draft stays on this device until you submit or discard it.'}{`\n`}In immediate danger? Contact local emergency services.</Text>
       </View>
     </ScrollView>
   </KeyboardAvoidingView></SafeAreaView>;

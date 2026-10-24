@@ -24,3 +24,7 @@ Show selectable hashtag suggestions beside generated prose and in Description.
 Persist the selected subset separately; explicit Clear means no hashtags.
 Reset on context changes and validate again against reviewed routing on the server.
 Label model fixtures explicitly and never present emulator fixtures as live AI results.
+
+## Device verification
+
+Use Apple simulators for app verification. Do not start or use Android emulators.
