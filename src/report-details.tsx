@@ -39,7 +39,7 @@ export function CategorySelect({ value, onChange, disabled = false }: { value: C
       <Text className="flex-1 text-base text-ink">{categoryLabels[value]}</Text>
       <Ionicons name="chevron-down" size={18} color={palette.muted} />
     </Pressable> : <View className="min-h-14 justify-center rounded-xl border border-line bg-surface px-2" style={{ opacity: disabled ? 0.45 : 1 }}>
-      <Picker accessibilityLabel="Issue type" selectedValue={value} enabled={!disabled} mode={fontScale > 1.2 ? 'dialog' : 'dropdown'} prompt="Issue type" onValueChange={select} dropdownIconColor={palette.muted} style={{ color: palette.ink, minHeight: Math.max(56, 40 * fontScale) }}>
+      <Picker accessibilityLabel="Issue type" selectedValue={value} enabled={!disabled} mode={fontScale > 1.2 ? 'dialog' : 'dropdown'} prompt="Issue type" numberOfLines={3} onValueChange={select} dropdownIconColor={palette.muted} style={{ color: palette.ink, height: fontScale > 1.2 ? 72 * fontScale : 56 }}>
         {categories.map(category => <Picker.Item key={category} label={categoryLabels[category]} value={category} />)}
       </Picker>
     </View>}
