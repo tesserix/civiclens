@@ -8,3 +8,16 @@ Google/Facebook identify accounts privately; only unique nicknames are public.
 An unverified authority or unreviewed photo must never reach a social publisher.
 Use OpenBao for all deployed application credentials, with civiclens-prefixed
 identifiers and separate development/UAT/production paths. No live cloud changes.
+
+
+## Captions and automatic tagging
+
+Follow the caption style and tagging rules in docs/architecture.md.
+Offer Serious, Light satire and Balanced tones in the preferred language.
+Use natural, human phrasing and everyday English; retain useful detail rather
+than forcing shorter captions. Humour should be witty, clear and constructive.
+Keep profanity, privacy, factuality and human-review safeguards in every tone.
+Derive issue hashtags on the server and city/region/council tags from reviewed
+directory data. Mention only verified relevant accounts; never invent groups,
+handles, officials, responsibility or blame. Recheck tags when category/location changes.
+Label model fixtures explicitly and never present emulator fixtures as live AI results.

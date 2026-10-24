@@ -74,6 +74,39 @@ When the gateway or key is missing, capabilities report `assist: false` and the
 app disables the actions with an explanation; a gateway failure returns 503 and leaves the text as is.
 Native keyboard spellcheck stays on for typing.
 
+### Caption style and tagging rules
+
+All drafting tones use the reporter's preferred language. English should sound
+like a local person talking: familiar words, natural contractions and readable
+sentences. Keep useful visible detail; a caption need not be shortened for humour.
+Avoid stiff official phrasing, forced jokes and stock slogans. Serious stays clear
+and direct; Light satire can be noticeably funny and playfully sarcastic about
+the mess; Balanced combines a witty observation with facts and a serious request
+for action. Encourage shared responsibility without identifying or inventing a
+culprit. Criticism of service delivery must not invent a history of neglect or blame.
+
+For example, a litter caption could say: “Lovely, the grass has started its own
+rubbish collection. Blue and white litter is scattered around this patch of
+Melbourne, giving the place a look nobody ordered. Can we get a clean-up here?
+And for the next round, let’s give the bins a go.” This is a style example, not a
+verified incident. Describe only supported details in an actual report.
+
+The model writes prose; it must not invent hashtags, mentions, council names or
+contact details. The API separately adds fixed issue-topic hashtags and the
+matched authority's reviewed topic tags and name hashtag. Reviewed topic tags
+cover applicable city, region and country identities. Do not derive city tags from
+an editable locality label, scrape result or model guess. The same helper supplies
+the preview and reviewed public caption. No verified match means no authority or
+place tags. Relevant groups, agencies, ministers and mayors require reviewed
+responsibility and account evidence before mentions; parent escalation remains a
+moderator decision. Hashtags are topic labels, not proof that an account was
+notified or a Facebook group received the post.
+
+Every tone retains profanity/harassment checks, photo privacy checks, factuality,
+reporter approval and moderator review before publishing. Exact coordinates stay
+out of model context and public hashtags. Emulator fixtures must be visibly labelled
+and their results kept distinct from live-provider evaluation.
+
 ## Geography and responsibility
 
 New reports request foreground device location automatically while the report

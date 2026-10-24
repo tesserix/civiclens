@@ -35,3 +35,15 @@ ambiguous or expired matches stay held. Parent escalation remains a moderator ch
 Camera/location failures leave manual reporting available. Native geocoding failures
 retain a selected valid point and permit town/country correction. AI failures retain
 written text. No photo, location or generated text is silently published.
+
+
+Hashtags reuse the existing preview response and publication caption. Fixed
+category topics come from the API enum; optional reviewed `topicTags` on authority
+records supply city, region and country tags. This defaults to an empty list for
+older records and needs no SQL migration. Validate at most eight ASCII hashtag
+tokens per authority, each at most 80 letters/digits after `#`; reject mentions,
+links and malformed tokens. Preview and caption share the same derivation. Editable
+locality text and AI output never supply tags or handles. Missing/expired/ambiguous
+routing supplies no office or place tags. This reuses the existing lookup, adds no
+network calls and preserves the pilot latency/cost budget. API and seed changes
+remain local until a specifically approved rollout.

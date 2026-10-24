@@ -279,6 +279,7 @@ fn public_caption_uses_reviewed_text_pseudonym_and_approximate_location() {
         &location,
         &[&office],
         contracts::Channel::Facebook,
+        contracts::Category::Waste,
     );
     assert!(caption.contains("RiverFox"));
     assert!(caption.contains("15.12, 75.99"));
@@ -1203,14 +1204,22 @@ fn council_topic_tags_come_from_verified_routing_and_are_shared_with_the_public_
             latitude: -37.814,
             longitude: 144.9633,
             country_code: "AU".into(),
-            locality: "Melbourne, VIC".into(),
+            locality: "Sydney, @UnverifiedGroup".into(),
         },
     };
     let preview =
         serde_json::to_value(authority::preview_for(&directory, &input, now).unwrap()).unwrap();
-    assert!(preview["hashtags"]
-        .as_array()
-        .is_some_and(|tags| tags.contains(&json!("#CityofMelbourne"))));
+    let tags = preview["hashtags"].as_array().unwrap();
+    for tag in [
+        "#CityofMelbourne",
+        "#Melbourne",
+        "#Victoria",
+        "#Australia",
+        "#Litter",
+        "#WasteManagement",
+    ] {
+        assert!(tags.contains(&json!(tag)), "missing relevant tag {tag}");
+    }
     let routed = authority::route(&directory, &input.location, input.category, now);
     let caption = authority::caption(
         "RiverFox",
@@ -1219,8 +1228,13 @@ fn council_topic_tags_come_from_verified_routing_and_are_shared_with_the_public_
         &input.location,
         &routed,
         contracts::Channel::Facebook,
+        contracts::Category::Waste,
     );
-    assert!(caption.contains("#CityofMelbourne"));
+    for tag in tags {
+        assert!(caption.contains(tag.as_str().unwrap()));
+    }
+    assert!(!caption.contains("#Sydney"));
+    assert!(!caption.contains("#UnverifiedGroup"));
     assert!(caption.contains("@cityofmelbourne"));
     input.location.latitude = -33.8688;
     input.location.longitude = 151.2093;
@@ -1248,5 +1262,26 @@ async fn photo_drafting_fails_closed_when_model_verdict_is_missing_or_malformed(
         )
         .await;
         assert!(matches!(result, Err(error::Error::Unavailable)));
+    }
+}
+
+#[test]
+fn reviewed_topic_tags_reject_mentions_links_and_unbounded_lists() {
+    let directory = authority::load(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/data/authorities.json"
+    ))
+    .unwrap();
+    for tags in [
+        vec!["@UnverifiedGroup".to_string()],
+        vec!["#City https://example.invalid".to_string()],
+        vec!["#Bad#Tag".to_string()],
+        vec!["#".to_string()],
+        vec!["#Good".to_string(); 9],
+        vec![format!("#{}", "x".repeat(81))],
+    ] {
+        let mut bad = directory.clone();
+        bad[0].topic_tags = tags;
+        assert!(authority::validate(&bad).is_err());
     }
 }

@@ -126,3 +126,12 @@ and reviewed image. Refreshing reference data never silently enables publishing.
 The API loads the current reviewed-source snapshot from PostgreSQL on startup;
 expired entries stop matching. See [ADR-0005](../adr/0005-authority-register.md)
 for sizing, failure behaviour, migration and rollback constraints.
+
+
+## Reviewed topic tags
+
+The reviewed `au-vic-melbourne` waste/litter routing record includes
+`#Melbourne`, `#Victoria` and `#Australia` as geographic identity tags. The API
+adds the reviewed council name and fixed waste/litter topic tags. This does not
+expand its boundary, category coverage, verified social accounts or expiry date.
+Topic tags are reviewed metadata, not newly verified group accounts or politicians.

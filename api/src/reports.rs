@@ -339,6 +339,7 @@ pub async fn approve(
             &report.location,
             &offices,
             publication.channel,
+            report.category,
         );
         sqlx::query("INSERT INTO publications(id,report_id,channel,status,caption) VALUES($1,$2,$3,'queued',$4) ON CONFLICT(report_id,channel) DO NOTHING")
             .bind(Uuid::now_v7()).bind(id).bind(publication.channel.as_str()).bind(caption).execute(&mut *tx).await?;

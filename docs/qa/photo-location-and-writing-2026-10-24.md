@@ -53,10 +53,49 @@ Commands actually run successfully:
 - `npm run export` — iOS, Android and web bundles. Android runtime QA was excluded
   at the user's request; no Android emulator was used in this work.
 - `cargo fmt --check`, `cargo clippy --all-targets -- -D warnings`, `cargo build`,
-  `cargo test` — 24 unit tests; one database integration test gated by default.
+  `cargo test` — 25 unit tests; one database integration test gated by default.
 - With the scratch local database URL set:
   `cargo test -p civiclens-api tests::database_enforces_ownership_roles_idempotency_and_transactional_publication -- --ignored --exact`
   — the database integration test passed separately.
+
+## Additional emulator run: tones, style and tags
+
+The same iPhone simulator was connected through a second local Metro instance to
+the actual latest Rust API and a separate scratch database. The AI gateway alone
+was replaced with labelled `[QA fixture]` responses. A loopback-only adapter used
+an isolated short-lived test session and blocked report/account writes. The
+production database, permissions and deployment were untouched. Fixture captions
+are UI/safety-plumbing evidence, not a live-model evaluation of humour quality.
+
+Observed in the emulator:
+
+- Serious, Light satire and Balanced selections produce their corresponding
+  labelled suggestions through the real API.
+- Applying stays disabled until the reporter checks the privacy/review box.
+- Changing tone invalidates a reviewed answer, even when changing back.
+- Identifying-details and unclear-issue verdicts return actionable photo holds.
+- Missing verdict fields return unavailable; no partial suggestion can be applied.
+- An unsafe-language verdict returns respectful-language guidance with no apply action.
+- The emulator displays `#Litter #WasteManagement #Melbourne #Victoria #Australia`
+  and `#CityofMelbourne` after the existing versioned bundled import updates the
+  isolated local database. Existing tag metadata is refreshed at import, not merely
+  by restarting an API replica. No deployed directory import was performed.
+- Switching to Roads removes the waste/council tags and reports unverified
+  category coverage. Switching back to Waste restores the reviewed match.
+- The gateway receives a photo plus town/country; event records confirm exact
+  coordinates are absent from the model context.
+- Applying the longer, simpler-English humour fixture updates the private draft.
+  The applied fixture was then cleared from the draft. Public sharing remains off;
+  no report is submitted.
+
+The revised production prompt requests everyday language, natural contractions,
+useful detail and stronger situational humour without forced shortening. It
+preserves the selected language, factuality and all safety/publication checks.
+Reviewed Melbourne metadata adds city/state/country tags; fixed category topics
+add litter/waste tags. Editable labels cannot inject other cities or groups.
+
+Additional validation: 10 authority-register/privacy/release checks via
+`node --test scripts/ci/authority-register.test.mjs scripts/ci/privacy.test.mjs scripts/ci/release.test.mjs` passed.
 
 ## Remaining gates
 
