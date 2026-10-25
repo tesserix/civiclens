@@ -37,6 +37,30 @@ on 25 October 2026. The dashboard confirmed active rule
 `10193714f04a41caa1c1d5e051d769e5`; initial checks exposed the ordering issue
 above. Reachability verification must follow the corrected placement.
 
+## Verified outcome and remaining Google challenge
+
+After correcting the order, all three pages returned HTTP 200 to Python urllib
+for GET and HEAD, and to curl for GET. GET bodies retained CivicLens content and
+working mailto links without Cloudflare email rewriting. All Python responses
+retained `Cache-Control: no-store, no-transform`.
+
+Google Play's new check still returned 403. The Cloudflare event at
+`2026-10-25T10:46:59Z`, ray `a500a3fe3b2fc714`, identifies a GET request to
+the account-deletion path, user agent `GooglePlayConsole`, Google LLC ASN 15169,
+and a **Bot Fight Mode managed challenge**. This is distinct from BIC.
+[Cloudflare's Skip documentation](https://developers.cloudflare.com/waf/custom-rules/skip/options/)
+states that Bot Fight Mode cannot be skipped; only Super Bot Fight Mode can.
+Do not disable the zone-wide setting or claim that the BIC rule fixed Google's
+validator.
+
+The public Markdown mirrors in `docs/public/` preserve the corresponding
+`api/public/*.html` policy text, with source SHA-256 comments and local policy
+links. They can be served by the existing public GitHub repository without
+changing protections on the shared domain or provisioning a new service.
+Update the mirrors whenever the canonical policy changes. Verify the rendered
+public GitHub pages and Google's validator before changing a store declaration;
+publishing the mirrors alone is not successful store validation.
+
 ## Verification and recovery
 
 After deployment, record the new rule ID and time. Fetch privacy, terms and
