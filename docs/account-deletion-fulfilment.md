@@ -109,3 +109,19 @@ private file, not a public URL. Erase all three fields when anonymizing an accou
 ordinary row deletion also removes them. Do not leave an imported-photo candidate
 in an anonymized user row. Backup expiration and restore reapplication cover
 these fields too. No user access token is retained by this feature.
+
+## Private community safety records (migration 0013)
+
+Include the account's outgoing `community_user_blocks.blocker_id` records and
+`community_opinion_flags.reporter_id` concerns in its restricted export. Resolve
+blocked accounts to public nicknames; do not export internal account identifiers,
+incoming blocks or other users' confidential abuse reports. Opinion concerns
+must retain the relevant opinion/card reference without exposing other reporters.
+
+During separately approved erasure, inventory both directions of block
+relationships and concerns on owned opinions. Foreign keys remove block rows
+when either account is deleted and remove opinion concerns when the reporter or
+opinion is deleted. Review the same audit, retention and backup-restore rules as
+the existing participation data. Cascading row cleanup does not by itself prove
+provider cleanup or completion of account erasure. No live purge is authorized
+by this runbook update.

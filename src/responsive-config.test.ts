@@ -13,3 +13,8 @@ test('uses the same native app identities as shared-link verification', () => {
   expect(config.ios?.associatedDomains).toContain(`applinks:${new URL(links.publicOrigin).hostname}`);
   expect(config.android?.intentFilters?.[0].autoVerify).toBe(true);
 });
+
+
+test('allows only the supported native social app availability queries',()=>{
+  expect(config.ios?.infoPlist?.LSApplicationQueriesSchemes).toEqual(['fb','instagram','whatsapp']);
+});

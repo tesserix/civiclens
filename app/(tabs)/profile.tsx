@@ -1,4 +1,5 @@
 import { AccountProfileCard } from '../../src/account-profile';
+import { BlockedUsers } from '../../src/community-safety';
 import { request } from '../../src/api';
 import type { Capabilities } from '../../shared/contracts';
 import { Text } from '../../src/text';
@@ -27,6 +28,7 @@ export default function Profile() {
   return <SafeAreaView edges={['top', 'left', 'right']} className="flex-1 bg-canvas"><KeyboardAvoidingView className="flex-1" behavior={Platform.OS==='ios'?'padding':'height'}><ScrollView automaticallyAdjustKeyboardInsets keyboardShouldPersistTaps="handled" contentContainerStyle={{ padding: 20, gap: 28, width: '100%', maxWidth: 800, alignSelf: 'center' }}>
     <Title>Your account</Title>
     {session ? <AccountProfileCard userId={session.user.id} token={session.token} nickname={nickname} available={capabilities.data?.profileEditing===true}/> : null}
+    {session?<BlockedUsers key={session.user.id} userId={session.user.id} token={session.token} available={capabilities.data?.communityBlocking===true}/>:null}
     <View className="gap-3">
       <Text accessibilityRole="header" className="text-[17px] font-semibold text-ink">How a report travels</Text>
       {journey.map(([title, description], i) => <View key={title} className="flex-row items-start gap-3">

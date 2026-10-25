@@ -5,6 +5,7 @@ mod assist;
 mod auth;
 mod authority;
 mod community;
+mod community_blocks;
 mod community_links;
 #[cfg(test)]
 mod community_tests;
