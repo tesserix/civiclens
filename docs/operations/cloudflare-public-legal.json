@@ -1,0 +1,12 @@
+{
+  "action": "skip",
+  "action_parameters": {
+    "products": ["bic"]
+  },
+  "expression": "(http.host eq \"civiclns-api.tesserix.app\" and http.request.method in {\"GET\" \"HEAD\"} and http.request.uri.path in {\"/v1/privacy\" \"/v1/terms\" \"/v1/account-deletion\"})",
+  "description": "CivicLens public legal pages: allow policy and store-review fetchers",
+  "enabled": true,
+  "logging": {
+    "enabled": true
+  }
+}
