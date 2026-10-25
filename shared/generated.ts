@@ -1,11 +1,15 @@
 // Generated from Rust. Run cargo test export_mobile_contract.
 export const communityRulesVersion = "2026-10-24";
+export type BlockInput = { blocked: boolean, };
+export type BlockState = { nickname: string, blocked: boolean, };
+export type BlockedUser = { nickname: string, createdAt: string, };
+export type BlockPage = { items: Array<BlockedUser>, nextCursor: string | null, };
 export type AccountProfile = { bio: string, photoBase64: string | null, signInPhotoAvailable: boolean, };
 export type ProfileInput = { bio: string, photoBase64: string | null, removePhoto: boolean, };
 export type ImportedProfilePhoto = { photoBase64: string, };
 export type BrokerConfiguration = { issuer: string, organizationId: string, projectId: string, iosClientId: string, androidClientId: string, googleIdpId: string, facebookIdpId: string, appleIdpId: string, };
 export type PublishingCapabilities = { facebook: boolean, instagram: boolean, whatsapp: boolean, };
-export type Capabilities = { manualShareChannels?: Array<Channel>, profileEditing?: boolean, communityDiscovery?: boolean, officialComplaintGateway?: boolean, complaintPreparation?: boolean, civicParticipation?: boolean, manualSharing?: boolean, google: boolean, facebook: boolean, apple: boolean, auth: BrokerConfiguration, publishing: PublishingCapabilities, assist: boolean, assistContext: boolean, hashtagSelection: boolean, authorityPreview: boolean, maxPhotos?: number, communityRulesVersion?: string, };
+export type Capabilities = { communityBlocking?: boolean, manualShareChannels?: Array<Channel>, profileEditing?: boolean, communityDiscovery?: boolean, officialComplaintGateway?: boolean, complaintPreparation?: boolean, civicParticipation?: boolean, manualSharing?: boolean, google: boolean, facebook: boolean, apple: boolean, auth: BrokerConfiguration, publishing: PublishingCapabilities, assist: boolean, assistContext: boolean, hashtagSelection: boolean, authorityPreview: boolean, maxPhotos?: number, communityRulesVersion?: string, };
 export type Category = "waste" | "pollution" | "roads" | "water" | "public_safety";
 export type Channel = "facebook" | "instagram" | "whatsapp" | "tiktok";
 export type Location = { latitude: number, longitude: number, countryCode: string, locality: string, };
@@ -76,6 +80,6 @@ export type CivicOpinionInput = { text: string, rulesVersion: string, consent: b
 export type CivicOpinion = { id: string, cardId: string, text: string, authorNickname: string, status: string, createdAt: string, mine: boolean, canReview: boolean, };
 export type CivicOpinionPage = { items: Array<CivicOpinion>, nextCursor: string | null, };
 export type CivicFlagReason = "privacy" | "harassment" | "misleading" | "other";
-export type CivicFlagInput = { reason: CivicFlagReason, };
+export type CivicFlagInput = { reason: CivicFlagReason, opinionId?: string, };
 
 export const civicTopics = [{"id":"general","label":"Community"},{"id":"environment","label":"Environment"},{"id":"transport","label":"Transport"},{"id":"public_safety","label":"Safety"},{"id":"governance","label":"Government"},{"id":"other","label":"Other"}] as const;

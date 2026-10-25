@@ -1,4 +1,4 @@
-import { Share, ActionSheetIOS } from 'react-native';
+import { Share, ActionSheetIOS, Alert } from 'react-native';
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react-native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { CivicCard } from '../shared/contracts';
@@ -10,13 +10,17 @@ let current:CivicCard;
 let calls:{url:string;method:string;body:unknown}[];
 let failVote=false;
 let client:QueryClient;
+let blocked:boolean;
 beforeEach(()=>{
   client=new QueryClient({defaultOptions:{queries:{retry:false,gcTime:0},mutations:{retry:false,gcTime:0}}});
-  current={...card};calls=[];failVote=false;
+  current={...card};calls=[];failVote=false;blocked=false;
   globalThis.fetch=jest.fn(async(url,init)=>{
     const path=String(url),method=init?.method??'GET';
     const body=init?.body?JSON.parse(String(init.body)):null;
     calls.push({url:path,method,body});
+    if(path.endsWith('/v1/capabilities'))return {ok:true,status:200,json:async()=>({communityBlocking:true})} as Response;
+    if(path.endsWith('/v1/me/blocks/HappyKea')){blocked=body.blocked;return {ok:true,status:200,json:async()=>({nickname:'HappyKea',blocked})} as Response;}
+    if(blocked&&path.endsWith(`/v1/community/${card.id}`))return {ok:false,status:404,json:async()=>({code:'not_found',message:'This request is unavailable.'})} as Response;
     if(path.endsWith('/response')){
       if(failVote)throw new Error('network disconnected');
       current={...current,myResponse:body.choice};
@@ -27,6 +31,18 @@ beforeEach(()=>{
 });
 afterEach(()=>{client.clear();jest.restoreAllMocks();jest.useRealTimers();});
 function mount(){return render(<QueryClientProvider client={client}><CommunityDetail id={card.id} userId="test-account" token="test-session"/></QueryClientProvider>);}
+
+test('blocks an author only after confirmation and immediately removes cached content',async()=>{
+  const confirm=jest.spyOn(Alert,'alert').mockImplementation(()=>{});
+  mount();await screen.findByText(card.title);
+  fireEvent.press(await screen.findByRole('button',{name:'Block HappyKea'}));
+  expect(calls.some(c=>c.method==='PUT')).toBe(false);
+  const buttons=confirm.mock.calls[0][2];
+  await act(async()=>{await buttons?.find(button=>button.text==='Block')?.onPress?.();});
+  await screen.findByText(/You blocked HappyKea/);
+  expect(screen.queryByText(card.title)).toBeNull();
+  expect(calls.find(c=>c.method==='PUT')?.body).toEqual({blocked:true});
+});
 
 test('requires explicit consent before recording a response and hides interim totals',async()=>{
   mount();await screen.findByText(card.title);

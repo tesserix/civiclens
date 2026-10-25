@@ -435,7 +435,7 @@ async fn load(
         c.owner_id=$2 AS mine,c.closes_at<=statement_timestamp() AS closed,
         c.owner_id<>$2 AND EXISTS(SELECT 1 FROM user_roles WHERE user_id=$2 AND role='moderator') AS can_review,
         r.choice AS my_response,w.card_id IS NOT NULL AS watching,
-        (SELECT count(*) FROM community_opinions o WHERE o.card_id=c.id AND o.status='approved') AS discussion_count,
+        (SELECT count(*) FROM community_opinions o WHERE o.card_id=c.id AND o.status='approved' AND ($3 OR community_users_visible($2,o.owner_id))) AS discussion_count,
         s.total,s.yes,s.no,s.dont_know
         FROM community_cards c JOIN users u ON u.id=c.owner_id
         LEFT JOIN community_responses r ON r.card_id=c.id AND r.user_id=$2
@@ -445,6 +445,7 @@ async fn load(
         WHERE ($1::uuid IS NULL OR c.id=$1)
         AND ($3 OR c.owner_id=$2 OR c.status='approved' OR ($1::uuid IS NOT NULL AND EXISTS(SELECT 1 FROM user_roles WHERE user_id=$2 AND role='moderator')))
         AND (NOT $3 OR c.status='pending')
+        AND ($3 OR ($1::uuid IS NOT NULL AND EXISTS(SELECT 1 FROM user_roles WHERE user_id=$2 AND role='moderator')) OR community_users_visible($2,c.owner_id))
         AND ($4::uuid IS NULL OR (NOT $14 AND c.id<$4) OR ($14 AND (c.closes_at>$15 OR (c.closes_at=$15 AND c.id<$4))))
         AND ($5::text IS NULL OR c.kind=$5) AND (NOT $6 OR c.owner_id=$2)
         AND ($8::text IS NULL OR c.topic=$8)
@@ -616,7 +617,7 @@ pub async fn respond(
     Json(input): Json<CivicResponseInput>,
 ) -> Result<Json<CivicCard>, Error> {
     let mut tx = state.pool.begin().await?;
-    let card=sqlx::query("SELECT status,closes_at FROM community_cards WHERE id=$1 AND (owner_id=$2 OR status='approved') FOR UPDATE").bind(id).bind(member.id).fetch_optional(&mut *tx).await?.ok_or(Error::NotFound)?;
+    let card=sqlx::query("SELECT status,closes_at FROM community_cards WHERE id=$1 AND (owner_id=$2 OR status='approved') AND community_users_visible($2,owner_id) FOR UPDATE").bind(id).bind(member.id).fetch_optional(&mut *tx).await?.ok_or(Error::NotFound)?;
     let now: OffsetDateTime = sqlx::query_scalar("SELECT clock_timestamp()")
         .fetch_one(&mut *tx)
         .await?;
@@ -675,9 +676,10 @@ pub async fn watch(
         .await?;
     let changed = if input.watching {
         let visible: bool = sqlx::query_scalar(
-            "SELECT EXISTS(SELECT 1 FROM community_cards WHERE id=$1 AND status='approved')",
+            "SELECT EXISTS(SELECT 1 FROM community_cards WHERE id=$1 AND status='approved' AND community_users_visible($2,owner_id))",
         )
         .bind(id)
+        .bind(member.id)
         .fetch_one(&mut *tx)
         .await?;
         if !visible {
@@ -780,7 +782,7 @@ async fn load_opinions(
     if !(1..=50).contains(&limit) {
         return Err(Error::Invalid("Choose a page size between 1 and 50."));
     }
-    let rows=sqlx::query("SELECT o.id,o.card_id,o.text,o.status,o.created_at,u.nickname,o.owner_id=$2 AS mine,o.owner_id<>$2 AND EXISTS(SELECT 1 FROM user_roles WHERE user_id=$2 AND role='moderator') AS can_review FROM community_opinions o JOIN users u ON u.id=o.owner_id WHERE o.card_id=$1 AND (o.owner_id=$2 OR o.status='approved' OR $3 OR ($4::uuid IS NOT NULL AND EXISTS(SELECT 1 FROM user_roles WHERE user_id=$2 AND role='moderator'))) AND ($4::uuid IS NULL OR o.id=$4) AND ($5::uuid IS NULL OR o.id<$5) AND (NOT $3 OR o.status='pending') ORDER BY o.id DESC LIMIT $6")
+    let rows=sqlx::query("SELECT o.id,o.card_id,o.text,o.status,o.created_at,u.nickname,o.owner_id=$2 AS mine,o.owner_id<>$2 AND EXISTS(SELECT 1 FROM user_roles WHERE user_id=$2 AND role='moderator') AS can_review FROM community_opinions o JOIN users u ON u.id=o.owner_id WHERE o.card_id=$1 AND (o.owner_id=$2 OR o.status='approved' OR $3 OR ($4::uuid IS NOT NULL AND EXISTS(SELECT 1 FROM user_roles WHERE user_id=$2 AND role='moderator'))) AND ($3 OR ($4::uuid IS NOT NULL AND EXISTS(SELECT 1 FROM user_roles WHERE user_id=$2 AND role='moderator')) OR community_users_visible($2,o.owner_id)) AND ($4::uuid IS NULL OR o.id=$4) AND ($5::uuid IS NULL OR o.id<$5) AND (NOT $3 OR o.status='pending') ORDER BY o.id DESC LIMIT $6")
         .bind(card).bind(user).bind(moderation).bind(opinion).bind(plain_cursor(query.before.as_deref())?).bind(limit+1).fetch_all(&state.pool).await?;
     let mut items = rows
         .into_iter()
@@ -1001,9 +1003,12 @@ pub enum CivicFlagReason {
 }
 
 #[derive(Debug, Deserialize, TS)]
-#[serde(deny_unknown_fields)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct CivicFlagInput {
     reason: CivicFlagReason,
+    #[serde(default)]
+    #[ts(optional)]
+    opinion_id: Option<String>,
 }
 
 pub async fn flag(
@@ -1014,8 +1019,30 @@ pub async fn flag(
 ) -> Result<Json<serde_json::Value>, Error> {
     read(&state, member.id, id).await?;
     let reason = serde_json::to_value(input.reason).map_err(|_| Error::Internal)?;
-    sqlx::query("INSERT INTO community_flags(id,card_id,reporter_id,reason) VALUES($1,$2,$3,$4) ON CONFLICT(card_id,reporter_id) DO NOTHING")
-        .bind(Uuid::now_v7()).bind(id).bind(member.id).bind(reason.as_str().ok_or(Error::Internal)?).execute(&state.pool).await?;
+    let reason = reason.as_str().ok_or(Error::Internal)?;
+    if let Some(opinion) = input.opinion_id {
+        let opinion =
+            Uuid::parse_str(&opinion).map_err(|_| Error::Invalid("Choose a valid opinion."))?;
+        if load_opinions(
+            &state,
+            member.id,
+            id,
+            Some(opinion),
+            &PageQuery::default(),
+            false,
+        )
+        .await?
+        .items
+        .is_empty()
+        {
+            return Err(Error::NotFound);
+        }
+        sqlx::query("INSERT INTO community_opinion_flags(id,opinion_id,reporter_id,reason) VALUES($1,$2,$3,$4) ON CONFLICT(opinion_id,reporter_id) DO NOTHING")
+            .bind(Uuid::now_v7()).bind(opinion).bind(member.id).bind(reason).execute(&state.pool).await?;
+    } else {
+        sqlx::query("INSERT INTO community_flags(id,card_id,reporter_id,reason) VALUES($1,$2,$3,$4) ON CONFLICT(card_id,reporter_id) DO NOTHING")
+            .bind(Uuid::now_v7()).bind(id).bind(member.id).bind(reason).execute(&state.pool).await?;
+    }
     Ok(Json(serde_json::json!({"received":true})))
 }
 
@@ -1028,10 +1055,10 @@ pub async fn flags(
     if !(1..=50).contains(&limit) {
         return Err(Error::Invalid("Choose a page size between 1 and 50."));
     }
-    let rows=sqlx::query("SELECT id,card_id,reason,created_at FROM community_flags WHERE ($1::uuid IS NULL OR id<$1) ORDER BY id DESC LIMIT $2").bind(plain_cursor(query.before.as_deref())?).bind(limit+1).fetch_all(&state.pool).await?;
+    let rows=sqlx::query("SELECT id,card_id,opinion_id,reason,created_at FROM (SELECT id,card_id,NULL::uuid AS opinion_id,reason,created_at FROM community_flags UNION ALL SELECT f.id,o.card_id,f.opinion_id,f.reason,f.created_at FROM community_opinion_flags f JOIN community_opinions o ON o.id=f.opinion_id) flags WHERE ($1::uuid IS NULL OR id<$1) ORDER BY id DESC LIMIT $2").bind(plain_cursor(query.before.as_deref())?).bind(limit+1).fetch_all(&state.pool).await?;
     let mut items = Vec::new();
     for row in rows {
-        items.push(serde_json::json!({"id":row.get::<Uuid,_>("id").to_string(),"cardId":row.get::<Uuid,_>("card_id").to_string(),"reason":row.get::<String,_>("reason"),"createdAt":row.get::<OffsetDateTime,_>("created_at").format(&Rfc3339).map_err(|_|Error::Internal)?}));
+        items.push(serde_json::json!({"id":row.get::<Uuid,_>("id").to_string(),"cardId":row.get::<Uuid,_>("card_id").to_string(),"opinionId":row.get::<Option<Uuid>,_>("opinion_id").map(|id|id.to_string()),"reason":row.get::<String,_>("reason"),"createdAt":row.get::<OffsetDateTime,_>("created_at").format(&Rfc3339).map_err(|_|Error::Internal)?}));
     }
     let next_cursor = if items.len() > limit as usize {
         items.truncate(limit as usize);

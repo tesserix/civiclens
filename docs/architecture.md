@@ -327,3 +327,16 @@ a native chooser and explicit save/copy/open fallback. TikTok is manual only;
 independent review and owner-scoped fresh exports apply before every action.
 No managed TikTok publishing or provider delivery receipt is supported. Native
 photo copies remain under user control, including device photo backup settings.
+
+ADR-0016 extends save/copy/open controls to every selected social app. The system
+share menu is labelled explicitly. Facebook, Instagram and WhatsApp have separate
+native launch actions; unavailable apps show a retry/install explanation. TikTok
+uses its HTTPS link and may open the app or website. Opening an app does not attach
+photos or paste text. Users finish each post in that app. Confirmed photo saves
+are reused across destinations on the same screen, with add-only Photos access.
+No personal-sharing clearance bypasses independent photo or authority review.
+Selected destinations appear one at a time with Previous/Next navigation. A
+combined action saves reviewed photos, copies the caption and opens the chosen
+app after another server review check. Returning from an app never advances
+automatically or means a post was delivered. Partial saves, missing apps and
+withdrawn approval stop the action; individual steps remain retryable.

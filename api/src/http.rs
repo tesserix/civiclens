@@ -72,6 +72,7 @@ async fn capabilities(State(state): State<Arc<AppState>>) -> Json<crate::contrac
     use crate::contracts::{BrokerConfiguration, Capabilities, PublishingCapabilities};
     let config = &state.config;
     Json(Capabilities {
+        community_blocking: Some(true),
         manual_share_channels: Some(crate::contracts::Channel::ALL.to_vec()),
         profile_editing: Some(true),
         community_discovery: Some(true),
@@ -141,6 +142,11 @@ pub fn router(state: Arc<AppState>) -> Result<Router, Error> {
         .route("/v1/auth/{provider}/challenge", post(auth::challenge))
         .route("/v1/auth/{provider}", post(auth::login))
         .route("/v1/me", get(auth::me))
+        .route("/v1/me/blocks", get(crate::community_blocks::list))
+        .route(
+            "/v1/me/blocks/{nickname}",
+            axum::routing::put(crate::community_blocks::change).layer(DefaultBodyLimit::max(2048)),
+        )
         .route(
             "/v1/me/profile",
             get(crate::profile::get)

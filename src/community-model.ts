@@ -1,6 +1,7 @@
-import { civicTopics, type CivicChoice, type CivicCard } from '../shared/contracts';
+import { civicTopics, type CivicChoice, type CivicCard, type CivicFlagReason } from '../shared/contracts';
 
 export const civicChoices:CivicChoice[]=['yes','no','dont_know'];
+export const civicFlagLabels:Record<CivicFlagReason,string>={privacy:'Privacy',harassment:'Harassment',misleading:'Misleading information',other:'Other concern'};
 export const civicChoiceLabels:Record<CivicChoice,string>={yes:'Yes',no:'No',dont_know:"Don't know"};
 export const civicQueryKey=(userId:string,id:string)=>['community-card',userId,id];
 export const topicLabel=(id:string|undefined)=>civicTopics.find(t=>t.id===id)?.label??'Community';

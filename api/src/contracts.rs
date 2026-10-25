@@ -26,6 +26,13 @@ pub struct PublishingCapabilities {
 #[derive(Serialize, Deserialize, TS)]
 pub struct Capabilities {
     #[serde(
+        rename = "communityBlocking",
+        default,
+        skip_serializing_if = "Option::is_none"
+    )]
+    #[ts(optional)]
+    pub community_blocking: Option<bool>,
+    #[serde(
         rename = "manualShareChannels",
         default,
         skip_serializing_if = "Option::is_none"
@@ -412,6 +419,10 @@ mod tests {
     #[test]
     fn export_mobile_contract() {
         let definitions = [
+            crate::community_blocks::BlockInput::decl(),
+            crate::community_blocks::BlockState::decl(),
+            crate::community_blocks::BlockedUser::decl(),
+            crate::community_blocks::BlockPage::decl(),
             crate::profile::AccountProfile::decl(),
             crate::profile::ProfileInput::decl(),
             crate::profile::ImportedProfilePhoto::decl(),

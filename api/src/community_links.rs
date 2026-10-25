@@ -128,16 +128,18 @@ fn stores(config: &LinkSettings) -> (Option<String>, Option<String>) {
 }
 pub async fn share_link(
     State(state): State<Arc<AppState>>,
-    _member: Member,
+    member: Member,
     Path(id): Path<Uuid>,
     Json(_input): Json<ShareInput>,
 ) -> Result<Json<CivicShareLink>, Error> {
+    crate::community_blocks::ensure_card_visible(&state, member.id, id).await?;
     let card = public_card(&state, id).await?;
     crate::content_safety::check_publication(
         &state,
         &format!("{}\n{}\n{}", card.title, card.body, card.place),
     )
     .await?;
+    crate::community_blocks::ensure_card_visible(&state, member.id, id).await?;
     let _fresh = public_card(&state, id).await?;
     let url = format!("{}/community/{id}", state.config.community_share_origin);
     let text = format!(

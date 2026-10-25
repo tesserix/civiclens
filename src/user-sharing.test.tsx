@@ -1,4 +1,4 @@
-import {fireEvent,render,screen,waitFor} from '@testing-library/react-native';
+import {act,fireEvent,render,screen,waitFor} from '@testing-library/react-native';
 import {UserSharing} from './user-sharing';
 import type {Report} from '../shared/contracts';
 
@@ -18,7 +18,7 @@ test('requires identity disclosure acknowledgement and exports only reviewed con
   expect(share).not.toHaveBeenCalled();
   expect(screen.getByText('5 reviewed photos')).toBeOnTheScreen();
   expect(JSON.parse(jest.mocked(fetch).mock.calls[0][1]!.body as string)).toEqual({channel:'facebook',identityAcknowledged:true});
-  fireEvent.press(screen.getByRole('button',{name:'Choose app and destination'}));
+  fireEvent.press(screen.getByRole('button',{name:'Open system share menu for Facebook'}));
   await waitFor(()=>expect(share).toHaveBeenCalledWith(expect.objectContaining({message:packageBody.caption,urls:packageBody.photosBase64.map(p=>`data:image/jpeg;base64,${p}`),useInternalStorage:true,failOnCancel:false})));
   expect(await screen.findByText(/Check your chosen app to confirm whether you posted/)).toBeOnTheScreen();
   expect(fetch).toHaveBeenCalledTimes(2);
@@ -40,7 +40,7 @@ test('holds native sharing when the server withdraws approval at the final check
   fireEvent(screen.getByLabelText('Accept social identity visibility'),'valueChange',true);
   fireEvent.press(screen.getByRole('button',{name:'Prepare reviewed post'}));
   await screen.findByText(packageBody.caption);
-  fireEvent.press(screen.getByRole('button',{name:'Choose app and destination'}));
+  fireEvent.press(screen.getByRole('button',{name:'Open system share menu for Facebook'}));
   expect(await screen.findByText(/Sharing could not be opened/)).toBeOnTheScreen();
   expect(share).not.toHaveBeenCalled();
 });
@@ -53,7 +53,7 @@ test('does not open a package belonging to another report',async()=>{
   fireEvent(screen.getByLabelText('Accept social identity visibility'),'valueChange',true);
   fireEvent.press(screen.getByRole('button',{name:'Prepare reviewed post'}));
   expect(await screen.findByText(/reviewed post could not be prepared/)).toBeOnTheScreen();
-  expect(screen.queryByRole('button',{name:'Choose app and destination'})).toBeNull();
+  expect(screen.queryByRole('button',{name:'Open system share menu for Facebook'})).toBeNull();
   expect(share).not.toHaveBeenCalled();
 });
 
@@ -85,12 +85,13 @@ test('supports selecting one, several or all destinations while requiring a sepa
   fireEvent.press(screen.getByRole('button',{name:'Prepare reviewed post'}));
   expect(await screen.findByText('3 destinations selected')).toBeOnTheScreen();
   expect(share).not.toHaveBeenCalled();
-  fireEvent.press(screen.getByRole('button',{name:'Open Facebook sharing options'}));
+  fireEvent.press(screen.getByRole('button',{name:'Open system share menu for Facebook'}));
   await waitFor(()=>expect(share).toHaveBeenCalledTimes(1));
   expect(screen.getByText('Facebook: options opened; delivery unverified')).toBeOnTheScreen();
-  expect(screen.getByRole('button',{name:'Open Instagram sharing options'})).toBeOnTheScreen();
+  fireEvent.press(screen.getByRole('button',{name:'Next app: Instagram'}));
+  expect(screen.getByRole('button',{name:'Open system share menu for Instagram'})).toBeOnTheScreen();
   expect(share).toHaveBeenCalledTimes(1);
-  fireEvent.press(screen.getByRole('button',{name:'Open Instagram sharing options'}));
+  fireEvent.press(screen.getByRole('button',{name:'Open system share menu for Instagram'}));
   await waitFor(()=>expect(share).toHaveBeenCalledTimes(2));
   expect(screen.getByText('Instagram: options opened; delivery unverified')).toBeOnTheScreen();
 });
@@ -129,7 +130,7 @@ test('offers TikTok native handoff and an explicit save, copy and open fallback 
   fireEvent.press(screen.getByRole('button',{name:'Copy TikTok caption'}));
   await waitFor(()=>expect(clipboard.setStringAsync).toHaveBeenCalledWith(packageBody.caption));
   await screen.findByText(/Reviewed caption copied/);
-  fireEvent.press(screen.getByRole('button',{name:'Open TikTok'}));
+  fireEvent.press(screen.getByRole('button',{name:'Open TikTok app or website'}));
   await waitFor(()=>expect(Linking.openURL).toHaveBeenCalledWith('https://www.tiktok.com/'));
   expect(await screen.findByText(/CivicLens cannot verify delivery/)).toBeOnTheScreen();
   expect(fetch).toHaveBeenCalledTimes(4);
@@ -151,7 +152,7 @@ test('retries only unsaved photos after partial failure and cleans temporary fil
   expect(media.saveToLibraryAsync).toHaveBeenCalledTimes(6);
   expect(fs.writeAsStringAsync.mock.calls.map((call:unknown[])=>call[1])).toEqual([packageBody.photosBase64[0],packageBody.photosBase64[1],...packageBody.photosBase64.slice(1)]);
 });
-test.each(['Save reviewed photos for TikTok','Copy TikTok caption','Open TikTok'])('rechecks review before %s and blocks withdrawn approval',async action=>{
+test.each(['Save reviewed photos for TikTok','Copy TikTok caption','Open TikTok app or website'])('rechecks review before %s and blocks withdrawn approval',async action=>{
   await prepareTikTok();
   jest.mocked(fetch).mockResolvedValueOnce({ok:false,status:409,json:async()=>({code:'CONFLICT',message:'Review required'})} as Response);
   fireEvent.press(screen.getByRole('button',{name:action}));
@@ -172,7 +173,7 @@ test('stops saving remaining photos if the account changes during a native save'
 
 test('hands the TikTok caption and all reviewed images to the chooser without a published receipt',async()=>{
   await prepareTikTok();
-  fireEvent.press(screen.getByRole('button',{name:'Choose app and destination'}));
+  fireEvent.press(screen.getByRole('button',{name:'Open system share menu for TikTok'}));
   await waitFor(()=>expect(jest.requireMock('react-native-share').default.open).toHaveBeenCalledWith(expect.objectContaining({title:'Share reviewed post to TikTok',message:packageBody.caption,urls:packageBody.photosBase64.map(p=>`data:image/jpeg;base64,${p}`)})));
   await screen.findByText('TikTok: options opened; delivery unverified');
 });
@@ -187,7 +188,7 @@ test('requires fresh preparation when the TikTok caption changes',async()=>{
 test('explains when the OS cannot open TikTok and keeps the reviewed package',async()=>{
   const {Linking}=jest.requireActual('react-native');
   jest.spyOn(Linking,'openURL').mockRejectedValueOnce(new Error('No browser'));
-  await prepareTikTok();fireEvent.press(screen.getByRole('button',{name:'Open TikTok'}));
+  await prepareTikTok();fireEvent.press(screen.getByRole('button',{name:'Open TikTok app or website'}));
   await screen.findByText(/TikTok preparation could not continue/);
   expect(screen.getByText(packageBody.caption)).toBeOnTheScreen();
 });
@@ -198,4 +199,161 @@ test('does not save the same confirmed photos twice on repeated taps',async()=>{
   fireEvent.press(screen.getByRole('button',{name:'Save reviewed photos for TikTok'}));
   await screen.findByText(/5 of 5 reviewed photos saved/);
   expect(jest.requireMock('expo-media-library/legacy').saveToLibraryAsync).toHaveBeenCalledTimes(5);
+});
+
+
+test.each([
+  ['facebook','Facebook','fb://'],
+  ['instagram','Instagram','instagram://app'],
+  ['whatsapp','WhatsApp','whatsapp://app'],
+])('offers reviewed save, copy and native launch for %s without silently dropping photos',async(channel,label,url)=>{
+  const {Linking}=jest.requireActual('react-native');
+  jest.spyOn(Linking,'canOpenURL').mockResolvedValue(true);
+  jest.spyOn(Linking,'openURL').mockResolvedValue(true);
+  jest.mocked(fetch).mockImplementation(async()=>({ok:true,json:async()=>({...packageBody,channel})}) as Response);
+  render(<UserSharing report={{...report,publications:[{channel,status:'blocked'}]} as Report} token="synthetic-session"/>);
+  fireEvent(screen.getByLabelText('Accept social identity visibility'),'valueChange',true);
+  fireEvent.press(screen.getByRole('button',{name:'Prepare reviewed post'}));
+  await screen.findByText(packageBody.caption);
+  fireEvent.press(screen.getByRole('button',{name:`Save reviewed photos for ${label}`}));
+  await screen.findByText(/5 of 5 reviewed photos saved/);
+  expect(jest.requireMock('expo-media-library/legacy').saveToLibraryAsync).toHaveBeenCalledTimes(5);
+  fireEvent.press(screen.getByRole('button',{name:`Copy ${label} caption`}));
+  await screen.findByText(/Reviewed caption copied/);
+  expect(jest.requireMock('expo-clipboard').setStringAsync).toHaveBeenCalledWith(packageBody.caption);
+  fireEvent.press(screen.getByRole('button',{name:`Open ${label}`}));
+  await waitFor(()=>expect(Linking.openURL).toHaveBeenCalledWith(url));
+  await screen.findByText(/Opening an app does not attach/);
+  expect(jest.requireMock('react-native-share').default.open).not.toHaveBeenCalled();
+});
+
+test('explains a missing social app without navigating to a browser or exporting more data',async()=>{
+  const {Linking}=jest.requireActual('react-native');
+  jest.spyOn(Linking,'canOpenURL').mockResolvedValueOnce(false);
+  jest.spyOn(Linking,'openURL').mockResolvedValue(true);
+  render(<UserSharing report={report} token="synthetic-session"/>);
+  fireEvent(screen.getByLabelText('Accept social identity visibility'),'valueChange',true);
+  fireEvent.press(screen.getByRole('button',{name:'Prepare reviewed post'}));
+  await screen.findByText(packageBody.caption);
+  fireEvent.press(screen.getByRole('button',{name:'Open Facebook'}));
+  await screen.findByText(/Facebook is not available/);
+  expect(Linking.openURL).not.toHaveBeenCalled();
+  expect(jest.requireMock('expo-clipboard').setStringAsync).not.toHaveBeenCalled();
+  expect(jest.requireMock('expo-media-library/legacy').saveToLibraryAsync).not.toHaveBeenCalled();
+});
+
+test('does not open an app if the account changes during its availability check',async()=>{
+  const {Linking}=jest.requireActual('react-native');
+  let finish!:(value:boolean)=>void;
+  jest.spyOn(Linking,'canOpenURL').mockImplementationOnce(()=>new Promise<boolean>(resolve=>{finish=resolve;}));
+  jest.spyOn(Linking,'openURL').mockResolvedValue(true);
+  const view=render(<UserSharing report={report} token="synthetic-session"/>);
+  fireEvent(screen.getByLabelText('Accept social identity visibility'),'valueChange',true);
+  fireEvent.press(screen.getByRole('button',{name:'Prepare reviewed post'}));
+  await screen.findByText(packageBody.caption);
+  fireEvent.press(screen.getByRole('button',{name:'Open Facebook'}));
+  await waitFor(()=>expect(Linking.canOpenURL).toHaveBeenCalled());
+  view.rerender(<UserSharing report={report} token="different-synthetic-session"/>);
+  await act(async()=>finish(true));
+  expect(Linking.openURL).not.toHaveBeenCalled();
+});
+
+
+test('reuses confirmed saved photos across selected apps and keeps their captions separate',async()=>{
+  jest.mocked(fetch).mockImplementation(async(_url,options)=>{
+    const channel=JSON.parse(options!.body as string).channel;
+    return {ok:true,json:async()=>({...packageBody,channel,caption:`Reviewed ${channel} caption`})} as Response;
+  });
+  render(<UserSharing report={report} token="synthetic-session"/>);
+  fireEvent.press(screen.getByRole('button',{name:'Social apps, Facebook'}));
+  fireEvent.press(screen.getByRole('button',{name:'Select all social apps'}));
+  fireEvent.press(screen.getByRole('button',{name:'Done'}));
+  fireEvent(screen.getByLabelText('Accept social identity visibility'),'valueChange',true);
+  fireEvent.press(screen.getByRole('button',{name:'Prepare reviewed post'}));
+  await screen.findByText('3 destinations selected');
+  fireEvent.press(screen.getByRole('button',{name:'Save reviewed photos for Facebook'}));
+  await screen.findByText(/5 of 5 reviewed photos saved/);
+  fireEvent.press(screen.getByRole('button',{name:'Next app: Instagram'}));
+  fireEvent.press(screen.getByRole('button',{name:'Save reviewed photos for Instagram'}));
+  await screen.findByText(/then open Instagram/);
+  expect(jest.requireMock('expo-media-library/legacy').saveToLibraryAsync).toHaveBeenCalledTimes(5);
+  fireEvent.press(screen.getByRole('button',{name:'Copy Instagram caption'}));
+  await screen.findByText(/Reviewed caption copied/);
+  expect(jest.requireMock('expo-clipboard').setStringAsync).toHaveBeenCalledWith('Reviewed instagram caption');
+});
+
+test.each(['Save reviewed photos for Facebook','Copy Facebook caption','Open Facebook'])('blocks %s when approval is withdrawn',async action=>{
+  const {Linking}=jest.requireActual('react-native');
+  jest.spyOn(Linking,'openURL').mockResolvedValue(true);
+  render(<UserSharing report={report} token="synthetic-session"/>);
+  fireEvent(screen.getByLabelText('Accept social identity visibility'),'valueChange',true);
+  fireEvent.press(screen.getByRole('button',{name:'Prepare reviewed post'}));
+  await screen.findByText(packageBody.caption);
+  jest.mocked(fetch).mockResolvedValueOnce({ok:false,status:409,json:async()=>({code:'CONFLICT',message:'Review required'})} as Response);
+  fireEvent.press(screen.getByRole('button',{name:action}));
+  await screen.findByText(/Facebook preparation could not continue/);
+  expect(Linking.openURL).not.toHaveBeenCalled();
+  expect(jest.requireMock('expo-media-library/legacy').saveToLibraryAsync).not.toHaveBeenCalled();
+  expect(jest.requireMock('expo-clipboard').setStringAsync).not.toHaveBeenCalled();
+});
+
+
+test('prepares the whole post and opens the selected app with one explicit action',async()=>{
+  const {Linking}=jest.requireActual('react-native');
+  jest.spyOn(Linking,'canOpenURL').mockResolvedValue(true);
+  jest.spyOn(Linking,'openURL').mockResolvedValue(true);
+  render(<UserSharing report={report} token="synthetic-session"/>);
+  fireEvent(screen.getByLabelText('Accept social identity visibility'),'valueChange',true);
+  fireEvent.press(screen.getByRole('button',{name:'Prepare reviewed post'}));
+  await screen.findByText(packageBody.caption);
+  fireEvent.press(screen.getByRole('button',{name:'Save photos, copy caption & open Facebook'}));
+  await waitFor(()=>expect(Linking.openURL).toHaveBeenCalledWith('fb://'));
+  expect(jest.requireMock('expo-media-library/legacy').saveToLibraryAsync).toHaveBeenCalledTimes(5);
+  expect(jest.requireMock('expo-clipboard').setStringAsync).toHaveBeenCalledWith(packageBody.caption);
+  expect(fetch).toHaveBeenCalledTimes(3);
+});
+
+test('shows selected apps one at a time and lets the user continue after returning',async()=>{
+  jest.mocked(fetch).mockImplementation(async(_url,options)=>({ok:true,json:async()=>({...packageBody,channel:JSON.parse(options!.body as string).channel})}) as Response);
+  render(<UserSharing report={report} token="synthetic-session"/>);
+  fireEvent.press(screen.getByRole('button',{name:'Social apps, Facebook'}));
+  fireEvent.press(screen.getByRole('button',{name:'Select all social apps'}));
+  fireEvent.press(screen.getByRole('button',{name:'Done'}));
+  fireEvent(screen.getByLabelText('Accept social identity visibility'),'valueChange',true);
+  fireEvent.press(screen.getByRole('button',{name:'Prepare reviewed post'}));
+  await screen.findByText('App 1 of 3: Facebook');
+  expect(screen.queryByRole('button',{name:'Open Instagram'})).toBeNull();
+  fireEvent.press(screen.getByRole('button',{name:'Open system share menu for Facebook'}));
+  await screen.findByText('Facebook: options opened; delivery unverified');
+  expect(screen.getByText('App 1 of 3: Facebook')).toBeOnTheScreen();
+  fireEvent.press(screen.getByRole('button',{name:'Next app: Instagram'}));
+  expect(screen.getByText('App 2 of 3: Instagram')).toBeOnTheScreen();
+  expect(screen.queryByRole('button',{name:'Open Facebook'})).toBeNull();
+  fireEvent.press(screen.getByRole('button',{name:'Next app: WhatsApp'}));
+  expect(screen.getByText('App 3 of 3: WhatsApp')).toBeOnTheScreen();
+  expect(screen.queryByRole('button',{name:/Next app:/})).toBeNull();
+  expect(jest.requireMock('react-native-share').default.open).toHaveBeenCalledTimes(1);
+});
+
+
+test.each(['missing app','denied photo access','save failure','withdrawn final review'])('combined preparation stops on %s without copying or opening',async failure=>{
+  const {Linking}=jest.requireActual('react-native');
+  jest.spyOn(Linking,'canOpenURL').mockResolvedValue(failure!=='missing app');
+  jest.spyOn(Linking,'openURL').mockResolvedValue(true);
+  const media=jest.requireMock('expo-media-library/legacy');
+  if(failure==='denied photo access')media.requestPermissionsAsync.mockResolvedValueOnce({granted:false});
+  if(failure==='save failure')media.saveToLibraryAsync.mockRejectedValueOnce(new Error('storage unavailable'));
+  render(<UserSharing report={report} token="synthetic-session"/>);
+  fireEvent(screen.getByLabelText('Accept social identity visibility'),'valueChange',true);
+  fireEvent.press(screen.getByRole('button',{name:'Prepare reviewed post'}));
+  await screen.findByText(packageBody.caption);
+  if(failure==='withdrawn final review')jest.mocked(fetch)
+    .mockResolvedValueOnce({ok:true,json:async()=>packageBody} as Response)
+    .mockResolvedValueOnce({ok:false,status:409,json:async()=>({code:'CONFLICT',message:'Review required'})} as Response);
+  fireEvent.press(screen.getByRole('button',{name:'Save photos, copy caption & open Facebook'}));
+  const message=failure==='missing app'?/Facebook is not available/:failure==='denied photo access'?/Photo access was not granted/:failure==='save failure'?/0 of 5 photos saved/:/Facebook preparation could not continue/;
+  await screen.findByText(message);
+  expect(jest.requireMock('expo-clipboard').setStringAsync).not.toHaveBeenCalled();
+  expect(Linking.openURL).not.toHaveBeenCalled();
+  if(failure==='missing app')expect(media.saveToLibraryAsync).not.toHaveBeenCalled();
 });

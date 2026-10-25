@@ -15,6 +15,334 @@ struct Fixture {
 
 #[tokio::test]
 #[ignore = "requires CIVICLENS_TEST_DATABASE_URL for an isolated scratch schema"]
+async fn account_blocking_is_private_idempotent_and_applies_to_direct_card_actions() {
+    let f = Fixture::new().await;
+    assert_eq!(
+        f.send(None, "GET", "/v1/capabilities", Value::Null, None)
+            .await
+            .1["communityBlocking"],
+        true
+    );
+    let (_, card) = f
+        .send(
+            Some(0),
+            "POST",
+            "/v1/community",
+            card_input("request"),
+            Some(uuid::Uuid::new_v4()),
+        )
+        .await;
+    let id = card["id"].as_str().unwrap();
+    f.send(
+        Some(2),
+        "POST",
+        &format!("/v1/moderation/community/{id}"),
+        json!({"decision":"approve"}),
+        None,
+    )
+    .await;
+    let path = "/v1/me/blocks/TestKea";
+    assert_eq!(
+        f.send(None, "PUT", path, json!({"blocked":true}), None)
+            .await
+            .0,
+        StatusCode::UNAUTHORIZED
+    );
+    assert_eq!(
+        f.send(Some(1), "PUT", path, json!({"blocked":true}), None)
+            .await
+            .0,
+        StatusCode::OK
+    );
+    assert_eq!(
+        f.send(Some(1), "PUT", path, json!({"blocked":true}), None)
+            .await
+            .0,
+        StatusCode::OK
+    );
+    let (_, blocks) = f
+        .send(Some(1), "GET", "/v1/me/blocks", Value::Null, None)
+        .await;
+    assert_eq!(blocks["items"].as_array().unwrap().len(), 1);
+    assert_eq!(blocks["items"][0]["nickname"], "TestKea");
+    assert!(blocks["items"][0].get("userId").is_none());
+    assert_eq!(
+        f.send(Some(2), "GET", "/v1/me/blocks", Value::Null, None)
+            .await
+            .1["items"],
+        json!([])
+    );
+    assert_eq!(
+        f.send(Some(1), "GET", "/v1/community", Value::Null, None)
+            .await
+            .1["items"],
+        json!([])
+    );
+    assert_eq!(
+        f.send(
+            Some(1),
+            "GET",
+            &format!("/v1/community/{id}"),
+            Value::Null,
+            None
+        )
+        .await
+        .0,
+        StatusCode::NOT_FOUND
+    );
+    for (suffix, body) in [
+        (
+            "response",
+            json!({"choice":"yes","consent":true,"rulesVersion":contracts::COMMUNITY_RULES_VERSION}),
+        ),
+        ("watch", json!({"watching":true})),
+        ("share-link", json!({})),
+    ] {
+        assert_eq!(
+            f.send(
+                Some(1),
+                "POST",
+                &format!("/v1/community/{id}/{suffix}"),
+                body,
+                None
+            )
+            .await
+            .0,
+            StatusCode::NOT_FOUND,
+            "{suffix}"
+        );
+    }
+    assert_eq!(
+        f.send(
+            Some(1),
+            "PUT",
+            "/v1/me/blocks/TestYak",
+            json!({"blocked":true}),
+            None
+        )
+        .await
+        .0,
+        StatusCode::BAD_REQUEST
+    );
+    assert_eq!(
+        f.send(
+            Some(1),
+            "PUT",
+            "/v1/me/blocks/NotAnAccount",
+            json!({"blocked":true}),
+            None
+        )
+        .await
+        .0,
+        StatusCode::NOT_FOUND
+    );
+    assert_eq!(
+        f.send(Some(1), "PUT", path, json!({"blocked":false}), None)
+            .await
+            .0,
+        StatusCode::OK
+    );
+    assert_eq!(
+        f.send(
+            Some(1),
+            "GET",
+            &format!("/v1/community/{id}"),
+            Value::Null,
+            None
+        )
+        .await
+        .0,
+        StatusCode::OK
+    );
+    f.finish().await;
+}
+
+#[tokio::test]
+#[ignore = "requires CIVICLENS_TEST_DATABASE_URL for an isolated scratch schema"]
+async fn blocking_an_opinion_author_hides_their_discussion_without_hiding_the_owners_card() {
+    let f = Fixture::new().await;
+    let (_, card) = f
+        .send(
+            Some(0),
+            "POST",
+            "/v1/community",
+            card_input("request"),
+            Some(uuid::Uuid::new_v4()),
+        )
+        .await;
+    let id = card["id"].as_str().unwrap();
+    f.send(
+        Some(2),
+        "POST",
+        &format!("/v1/moderation/community/{id}"),
+        json!({"decision":"approve"}),
+        None,
+    )
+    .await;
+    let path = format!("/v1/community/{id}/opinions");
+    let (_, opinion) = f.send(Some(1), "POST", &path, json!({"text":"A recycling bin beside the entrance would help.","consent":true,"rulesVersion":contracts::COMMUNITY_RULES_VERSION}), Some(uuid::Uuid::new_v4())).await;
+    let opinion_id = opinion["id"].as_str().unwrap();
+    f.send(
+        Some(2),
+        "POST",
+        &format!("/v1/moderation/community/{id}/opinions/{opinion_id}"),
+        json!({"decision":"approve"}),
+        None,
+    )
+    .await;
+    assert_eq!(
+        f.send(Some(0), "GET", &path, Value::Null, None).await.1["items"]
+            .as_array()
+            .unwrap()
+            .len(),
+        1
+    );
+    f.send(
+        Some(0),
+        "PUT",
+        "/v1/me/blocks/TestYak",
+        json!({"blocked":true}),
+        None,
+    )
+    .await;
+    assert_eq!(
+        f.send(Some(0), "GET", &path, Value::Null, None).await.1["items"],
+        json!([])
+    );
+    let (status, visible) = f
+        .send(
+            Some(0),
+            "GET",
+            &format!("/v1/community/{id}"),
+            Value::Null,
+            None,
+        )
+        .await;
+    assert_eq!(status, StatusCode::OK);
+    assert_eq!(visible["discussionCount"], 0);
+    assert_eq!(
+        f.send(
+            Some(1),
+            "GET",
+            &format!("/v1/community/{id}"),
+            Value::Null,
+            None
+        )
+        .await
+        .0,
+        StatusCode::NOT_FOUND
+    );
+    f.send(
+        Some(0),
+        "PUT",
+        "/v1/me/blocks/TestYak",
+        json!({"blocked":false}),
+        None,
+    )
+    .await;
+    assert_eq!(
+        f.send(Some(0), "GET", &path, Value::Null, None).await.1["items"][0]["id"],
+        opinion["id"]
+    );
+    f.finish().await;
+}
+
+#[tokio::test]
+#[ignore = "requires CIVICLENS_TEST_DATABASE_URL for an isolated scratch schema"]
+async fn opinion_abuse_reports_identify_the_actual_opinion_and_stay_moderator_only() {
+    let f = Fixture::new().await;
+    let (_, card) = f
+        .send(
+            Some(0),
+            "POST",
+            "/v1/community",
+            card_input("request"),
+            Some(uuid::Uuid::new_v4()),
+        )
+        .await;
+    let id = card["id"].as_str().unwrap();
+    f.send(
+        Some(2),
+        "POST",
+        &format!("/v1/moderation/community/{id}"),
+        json!({"decision":"approve"}),
+        None,
+    )
+    .await;
+    let (_, opinion) = f.send(Some(1), "POST", &format!("/v1/community/{id}/opinions"), json!({"text":"A recycling bin beside the entrance would help.","consent":true,"rulesVersion":contracts::COMMUNITY_RULES_VERSION}), Some(uuid::Uuid::new_v4())).await;
+    let oid = opinion["id"].as_str().unwrap();
+    assert_eq!(
+        f.send(
+            Some(0),
+            "POST",
+            &format!("/v1/community/{id}/flag"),
+            json!({"reason":"harassment","opinionId":oid}),
+            None
+        )
+        .await
+        .0,
+        StatusCode::NOT_FOUND
+    );
+    f.send(
+        Some(2),
+        "POST",
+        &format!("/v1/moderation/community/{id}/opinions/{oid}"),
+        json!({"decision":"approve"}),
+        None,
+    )
+    .await;
+    let body = json!({"reason":"harassment","opinionId":oid});
+    assert_eq!(
+        f.send(
+            Some(0),
+            "POST",
+            &format!("/v1/community/{id}/flag"),
+            body.clone(),
+            None
+        )
+        .await
+        .0,
+        StatusCode::OK
+    );
+    f.send(
+        Some(0),
+        "POST",
+        &format!("/v1/community/{id}/flag"),
+        body,
+        None,
+    )
+    .await;
+    assert_eq!(
+        f.send(
+            Some(0),
+            "GET",
+            "/v1/moderation/community/flags",
+            Value::Null,
+            None
+        )
+        .await
+        .0,
+        StatusCode::FORBIDDEN
+    );
+    let (status, flags) = f
+        .send(
+            Some(2),
+            "GET",
+            "/v1/moderation/community/flags",
+            Value::Null,
+            None,
+        )
+        .await;
+    assert_eq!(status, StatusCode::OK);
+    assert_eq!(flags["items"].as_array().unwrap().len(), 1);
+    assert_eq!(flags["items"][0]["opinionId"], oid);
+    assert_eq!(flags["items"][0]["cardId"], id);
+    assert!(flags["items"][0].get("reporterId").is_none());
+    f.finish().await;
+}
+
+#[tokio::test]
+#[ignore = "requires CIVICLENS_TEST_DATABASE_URL for an isolated scratch schema"]
 async fn official_gateway_maps_india_and_rejects_cross_region_or_unauthenticated_routes() {
     let f = Fixture::new().await;
     let path = "/v1/official-complaints/jurisdictions?countryCode=IN&limit=50";
