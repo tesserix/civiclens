@@ -58,9 +58,18 @@ async fn report_bulkhead(
 
 async fn protect_response(request: Request, next: Next) -> Response {
     let mut response = next.run(request).await;
+    let cache_control = if response
+        .headers()
+        .get(header::CACHE_CONTROL)
+        .is_some_and(|value| value == "no-transform")
+    {
+        "no-store, no-transform"
+    } else {
+        "no-store"
+    };
     response.headers_mut().insert(
         header::CACHE_CONTROL,
-        HeaderValue::from_static("no-store, no-transform"),
+        HeaderValue::from_static(cache_control),
     );
     response.headers_mut().insert(
         header::X_CONTENT_TYPE_OPTIONS,
@@ -329,7 +338,7 @@ mod tests {
     use tower::ServiceExt;
 
     #[tokio::test]
-    async fn routed_responses_prevent_caching_and_edge_transforms() {
+    async fn routed_legal_pages_prevent_edge_transforms_and_private_routes_remain_no_store() {
         let database_url = "postgres://localhost/civiclens_header_test";
         let state = Arc::new(AppState {
             pool: PgPoolOptions::new().connect_lazy(database_url).unwrap(),
@@ -359,7 +368,11 @@ mod tests {
             assert_eq!(response.status(), status, "{path}");
             assert_eq!(
                 response.headers().get(header::CACHE_CONTROL),
-                Some(&HeaderValue::from_static("no-store, no-transform")),
+                Some(&HeaderValue::from_static(if legal {
+                    "no-store, no-transform"
+                } else {
+                    "no-store"
+                })),
                 "{path}"
             );
             assert_eq!(

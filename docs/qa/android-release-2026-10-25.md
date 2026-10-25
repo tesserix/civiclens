@@ -77,7 +77,8 @@ Production checks after PR #20 still returned `Cache-Control: no-store` and
 obfuscated email links: the response-protection middleware overwrote the legal
 handler's header. A regression test through the real router failed with
 `Some("no-store")` instead of `Some("no-store, no-transform")`. The middleware
-now preserves no-store protection and prevents edge transformations on responses.
+now preserves no-store protection and prevents edge transformations on legal pages;
+private and other API responses retain their existing `no-store` header.
 The router test also checks all three legal pages, unauthenticated account
 access, health and not-found responses, preserving CSP and nosniff. Local Rust
 checks passed: 39 tests, with 20 database tests still reserved for CI, plus fmt,
