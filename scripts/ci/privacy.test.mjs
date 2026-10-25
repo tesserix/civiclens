@@ -9,7 +9,7 @@ test('native permissions match foreground photo reporting', () => {
   for (const key of ['NSLocationAlwaysUsageDescription', 'NSLocationAlwaysAndWhenInUseUsageDescription', 'NSFaceIDUsageDescription', 'NSMicrophoneUsageDescription']) {
     assert.equal(plist[key], undefined, `unneeded permission ${key}`);
   }
-  assert.match(plist.NSPhotoLibraryAddUsageDescription, /reviewed.*TikTok/);
+  assert.match(plist.NSPhotoLibraryAddUsageDescription, /confirmed.*TikTok/);
   assert.match(plist.NSCameraUsageDescription, /report/);
   assert.match(plist.NSMotionUsageDescription, /location.*report/i);
   assert.match(plist.NSLocationWhenInUseUsageDescription, /choose/);

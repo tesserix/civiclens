@@ -1,5 +1,5 @@
 // Generated from Rust. Run cargo test export_mobile_contract.
-export const communityRulesVersion = "2026-10-24";
+export const communityRulesVersion = "2026-10-25";
 export type BlockInput = { blocked: boolean, };
 export type BlockState = { nickname: string, blocked: boolean, };
 export type BlockedUser = { nickname: string, createdAt: string, };
@@ -9,13 +9,13 @@ export type ProfileInput = { bio: string, photoBase64: string | null, removePhot
 export type ImportedProfilePhoto = { photoBase64: string, };
 export type BrokerConfiguration = { issuer: string, organizationId: string, projectId: string, iosClientId: string, androidClientId: string, googleIdpId: string, facebookIdpId: string, appleIdpId: string, };
 export type PublishingCapabilities = { facebook: boolean, instagram: boolean, whatsapp: boolean, };
-export type Capabilities = { communityBlocking?: boolean, manualShareChannels?: Array<Channel>, profileEditing?: boolean, communityDiscovery?: boolean, officialComplaintGateway?: boolean, complaintPreparation?: boolean, civicParticipation?: boolean, manualSharing?: boolean, google: boolean, facebook: boolean, apple: boolean, auth: BrokerConfiguration, publishing: PublishingCapabilities, assist: boolean, assistContext: boolean, hashtagSelection: boolean, authorityPreview: boolean, maxPhotos?: number, communityRulesVersion?: string, };
+export type Capabilities = { reporterSharing?: boolean, communityBlocking?: boolean, manualShareChannels?: Array<Channel>, profileEditing?: boolean, communityDiscovery?: boolean, officialComplaintGateway?: boolean, complaintPreparation?: boolean, civicParticipation?: boolean, manualSharing?: boolean, google: boolean, facebook: boolean, apple: boolean, auth: BrokerConfiguration, publishing: PublishingCapabilities, assist: boolean, assistContext: boolean, hashtagSelection: boolean, authorityPreview: boolean, maxPhotos?: number, communityRulesVersion?: string, };
 export type Category = "waste" | "pollution" | "roads" | "water" | "public_safety";
 export type Channel = "facebook" | "instagram" | "whatsapp" | "tiktok";
 export type Location = { latitude: number, longitude: number, countryCode: string, locality: string, };
-export type ReportInput = { complaintRequested?: boolean, sharingMode?: SharingMode, category: Category, description: string, location: Location, photoBase64: string, additionalPhotosBase64?: Array<string>, communityRulesVersion?: string, locationSource?: LocationSource, channels: Array<Channel>, consent: boolean, hashtags?: Array<string>, };
+export type ReportInput = { reporterConfirmed?: boolean, complaintRequested?: boolean, sharingMode?: SharingMode, category: Category, description: string, location: Location, photoBase64: string, additionalPhotosBase64?: Array<string>, communityRulesVersion?: string, locationSource?: LocationSource, channels: Array<Channel>, consent: boolean, hashtags?: Array<string>, };
 export type SharingMode = "managed" | "manual";
-export type ShareRequest = { channel: Channel, identityAcknowledged: boolean, };
+export type ShareRequest = { communityRulesVersion?: string, reporterConfirmed?: boolean, confirmedPhotoCount?: number, channel: Channel, identityAcknowledged: boolean, };
 export type SharePackage = { reportId: string, channel: Channel, caption: string, photosBase64: Array<string>, };
 export type ComplaintChannel = { id: string, name: string, url: string, evidenceUrl: string, channelType: string, apiStatus: string, authentication: string, verifiedAt: string, expiresAt: string, };
 export type ComplaintOptions = { channels: Array<ComplaintChannel>, factualTextReviewed: boolean, history: Array<ComplaintRecord>, };

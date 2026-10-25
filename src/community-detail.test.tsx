@@ -1,3 +1,4 @@
+import {communityRulesVersion} from '../shared/contracts';
 import { Share, ActionSheetIOS, Alert } from 'react-native';
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react-native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -52,7 +53,7 @@ test('requires explicit consent before recording a response and hides interim to
   fireEvent.press(screen.getByRole('checkbox',{name:'I confirm my response and accept the community rules.'}));
   fireEvent.press(screen.getByRole('button',{name:'Confirm response'}));
   await screen.findByText('Your response: Yes.');
-  expect(calls.filter(c=>c.method==='POST')[0].body).toEqual({choice:'yes',rulesVersion:'2026-10-24',consent:true});
+  expect(calls.filter(c=>c.method==='POST')[0].body).toEqual({choice:'yes',rulesVersion:communityRulesVersion,consent:true});
   expect(screen.queryByText(/33.3%/)).toBeNull();
 });
 

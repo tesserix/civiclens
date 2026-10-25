@@ -1,8 +1,9 @@
 import {act,fireEvent,render,screen,waitFor} from '@testing-library/react-native';
 import {UserSharing} from './user-sharing';
-import type {Report} from '../shared/contracts';
+import {beginReportSharing} from './report-sharing-intent';
+import {communityRulesVersion,type Report} from '../shared/contracts';
 
-jest.mock('react-native-share',()=>({__esModule:true,default:{open:jest.fn(async()=>({success:true}))}}),{virtual:true});
+jest.mock('react-native-share',()=>({__esModule:true,Social:{Facebook:'facebook',Whatsapp:'whatsapp'},default:{open:jest.fn(async()=>({success:true})),shareSingle:jest.fn(async()=>({success:true})),isPackageInstalled:jest.fn(async()=>({isInstalled:true}))}}));
 const report={id:'report-qa',status:'approved',sharingMode:'manual',publications:[{channel:'facebook',status:'blocked'},{channel:'instagram',status:'blocked'},{channel:'whatsapp',status:'blocked'}]} as Report;
 const packageBody={reportId:'report-qa',channel:'facebook',caption:'Reviewed litter caption. Reported by SampleFox. #Melbourne',photosBase64:['/9j/AA==','/9j/AQ==','/9j/Ag==','/9j/Aw==','/9j/BA==']};
 beforeEach(()=>{jest.clearAllMocks();globalThis.fetch=jest.fn(async()=>({ok:true,json:async()=>packageBody})) as jest.Mock;});
@@ -356,4 +357,62 @@ test.each(['missing app','denied photo access','save failure','withdrawn final r
   expect(jest.requireMock('expo-clipboard').setStringAsync).not.toHaveBeenCalled();
   expect(Linking.openURL).not.toHaveBeenCalled();
   if(failure==='missing app')expect(media.saveToLibraryAsync).not.toHaveBeenCalled();
+});
+
+
+test('a reporter-confirmed submission opens sharing once and retains every selected app without moderator approval',async()=>{
+  const share=jest.requireMock('react-native-share').default.open;
+  jest.mocked(fetch).mockImplementation(async(_url,options)=>({ok:true,json:async()=>({...packageBody,channel:JSON.parse(options!.body as string).channel})}) as Response);
+  const pending={...report,status:'ready_to_share',photoCount:5};
+  beginReportSharing('synthetic-session',pending.id);
+  const view=render(<UserSharing report={pending} token="synthetic-session" reporterSharing/>);
+  await waitFor(()=>expect(share).toHaveBeenCalledTimes(1));
+  expect(screen.getByText('3 destinations selected')).toBeOnTheScreen();
+  expect(screen.queryByText(/available after every photo/)).toBeNull();
+  expect(JSON.parse(jest.mocked(fetch).mock.calls[0][1]!.body as string)).toMatchObject({reporterConfirmed:true,confirmedPhotoCount:5,identityAcknowledged:true,communityRulesVersion});
+  view.rerender(<UserSharing report={{...pending}} token="synthetic-session" reporterSharing/>);
+  expect(share).toHaveBeenCalledTimes(1);
+  fireEvent.press(screen.getByRole('button',{name:'Next app: Instagram'}));
+  await waitFor(()=>expect(share).toHaveBeenCalledTimes(2));
+  expect(screen.getByText(/delivery unverified/)).toBeOnTheScreen();
+});
+
+test('existing pending reports can be shared by their owner after explicit personal responsibility confirmation',async()=>{
+  jest.mocked(fetch).mockImplementation(async(_url,options)=>({ok:true,json:async()=>({...packageBody,channel:JSON.parse(options!.body as string).channel})}) as Response);
+  render(<UserSharing report={{...report,status:'pending_review',photoCount:5}} token="synthetic-session" reporterSharing/>);
+  expect(screen.getByRole('button',{name:'Prepare post'})).toBeDisabled();
+  expect(fetch).not.toHaveBeenCalled();
+  fireEvent(screen.getByLabelText('Confirm my post and social identity'),'valueChange',true);
+  fireEvent.press(screen.getByRole('button',{name:'Prepare post'}));
+  await screen.findByText(packageBody.caption);
+  expect(JSON.parse(jest.mocked(fetch).mock.calls[0][1]!.body as string)).toMatchObject({reporterConfirmed:true,confirmedPhotoCount:5});
+});
+
+
+test.each(['facebook','whatsapp'] as const)('Android %s targets the installed app with every photo',async channel=>{
+  const {Platform}=jest.requireActual('react-native');
+  const property=jest.replaceProperty(Platform,'OS','android');
+  try {
+    const native=jest.requireMock('react-native-share').default;
+    jest.mocked(fetch).mockImplementation(async()=>({ok:true,json:async()=>({...packageBody,channel})}) as Response);
+    beginReportSharing('synthetic-session',report.id);
+    render(<UserSharing report={{...report,status:'ready_to_share',photoCount:5,publications:[{channel,status:'blocked',reason:null,providerId:null}]}} token="synthetic-session" reporterSharing/>);
+    await waitFor(()=>expect(native.shareSingle).toHaveBeenCalledWith(expect.objectContaining({social:channel,urls:packageBody.photosBase64.map(photo=>`data:image/jpeg;base64,${photo}`)})));
+    expect(native.open).not.toHaveBeenCalled();
+  }finally{property.restore();}
+});
+
+test('Android reports a missing selected app without opening a website or losing the package',async()=>{
+  const {Platform}=jest.requireActual('react-native');
+  const property=jest.replaceProperty(Platform,'OS','android');
+  try {
+    const native=jest.requireMock('react-native-share').default;
+    native.isPackageInstalled.mockResolvedValueOnce({isInstalled:false});
+    beginReportSharing('synthetic-session',report.id);
+    render(<UserSharing report={{...report,status:'ready_to_share',photoCount:5,publications:report.publications.slice(0,1)}} token="synthetic-session" reporterSharing/>);
+    await screen.findByText(/Facebook is not available/);
+    expect(native.shareSingle).not.toHaveBeenCalled();
+    expect(native.open).not.toHaveBeenCalled();
+    expect(screen.getByText(packageBody.caption)).toBeOnTheScreen();
+  }finally{property.restore();}
 });

@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use ts_rs::TS;
 
-pub const COMMUNITY_RULES_VERSION: &str = "2026-10-24";
+pub const COMMUNITY_RULES_VERSION: &str = "2026-10-25";
 
 #[derive(Serialize, Deserialize, TS)]
 #[serde(rename_all = "camelCase")]
@@ -25,6 +25,13 @@ pub struct PublishingCapabilities {
 
 #[derive(Serialize, Deserialize, TS)]
 pub struct Capabilities {
+    #[serde(
+        rename = "reporterSharing",
+        default,
+        skip_serializing_if = "Option::is_none"
+    )]
+    #[ts(optional)]
+    pub reporter_sharing: Option<bool>,
     #[serde(
         rename = "communityBlocking",
         default,
@@ -163,6 +170,15 @@ pub enum SharingMode {
 #[derive(Deserialize, Serialize, TS)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct ShareRequest {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[ts(optional)]
+    pub community_rules_version: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[ts(optional)]
+    pub reporter_confirmed: Option<bool>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[ts(optional)]
+    pub confirmed_photo_count: Option<u8>,
     pub channel: Channel,
     pub identity_acknowledged: bool,
 }
@@ -179,6 +195,9 @@ pub struct SharePackage {
 #[derive(Deserialize, Serialize, TS)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct ReportInput {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[ts(optional)]
+    pub reporter_confirmed: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     #[ts(optional)]
     pub complaint_requested: Option<bool>,

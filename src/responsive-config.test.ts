@@ -18,3 +18,8 @@ test('uses the same native app identities as shared-link verification', () => {
 test('allows only the supported native social app availability queries',()=>{
   expect(config.ios?.infoPlist?.LSApplicationQueriesSchemes).toEqual(['fb','instagram','whatsapp']);
 });
+
+test('targeted Android handoffs can query supported installed apps without broad storage access',()=>{
+  expect(config.plugins).toContainEqual(['react-native-share',{android:['com.facebook.katana','com.whatsapp']}]);
+  expect(config.android?.permissions).not.toContain('android.permission.WRITE_EXTERNAL_STORAGE');
+});

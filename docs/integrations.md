@@ -32,14 +32,17 @@ shipped. Google/Facebook/Apple sign-in remains separate from sharing. Users need
 no additional login or publishing token in CivicLens for the native share sheet.
 Do not merge Google and Meta identities by matching email addresses.
 
-After independent moderation, an owner can prepare reviewed content for any one,
-several or all selected channels. `POST /v1/reports/{id}/share-package` validates
-owner identity in SQL, current rules, selected channel, all-photo privacy review,
-fresh verified authorities and content safety. It returns only the approved
-caption and 1–5 metadata-stripped photos. The client repeats this check immediately
+With the reporterSharing capability, owners can prepare their own confirmed
+reports immediately for any one, several or all selected channels. Moderator
+approval is not required for this native sharing path (ADR-0018). `POST /v1/reports/{id}/share-package` validates
+owner identity in SQL, current rules, selected channel, explicit reporter/identity
+confirmation and the exact photo count. It screens the final caption, includes
+only freshly verified authority tags and returns 1–5 metadata-stripped photos.
+Missing authority coverage omits those tags without blocking an awareness post.
+Requests without reporter confirmation retain the legacy independent-review gate. The client repeats this check immediately
 before each handoff. Manual approval creates no automated publisher jobs.
 
-Each platform gets its own reviewed caption preview and explicit handoff button.
+Each platform gets its own caption preview and explicit handoff button.
 The OS opens one app at a time; users select the matching account/group/Channel
 and confirm there. Share-sheet completion or cancellation is never recorded as
 provider delivery. External apps may omit caption text, limit attachments or offer
@@ -120,9 +123,9 @@ automated discovery must feed verification, not silently create public tags.
 
 ## TikTok — user-confirmed sharing
 
-TikTok is a manual destination for independently reviewed reports. The phone's
-share chooser can hand off the reviewed JPEGs and caption if a suitable app
-accepts them. When TikTok is absent, Save reviewed photos, Copy TikTok caption and
+TikTok is a manual destination for reporter-confirmed reports. The phone's
+share chooser can hand off the sanitized JPEGs and caption if a suitable app
+accepts them. When TikTok is absent, Save photos, Copy TikTok caption and
 Open TikTok provide an explicit upload path. The user selects their own account,
 checks attachment order and caption, then confirms in TikTok. Native chooser
 completion never confirms publication. See ADR-0014 for permissions, partial-save

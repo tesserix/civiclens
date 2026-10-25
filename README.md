@@ -6,8 +6,10 @@ community reporting: litter, pollution, roads, water and public safety.
 Sign in through Google or Facebook using Tesserix's Zitadel identity broker.
 Choose a nickname, or receive a unique one automatically. Photograph an issue,
 confirm its location, and submit. Public posts credit the nickname; real names,
-emails and provider tokens never enter report content. Reviewers verify the photo
-and responsible authority before publication.
+emails and provider tokens never enter report content. Users confirm their photos
+and caption and share through their own social apps without moderator approval.
+Automatic language checks and metadata stripping remain in place. Managed
+publishers, community content and official complaints retain independent review.
 
 ## What is implemented
 

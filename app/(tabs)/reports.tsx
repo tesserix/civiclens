@@ -22,7 +22,7 @@ export default function Reports() {
     onRefresh={() => void query.refetch()} refreshing={query.isRefetching}
     onEndReached={() => { if (query.hasNextPage && !query.isFetchingNextPage) void query.fetchNextPage(); }}
     ListHeaderComponent={<View className="mb-3 gap-4">
-      <Title subtitle="Follow each report from review to publication. Only you and authorised reviewers can see this history.">My reports</Title>
+      <Title subtitle="Your saved reports and sharing choices. A saved report is not a confirmed social post.">My reports</Title>
       {query.isError ? <><Notice>{query.error.message}</Notice><Button title="Retry reports" variant="secondary" onPress={() => void query.refetch()} /></> : null}
     </View>}
     ListEmptyComponent={query.isPending ? <Loading label="Loading your reports" /> : !query.isError ? <View className="flex-1 justify-center gap-5 py-10">
@@ -36,7 +36,7 @@ export default function Reports() {
       <View className="flex-row items-center gap-2.5">
         <View className="h-8 w-8 items-center justify-center rounded-lg bg-mint"><Ionicons name={categoryIcons[item.category]} size={17} color={palette.brand} /></View>
         <Text className="flex-1 text-sm font-semibold text-ink">{categoryLabels[item.category]}</Text>
-        <Status label={item.status === 'approved' ? 'Reviewed' : 'In review'} color={item.status === 'approved' ? palette.brand : palette.hivis} />
+        <Status label={item.sharingMode==='manual' ? 'Saved · share post' : item.status === 'approved' ? 'Reviewed' : 'In review'} color={item.status === 'approved' ? palette.brand : palette.hivis} />
       </View>
       <Text numberOfLines={2} className="text-base leading-6 text-ink">{item.description}</Text>
       <View className="flex-row items-center gap-1.5">

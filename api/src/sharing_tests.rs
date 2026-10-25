@@ -146,9 +146,10 @@ async fn australia_five_photos_require_review_and_owner_consent_before_user_shar
         .route("/storage/v1/b/{bucket}/o/{object}", get(object))
         .with_state(objects.clone());
     let (storage_url, stop_storage, storage_server) = serve(storage).await;
-    let safety = Router::new().fallback(|| async {
-        Json(json!({"choices":[{"message":{"content":"{\"safe\":true}"}}]}))
-    });
+    let safety_allowed = Arc::new(AtomicUsize::new(1));
+    let safety = Router::new().fallback(|State(allowed): State<Arc<AtomicUsize>>| async move {
+        Json(json!({"choices":[{"message":{"content":json!({"safe":allowed.load(Ordering::SeqCst) == 1}).to_string()}}]}))
+    }).with_state(safety_allowed.clone());
     let (safety_url, stop_safety, safety_server) = serve(safety).await;
     let mut config = config::Config::for_test(&url);
     config.ai_gateway_url = Some(safety_url);
@@ -272,6 +273,90 @@ async fn australia_five_photos_require_review_and_owner_consent_before_user_shar
         .0,
         StatusCode::FORBIDDEN
     );
+    sqlx::query(
+        "UPDATE reports SET report=jsonb_set(report,'{communityRulesVersion}',$2) WHERE id=$1",
+    )
+    .bind(uuid::Uuid::parse_str(id).unwrap())
+    .bind(json!("2026-10-24"))
+    .execute(&pool)
+    .await
+    .unwrap();
+    let owner_export = format!("/v1/reports/{id}/share-package");
+    let owner_confirmation = json!({"channel":"facebook","identityAcknowledged":true,"reporterConfirmed":true,"confirmedPhotoCount":5,"communityRulesVersion":contracts::COMMUNITY_RULES_VERSION});
+    let (status, package) = send(
+        &app,
+        "POST",
+        &owner_export,
+        &users[0].1,
+        owner_confirmation.clone(),
+        None,
+    )
+    .await;
+    assert_eq!(status, StatusCode::OK, "{package}");
+    assert_eq!(package["photosBase64"].as_array().unwrap().len(), 5);
+    assert!(package["caption"]
+        .as_str()
+        .unwrap()
+        .contains("Private original description beside the grass."));
+    for photo in package["photosBase64"].as_array().unwrap() {
+        assert!(!STANDARD
+            .decode(photo.as_str().unwrap())
+            .unwrap()
+            .windows(b"private GPS original".len())
+            .any(|bytes| bytes == b"private GPS original"));
+    }
+    assert_eq!(
+        send(
+            &app,
+            "POST",
+            &owner_export,
+            &users[1].1,
+            owner_confirmation.clone(),
+            None
+        )
+        .await
+        .0,
+        StatusCode::NOT_FOUND
+    );
+    for (field, value) in [
+        ("identityAcknowledged", json!(false)),
+        ("reporterConfirmed", json!(false)),
+        ("confirmedPhotoCount", json!(4)),
+        ("channel", json!("instagram")),
+    ] {
+        let mut invalid = owner_confirmation.clone();
+        invalid[field] = value;
+        assert!(
+            !send(&app, "POST", &owner_export, &users[0].1, invalid, None)
+                .await
+                .0
+                .is_success(),
+            "accepted invalid {field}"
+        );
+    }
+    assert!(
+        reports::reviewed_export(&state, users[0].0, uuid::Uuid::parse_str(id).unwrap())
+            .await
+            .is_err(),
+        "owner sharing must not approve official complaints"
+    );
+    assert_eq!(
+        sqlx::query_scalar::<_, i64>("SELECT count(*) FROM publications")
+            .fetch_one(&pool)
+            .await
+            .unwrap(),
+        0
+    );
+
+    sqlx::query(
+        "UPDATE reports SET report=jsonb_set(report,'{communityRulesVersion}',$2) WHERE id=$1",
+    )
+    .bind(uuid::Uuid::parse_str(id).unwrap())
+    .bind(json!(contracts::COMMUNITY_RULES_VERSION))
+    .execute(&pool)
+    .await
+    .unwrap();
+
     let approval = json!({"publicDescription":"Litter is scattered beside a public path. Please arrange a clean-up.","publicLocality":"Melbourne","photoPrivacyReviewed":true,"includeParents":false});
     assert_eq!(
         send(
@@ -478,6 +563,138 @@ async fn australia_five_photos_require_review_and_owner_consent_before_user_shar
         StatusCode::CONFLICT,
         "expired authority allowed a new share package"
     );
+    let mut immediate = body.clone();
+    immediate["reporterConfirmed"] = json!(true);
+    immediate["location"]["latitude"] = json!(-60.0);
+    immediate["location"]["longitude"] = json!(0.0);
+    immediate["channels"] = json!(["facebook", "instagram", "whatsapp", "tiktok"]);
+    let immediate_key = uuid::Uuid::new_v4();
+    let (status, immediate_report) = send(
+        &app,
+        "POST",
+        "/v1/reports",
+        &users[0].1,
+        immediate.clone(),
+        Some(immediate_key),
+    )
+    .await;
+    assert_eq!(status, StatusCode::OK, "{immediate_report}");
+    assert_eq!(immediate_report["status"], "ready_to_share");
+    assert_eq!(immediate_report["routing"]["authorityNames"], json!([]));
+    assert_eq!(
+        send(
+            &app,
+            "POST",
+            "/v1/reports",
+            &users[0].1,
+            immediate.clone(),
+            Some(immediate_key)
+        )
+        .await
+        .1["id"],
+        immediate_report["id"]
+    );
+    let immediate_id = immediate_report["id"].as_str().unwrap();
+    let immediate_export = format!("/v1/reports/{immediate_id}/share-package");
+    for channel in ["facebook", "instagram", "whatsapp", "tiktok"] {
+        let mut confirmation = owner_confirmation.clone();
+        confirmation["channel"] = json!(channel);
+        let (status, package) = send(
+            &app,
+            "POST",
+            &immediate_export,
+            &users[0].1,
+            confirmation,
+            None,
+        )
+        .await;
+        assert_eq!(status, StatusCode::OK, "{package}");
+        assert_eq!(package["photosBase64"].as_array().unwrap().len(), 5);
+        let caption = package["caption"].as_str().unwrap();
+        assert!(!caption.contains("Responsible offices:"));
+        assert!(!caption.contains('@'));
+        assert!(!caption.contains("#Melbourne"));
+    }
+    safety_allowed.store(0, Ordering::SeqCst);
+    assert_eq!(
+        send(
+            &app,
+            "POST",
+            &immediate_export,
+            &users[0].1,
+            owner_confirmation.clone(),
+            None
+        )
+        .await
+        .0,
+        StatusCode::UNPROCESSABLE_ENTITY,
+        "unsafe content escaped caption screening"
+    );
+    let mut no_count = owner_confirmation.clone();
+    no_count
+        .as_object_mut()
+        .unwrap()
+        .remove("confirmedPhotoCount");
+    assert_eq!(
+        send(&app, "POST", &immediate_export, &users[0].1, no_count, None)
+            .await
+            .0,
+        StatusCode::CONFLICT
+    );
+    immediate["sharingMode"] = json!("managed");
+    immediate["channels"] = json!(["facebook"]);
+    assert_eq!(
+        send(
+            &app,
+            "POST",
+            "/v1/reports",
+            &users[0].1,
+            immediate.clone(),
+            Some(uuid::Uuid::new_v4())
+        )
+        .await
+        .0,
+        StatusCode::BAD_REQUEST
+    );
+    immediate
+        .as_object_mut()
+        .unwrap()
+        .remove("reporterConfirmed");
+    let (status, managed_report) = send(
+        &app,
+        "POST",
+        "/v1/reports",
+        &users[0].1,
+        immediate,
+        Some(uuid::Uuid::new_v4()),
+    )
+    .await;
+    assert_eq!(status, StatusCode::OK, "{managed_report}");
+    assert_eq!(
+        send(
+            &app,
+            "POST",
+            &format!(
+                "/v1/reports/{}/share-package",
+                managed_report["id"].as_str().unwrap()
+            ),
+            &users[0].1,
+            owner_confirmation,
+            None
+        )
+        .await
+        .0,
+        StatusCode::CONFLICT,
+        "reporter confirmation bypassed managed review"
+    );
+    assert_eq!(
+        sqlx::query_scalar::<_, i64>("SELECT count(*) FROM publications")
+            .fetch_one(&pool)
+            .await
+            .unwrap(),
+        0
+    );
+
     for stop in [stop_storage, stop_safety] {
         stop.send(()).unwrap();
     }

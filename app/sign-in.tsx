@@ -35,7 +35,7 @@ export default function Welcome() {
         <Viewfinder className="px-6 py-8">
           <Text accessibilityRole="header" className="text-[36px] font-bold leading-[42px] tracking-tight text-ink">Report what needs fixing near you.</Text>
         </Viewfinder>
-        <Text className="text-base leading-6 text-muted">Photograph the problem, mark where it is and describe it in your own language. Every report is reviewed before it’s shared.</Text>
+        <Text className="text-base leading-6 text-muted">Photograph the problem, mark where it is and describe it in your own language. Share through your own social apps without waiting for moderator approval. You check and confirm each post.</Text>
       </View>
       <View className="gap-4">
         <Field label="Public nickname (optional)" hint="Choose a unique nickname, or leave blank for an automatic one. Existing accounts keep their nickname." value={nickname} onChangeText={setNickname} autoCapitalize="none" autoCorrect={false} maxLength={30} placeholder="e.g. RiverFox_27" />
@@ -50,7 +50,7 @@ export default function Welcome() {
         {error ? <Notice>{error}</Notice> : null}
         {sessionError ? <><Notice>{sessionError}</Notice><Button title="Retry saved sign-in" variant="secondary" onPress={retry} /></> : null}
       </View>
-      <View className="flex-row items-start gap-2.5"><Ionicons name="lock-closed-outline" size={16} color={palette.muted} /><Text className="flex-1 text-[13px] leading-5 text-muted">Your profile stays private. Reports appear under your nickname and are reviewed before public sharing.</Text></View>
+      <View className="flex-row items-start gap-2.5"><Ionicons name="lock-closed-outline" size={16} color={palette.muted} /><Text className="flex-1 text-[13px] leading-5 text-muted">Your profile stays private. CivicLens captions use your nickname. Your social account identity may be visible when you post in another app.</Text></View>
       <LegalLinks />
       </View>
     </ScrollView>

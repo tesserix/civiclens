@@ -1,4 +1,4 @@
-<!-- Public mirror of api/public/terms.html; SHA-256 e981c09c64eb0615d2fa75be4e4118f9cf593e234ade5eed286f2043753dd49a. -->
+<!-- Public mirror of api/public/terms.html; SHA-256 8117e993b63110253c063a2e5b7c8c074cf00cbb40ae6df9afd17b4735f1258f. -->
 
 CIVICLENS · TESSERIX
 
@@ -12,7 +12,7 @@ Only submit content you have the right to share. Report observable civic issues 
 
 ## Review and responsibility
 
-Submissions are subject to moderation and verification of the responsible authority. We may withhold or remove content and restrict abusive accounts. A report is an allegation or observation, not a finding of guilt. CivicLens is not a government service, police reporting channel or emergency dispatch system. In immediate danger, contact local emergency services.
+Sharing a report through your own social account does not require moderator approval. You must check every photo and the caption, take responsibility for your post and confirm it in the destination app. Automatic language-safety checks and photo metadata stripping still apply. Community requests and opinions, managed publishing and official complaint preparation have separate moderation and verification requirements. We may withhold or remove content and restrict abusive accounts. A report is an allegation or observation, not a finding of guilt. CivicLens is not a government service, police reporting channel or emergency dispatch system. In immediate danger, contact local emergency services.
 
 ## Child safety standards
 
@@ -24,7 +24,7 @@ Our child-safety contact receives concerns and coordinates a restricted review. 
 
 ## Your content
 
-You retain ownership of your content. By requesting reviewed public sharing, you authorize CivicLens to process and publish the approved content to your selected enabled destinations for that purpose. For user sharing, you separately choose and confirm the destination in your social app. You control communities you own, invites and membership there, and must follow that service’s rules. Your external sender identity may be visible. CivicLens does not verify delivery from a share-sheet action. Publication is subject to review, provider support and permissions. Do not expect every requested channel or every country's authority directory to be available. Public content may be copied by others.
+You retain ownership of your content. By requesting sharing, you authorize CivicLens to process your photos and caption and prepare them for your selected destinations. For user sharing, you choose and confirm the post in your social app using your own account. No moderator approval is required for this handoff. You control communities you own, invites and membership there, and must follow that service’s rules. Your external sender identity may be visible. CivicLens does not verify delivery from a share-sheet action. Sharing is subject to safety checks, provider support and permissions. Managed publishing and official complaint preparation retain independent review. Do not expect every requested channel or every country's authority directory to be available. Public content may be copied by others.
 
 ## Requests and opinion polls
 

@@ -3,12 +3,13 @@ import {useEffect,useRef,useState} from 'react';
 import { Linking, Platform, Switch, View } from 'react-native';
 import {Image} from 'expo-image';
 import { SocialDestinationSelect } from './social-destination-select';
-import {request} from './api';
+import {API_URL,request} from './api';
+import {consumeReportSharing} from './report-sharing-intent';
 import socialApps from '../shared/social-apps.json';
 import {Button,Notice,channelIcons,palette} from './ui';
-import {channelLabels as labels, type Channel, type Report, type SharePackage} from '../shared/contracts';
+import {communityRulesVersion,channelLabels as labels, type Channel, type Report, type SharePackage} from '../shared/contracts';
 
-export function UserSharing({report,token}:{report:Report;token:string}) {
+export function UserSharing({report,token,reporterSharing=false}:{report:Report;token:string;reporterSharing?:boolean}) {
   const [selected,setSelected]=useState<Channel[]>([]);
   const [acknowledged,setAcknowledged]=useState(false);
   const [prepared,setPrepared]=useState<SharePackage[]|null>(null);
@@ -20,51 +21,67 @@ export function UserSharing({report,token}:{report:Report;token:string}) {
   const saved=useRef({photos:'',count:0});
   const working=useRef(false);
   const channelKey=[...new Set(report.publications.map(p=>p.channel))].join(',');
-  const available=report.sharingMode==='manual' && report.status==='approved';
+  const available=report.sharingMode==='manual' && (report.status==='approved' || (reporterSharing && ['ready_to_share','pending_review'].includes(report.status)));
   useEffect(()=>{
     saved.current={photos:'',count:0};working.current=false;
     generation.current++;setAcknowledged(false);setPrepared(null);setOpened([]);setStep(0);setMessage('');setBusy(false);
-    setSelected(channelKey ? [channelKey.split(',')[0] as Channel] : []);
+    const channels=channelKey ? channelKey.split(',') as Channel[] : [];
+    setSelected(reporterSharing ? channels : channels.slice(0,1));
+    const automatic=reporterSharing && available && consumeReportSharing(token,report.id);
+    if(automatic){setAcknowledged(true);void prepare(channels,true);}
     return ()=>{generation.current++;};
-  },[token,report.id,available,channelKey]);
+  // The session-bound intent is consumed only when this report becomes shareable.
+  },[token,report.id,available,channelKey,reporterSharing]);
   const choose=(channels:Channel[])=>{generation.current++;setSelected(channels);setPrepared(null);setOpened([]);setStep(0);setMessage('');};
   const packageForShare=async(channel:Channel)=>{
-    const value=await request<SharePackage>(`/v1/reports/${encodeURIComponent(report.id)}/share-package`,{token,method:'POST',body:{channel,identityAcknowledged:true},timeoutMs:80000});
-    if(value.reportId!==report.id || value.channel!==channel || typeof value.caption!=='string' || !value.caption.trim() || value.caption.length>10000 || !Array.isArray(value.photosBase64) || value.photosBase64.length<1 || value.photosBase64.length>5 || value.photosBase64.some(photo=>typeof photo!=='string' || photo.length>8100000 || !/^\/9j\/[A-Za-z0-9+/]*={0,2}$/.test(photo))) throw new Error('Invalid reviewed package');
+    const value=await request<SharePackage>(`/v1/reports/${encodeURIComponent(report.id)}/share-package`,{token,method:'POST',body:{channel,identityAcknowledged:true,...(reporterSharing ? {reporterConfirmed:true,confirmedPhotoCount:report.photoCount || 1,communityRulesVersion} : {})},timeoutMs:80000});
+    if(value.reportId!==report.id || value.channel!==channel || typeof value.caption!=='string' || !value.caption.trim() || value.caption.length>10000 || !Array.isArray(value.photosBase64) || value.photosBase64.length<1 || value.photosBase64.length>5 || (report.photoCount && value.photosBase64.length!==report.photoCount) || value.photosBase64.some(photo=>typeof photo!=='string' || photo.length>8100000 || !/^\/9j\/[A-Za-z0-9+/]*={0,2}$/.test(photo))) throw new Error('Invalid reviewed package');
     return value;
   };
-  const prepare=async()=>{
-    if(!selected.length || !acknowledged || !available || working.current)return;
+  const prepare=async(channels=selected,auto=false)=>{
+    if(!channels.length || (!acknowledged && !auto) || !available || working.current)return;
     working.current=true;
     const run=generation.current;setBusy(true);setMessage('');setPrepared(null);setOpened([]);setStep(0);
     try {
       const packages:SharePackage[]=[];
-      for(const channel of selected){
+      for(const channel of channels){
         const value=await packageForShare(channel);
         if(run!==generation.current)return;
         if(packages.length && JSON.stringify(value.photosBase64)!==JSON.stringify(packages[0].photosBase64))throw new Error('Reviewed photos changed');
         packages.push(value);
       }
       setPrepared(packages);
+      if(auto && Platform.OS!=='web')await handoff(packages[0],run,true);
     }
-    catch {if(run===generation.current)setMessage('The reviewed post could not be prepared. Keep your report and retry after review or connection is restored.');}
+    catch {if(run===generation.current)setMessage(reporterSharing ? 'Your report is saved. Sharing could not be prepared. Check your connection and retry here.' : 'The reviewed post could not be prepared. Keep your report and retry after review or connection is restored.');}
     finally {if(run===generation.current){working.current=false;setBusy(false);}}
   };
-  const share=async(target:SharePackage)=>{
+  const handoff=async(target:SharePackage,run:number,targeted=false)=>{
+    const fresh=await packageForShare(target.channel);
+    if(run!==generation.current)return;
+    if(JSON.stringify(fresh)!==JSON.stringify(target)) {setPrepared(null);setMessage('Content changed. Prepare and check the post again.');return;}
+    // iOS and Android Instagram handlers can drop multiple photos; preserve all with the system sheet.
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const native: typeof import('react-native-share') = require('react-native-share');
+    const options={title:`Share ${reporterSharing ? 'post' : 'reviewed post'} to ${labels[target.channel]}`,message:fresh.caption,urls:fresh.photosBase64.map(photo=>`data:image/jpeg;base64,${photo}`),type:'image/jpeg',useInternalStorage:true};
+    if(targeted && Platform.OS==='android' && (target.channel==='facebook' || target.channel==='whatsapp')){
+      const packages={facebook:'com.facebook.katana',whatsapp:'com.whatsapp'};
+      const installed=await native.default.isPackageInstalled(packages[target.channel]);
+      if(run!==generation.current)return;
+      if(!installed.isInstalled){setMessage(`${labels[target.channel]} is not available. Install or update it, or use the system share menu.`);return;}
+      const social:Record<'facebook'|'whatsapp',import('react-native-share').Social.Facebook|import('react-native-share').Social.Whatsapp>={facebook:native.Social.Facebook,whatsapp:native.Social.Whatsapp};
+      await native.default.shareSingle({...options,social:social[target.channel]});
+    } else {
+      await native.default.open({...options,failOnCancel:false});
+    }
+    if(run===generation.current){setOpened(current=>[...new Set([...current,target.channel])]);setMessage('Sharing options closed. Check your chosen app to confirm whether you posted. CivicLens cannot verify delivery.');}
+  };
+  const share=async(target:SharePackage,targeted=false)=>{
     if(!prepared || !acknowledged || !available || Platform.OS==='web' || working.current)return;
     working.current=true;
     const run=generation.current;setBusy(true);setMessage('');
-    try {
-      const fresh=await packageForShare(target.channel);
-      if(run!==generation.current)return;
-      if(JSON.stringify(fresh)!==JSON.stringify(target)) {setPrepared(null);setMessage('Reviewed content changed. Prepare and check the post again.');return;}
-      // Older development clients can still read reports before installing the sharing module.
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
-      const native: typeof import('react-native-share') = require('react-native-share');
-      if(run!==generation.current)return;
-      await native.default.open({title:`Share reviewed post to ${labels[target.channel]}`,message:fresh.caption,urls:fresh.photosBase64.map(photo=>`data:image/jpeg;base64,${photo}`),type:'image/jpeg',useInternalStorage:true,failOnCancel:false});
-      if(run===generation.current){setOpened(current=>[...new Set([...current,target.channel])]);setMessage('Sharing options closed. Check your chosen app to confirm whether you posted. CivicLens cannot verify delivery.');}
-    } catch {if(run===generation.current)setMessage('Sharing could not be opened. Your report is safe. Update CivicLens or retry after review and connection are available.');}
+    try {await handoff(target,run,targeted);}
+    catch {if(run===generation.current)setMessage('Sharing could not be opened. Your report is safe. Check your connection, app availability and try again.');}
     finally {if(run===generation.current){working.current=false;setBusy(false);}}
   };
   const appAction=async(target:SharePackage,action:'save'|'copy'|'open'|'prepare')=>{
@@ -75,7 +92,7 @@ export function UserSharing({report,token}:{report:Report;token:string}) {
     try {
       const fresh=await packageForShare(target.channel);
       if(!active())return;
-      if(JSON.stringify(fresh)!==JSON.stringify(target)){setPrepared(null);setMessage('Reviewed content changed. Prepare and check the post again.');return;}
+      if(JSON.stringify(fresh)!==JSON.stringify(target)){setPrepared(null);setMessage(`${reporterSharing ? 'Content' : 'Reviewed content'} changed. Prepare and check the post again.`);return;}
       const url=socialApps[target.channel];
       const canOpen=async()=>{
         if(Platform.OS==='ios' && target.channel!=='tiktok'){
@@ -90,7 +107,7 @@ export function UserSharing({report,token}:{report:Report;token:string}) {
         const clipboard:typeof import('expo-clipboard')=require('expo-clipboard');
         if(!active())return false;
         if(!await clipboard.setStringAsync(fresh.caption))throw new Error('Clipboard unavailable');
-        if(active())setMessage(`Reviewed caption copied. Paste it into ${labels[target.channel]} and check it before posting.`);
+        if(active())setMessage(`${reporterSharing ? 'Caption' : 'Reviewed caption'} copied. Paste it into ${labels[target.channel]} and check it before posting.`);
         return active();
       };
       const open=async()=>{
@@ -135,7 +152,7 @@ export function UserSharing({report,token}:{report:Report;token:string}) {
               progress.count++;
             } finally {await files.deleteAsync(uri,{idempotent:true});}
           }
-          if(active())setMessage(`${progress.count} of ${fresh.photosBase64.length} reviewed photos saved to Photos. Copies remain there until you remove them. Copy the caption, then open ${labels[target.channel]}.`);
+          if(active())setMessage(`${progress.count} of ${fresh.photosBase64.length} ${reporterSharing ? 'confirmed' : 'reviewed'} photos saved to Photos. Copies remain there until you remove them. Copy the caption, then open ${labels[target.channel]}.`);
         } catch {
           if(active())setMessage(`${progress.count} of ${fresh.photosBase64.length} photos saved. Check Photos before retrying; an interrupted save may already have created a copy. Retry continues after confirmed saves while this screen stays open.`);
           return;
@@ -143,11 +160,11 @@ export function UserSharing({report,token}:{report:Report;token:string}) {
         if(action==='prepare'&&active()){
           const latest=await packageForShare(target.channel);
           if(!active())return;
-          if(JSON.stringify(latest)!==JSON.stringify(target)){setPrepared(null);setMessage('Reviewed content changed. Prepare and check the post again.');return;}
+          if(JSON.stringify(latest)!==JSON.stringify(target)){setPrepared(null);setMessage(`${reporterSharing ? 'Content' : 'Reviewed content'} changed. Prepare and check the post again.`);return;}
           if(await copy())await open();
         }
       }
-    } catch {if(active())setMessage(`${labels[target.channel]} preparation could not continue. Check that the app is installed, your connection and review status, then retry. No delivery is confirmed.`);}
+    } catch {if(active())setMessage(`${labels[target.channel]} preparation could not continue. Check that the app is installed, your connection and sharing availability, then retry. No delivery is confirmed.`);}
     finally {if(active()){working.current=false;setBusy(false);}}
   };
   if(report.sharingMode!=='manual'||!report.publications.length)return null;
@@ -158,36 +175,39 @@ export function UserSharing({report,token}:{report:Report;token:string}) {
       <Text className="text-sm leading-5 text-muted">Your social profile name, username, Page name or phone number may be visible. The caption credits your CivicLens nickname; it does not hide the sender in another app.</Text>
       <Text className="text-sm leading-5 text-muted">Choose one, several or all destinations. Your phone opens one app at a time; confirm each post in the matching app.</Text>
       <SocialDestinationSelect value={selected} options={report.publications.map(p=>p.channel)} disabled={busy} onChange={choose}/>
-      <View className="flex-row items-center gap-3"><Text className="flex-1 text-sm leading-5 text-ink">I understand my social account identity may be visible.</Text><Switch accessibilityLabel="Accept social identity visibility" value={acknowledged} disabled={busy} onValueChange={value=>{generation.current++;working.current=false;setBusy(false);setAcknowledged(value);setPrepared(null);setOpened([]);setStep(0);setMessage('');}} trackColor={{true:palette.brand}}/></View>
-      <Button title="Prepare reviewed post" variant="secondary" disabled={!acknowledged || !selected.length || busy || Platform.OS==='web'} busy={busy} onPress={()=>void prepare()}/>
+      {reporterSharing ? <><Text className="text-sm leading-5 text-muted">Keep posts truthful and respectful: no hate, profanity, threats or personal attacks. Do not share private names, faces, number plates, children or unsupported allegations. I agree to the current community rules.</Text><Button title="Read sharing rules" variant="quiet" onPress={()=>void Linking.openURL(`${API_URL}/v1/terms`).catch(()=>setMessage('Could not open the rules. Check your connection and retry.'))}/></> : null}
+      <View className="flex-row items-center gap-3"><Text className="flex-1 text-sm leading-5 text-ink">{reporterSharing ? 'I’ve checked every photo and the caption, take responsibility for this post and understand my social account identity may be visible.' : 'I understand my social account identity may be visible.'}</Text><Switch accessibilityLabel={reporterSharing ? 'Confirm my post and social identity' : 'Accept social identity visibility'} value={acknowledged} disabled={busy} onValueChange={value=>{generation.current++;working.current=false;setBusy(false);setAcknowledged(value);setPrepared(null);setOpened([]);setStep(0);setMessage('');}} trackColor={{true:palette.brand}}/></View>
+      <Button title={reporterSharing ? "Prepare post" : "Prepare reviewed post"} variant="secondary" disabled={!acknowledged || !selected.length || busy || Platform.OS==='web'} busy={busy} onPress={()=>void prepare()}/>
       {prepared ? <>
         <Text className="text-sm font-semibold text-ink">{prepared.length} {prepared.length===1?'destination':'destinations'} selected</Text>
-        <Text className="text-sm font-semibold text-ink">{prepared[0].photosBase64.length} reviewed {prepared[0].photosBase64.length===1?'photo':'photos'}</Text>
-        <View className="flex-row flex-wrap gap-2">{prepared[0].photosBase64.map((photo,index)=><Image key={index} source={{uri:`data:image/jpeg;base64,${photo}`}} accessibilityLabel={`Reviewed photo ${index+1}`} contentFit="cover" style={{width:88,height:88,borderRadius:12}}/>)}</View>
+        <Text className="text-sm font-semibold text-ink">{prepared[0].photosBase64.length} {reporterSharing ? 'confirmed' : 'reviewed'} {prepared[0].photosBase64.length===1?'photo':'photos'}</Text>
+        <View className="flex-row flex-wrap gap-2">{prepared[0].photosBase64.map((photo,index)=><Image key={index} source={{uri:`data:image/jpeg;base64,${photo}`}} accessibilityLabel={`${reporterSharing ? 'Confirmed' : 'Reviewed'} photo ${index+1}`} contentFit="cover" style={{width:88,height:88,borderRadius:12}}/>)}</View>
+        {reporterSharing ? <Text className="text-sm leading-5 text-muted">No moderator approval is needed. You are responsible for what you post. On iPhone, choose the matching installed app in the share sheet to keep all photos together.</Text> : null}
         <Notice>Some apps may omit the caption or limit attachments. Check every photo, the caption, the sending account and the destination before posting.</Notice>
         {prepared.slice(step,step+1).map(target=><View key={target.channel} className="gap-3 border-t border-line pt-3">
           <Text accessibilityRole="header" className="font-semibold text-ink">App {step+1} of {prepared.length}: {labels[target.channel]}</Text>
           <Text selectable className="text-sm leading-6 text-ink">{target.caption}</Text>
+          {reporterSharing ? <Button title={`Share to ${labels[target.channel]}`} icon={channelIcons[target.channel]} disabled={!acknowledged || busy || Platform.OS==='web'} busy={busy} onPress={()=>void share(target,true)}/> : null}
           <Button title={`Open system share menu for ${labels[target.channel]}`} icon="share-outline" disabled={!acknowledged || busy || Platform.OS==='web'} busy={busy} onPress={()=>void share(target)}/>
           <View className="gap-3 rounded-xl border border-line p-3">
             <Text className="text-sm font-semibold text-ink">Post in {labels[target.channel]}</Text>
-            <Text className="text-sm leading-5 text-muted">If {labels[target.channel]} is missing from the share menu or drops attachments, use these steps: save the reviewed photos, copy the caption, then open {labels[target.channel]}. Create a post or message and add all your saved photos. Opening the app does not attach them automatically.</Text>
+            <Text className="text-sm leading-5 text-muted">If {labels[target.channel]} is missing from the share menu or drops attachments, use these steps: save the photos, copy the caption, then open {labels[target.channel]}. Create a post or message and add all your saved photos. Opening the app does not attach them automatically.</Text>
             {target.channel==='tiktok'?<Text className="text-sm leading-5 text-muted">The TikTok link may open its app or website, depending on your device. If the website cannot upload your photos, open TikTok from your home screen.</Text>:null}
             <Notice>Saving creates copies in Photos, which may sync through your device’s backup settings. Copying places the public caption on your clipboard. CivicLens cannot remove exported copies or confirm a post.</Notice>
             <Button title={`Save photos, copy caption & open ${labels[target.channel]}`} icon={channelIcons[target.channel]} disabled={!acknowledged || busy || Platform.OS==='web'} busy={busy} onPress={()=>void appAction(target,'prepare')}/>
-            <Button title={`Save reviewed photos for ${labels[target.channel]}`} icon="download-outline" variant="secondary" disabled={!acknowledged || busy || Platform.OS==='web'} onPress={()=>void appAction(target,'save')}/>
+            <Button title={`Save ${reporterSharing ? '' : 'reviewed '}photos for ${labels[target.channel]}`} icon="download-outline" variant="secondary" disabled={!acknowledged || busy || Platform.OS==='web'} onPress={()=>void appAction(target,'save')}/>
             <Button title={`Copy ${labels[target.channel]} caption`} icon="copy-outline" variant="secondary" disabled={!acknowledged || busy || Platform.OS==='web'} onPress={()=>void appAction(target,'copy')}/>
             <Button title={target.channel==='tiktok'?'Open TikTok app or website':`Open ${labels[target.channel]}`} icon={channelIcons[target.channel]} variant="secondary" disabled={!acknowledged || busy || Platform.OS==='web'} onPress={()=>void appAction(target,'open')}/>
           </View>
           {opened.includes(target.channel)?<Text className="text-sm leading-5 text-muted">{labels[target.channel]}: options opened; delivery unverified</Text>:null}
           <Text className="text-sm leading-5 text-muted">Finish or cancel in this app, then return here. Continuing does not mark a post as delivered.</Text>
           <View className="gap-2">
-            {step+1<prepared.length?<Button title={`Next app: ${labels[prepared[step+1].channel]}`} icon="arrow-forward" disabled={busy} onPress={()=>{setStep(current=>current+1);setMessage('');}}/>:null}
+            {step+1<prepared.length?<Button title={`Next app: ${labels[prepared[step+1].channel]}`} icon="arrow-forward" disabled={busy} onPress={()=>{setStep(current=>current+1);setMessage('');if(reporterSharing)void share(prepared[step+1],true);}}/>:null}
             {step>0?<Button title={`Previous app: ${labels[prepared[step-1].channel]}`} variant="quiet" disabled={busy} onPress={()=>{setStep(current=>current-1);setMessage('');}}/>:null}
           </View>
         </View>)}
       </> : null}
-      {Platform.OS==='web'?<Notice>Use the iOS or Android app to share reviewed photos.</Notice>:null}
+      {Platform.OS==='web'?<Notice>Use the iOS or Android app to share your photos.</Notice>:null}
     </>}
     {message?<Notice>{message}</Notice>:null}
   </View>;

@@ -9,7 +9,7 @@ import { Button, Loading, Notice, Status, categoryIcons, channelIcons, cardShado
 import {ComplaintFlow} from '../../src/complaint-flow';
 import {UserSharing} from '../../src/user-sharing';
 import { request } from '../../src/api';
-import { categoryLabels, channelLabels, type PublicationStatus, type Report } from '../../shared/contracts';
+import { categoryLabels, channelLabels, type PublicationStatus, type Report, type Capabilities } from '../../shared/contracts';
 
 const statuses: Record<PublicationStatus, [string, string]> = {
   queued: ['Queued for publishing', palette.faint], sending: ['Sending', palette.hivis], published: ['Published', palette.brand],
@@ -20,6 +20,8 @@ export default function Receipt() {
   const { session, loading } = useSession(); const { id } = useLocalSearchParams<{ id: string }>(); const router = useRouter();
   const query = useQuery({ queryKey: ['report', session?.user.id, id], enabled: !!session && !!id,
     queryFn: ({ signal }) => request<Report>(`/v1/reports/${encodeURIComponent(id)}`, { token: session?.token, signal }), refetchInterval: 30_000 });
+  const capabilities=useQuery({queryKey:['capabilities'],queryFn:({signal})=>request<Capabilities>('/v1/capabilities',{signal})});
+  const reporterSharing=capabilities.data?.reporterSharing===true;
   if (!loading && !session) return <Redirect href="/sign-in" />;
   const report = query.data;
   return <SafeAreaView className="flex-1 bg-canvas"><ScrollView contentContainerStyle={{ padding: 20, gap: 24 }}>
@@ -30,8 +32,10 @@ export default function Receipt() {
       <View className="gap-2">
         <View className="h-11 w-11 items-center justify-center rounded-full bg-brand"><Ionicons name="checkmark" size={24} color="#FFFFFF" /></View>
         <Text accessibilityRole="header" className="text-[28px] font-bold leading-9 tracking-tight text-ink">Report received</Text>
-        <Text className="text-[15px] leading-[22px] text-muted">{report.sharingMode==='manual' ? 'Your report stays private until review. You choose where to share the approved post.' : 'Each destination’s delivery status appears below as it changes.'}</Text>
+        <Text className="text-[15px] leading-[22px] text-muted">{report.sharingMode==='manual' ? (reporterSharing ? 'Your report is saved. No moderator approval is needed to share through your own social accounts. You confirm each post in its app.' : 'Your report stays private until review. You choose where to share the approved post.') : 'Each destination’s delivery status appears below as it changes.'}</Text>
       </View>
+      {session && (!capabilities.isPending || report.status==='approved') ? <UserSharing key={`${session.user.id}:${report.id}:${reporterSharing}`} report={report} token={session.token} reporterSharing={reporterSharing}/> : null}
+      {capabilities.isError && report.sharingMode==='manual' ? <><Notice>Could not check sharing availability. Your report is saved.</Notice><Button title="Retry sharing availability" onPress={()=>void capabilities.refetch()}/></> : null}
       <View className="gap-3 rounded-3xl border border-line bg-surface p-5" style={cardShadow}>
         <View className="flex-row items-center gap-2"><Ionicons name={categoryIcons[report.category]} size={16} color={palette.brand} /><Text className="text-sm font-semibold text-brand">{categoryLabels[report.category]}</Text></View>
         <Text className="text-[17px] leading-[26px] text-ink">{report.description}</Text>
@@ -42,7 +46,7 @@ export default function Receipt() {
       </View>
       <View className="gap-2">
         <Text accessibilityRole="header" className="text-[17px] font-semibold text-ink">Responsible offices</Text>
-        <Text className="text-sm leading-5 text-muted">{report.routing.authorityNames.length ? report.routing.authorityNames.join(', ') : 'The local authority needs verification. Your report is safely held for review.'}</Text>
+        <Text className="text-sm leading-5 text-muted">{report.routing.authorityNames.length ? report.routing.authorityNames.join(', ') : 'No verified authority match is available. You can still share an awareness post without authority tags.'}</Text>
       </View>
       {report.publications.length ? <View className="gap-2">
         <Text accessibilityRole="header" className="text-[17px] font-semibold text-ink">{report.sharingMode==='manual' ? 'Your sharing choices' : 'Where your report stands'}</Text>
@@ -51,16 +55,15 @@ export default function Receipt() {
             <View className="flex-row items-center gap-2.5">
               <Ionicons name={channelIcons[p.channel]} size={18} color={palette.ink} />
               <Text className="flex-1 text-[15px] font-semibold text-ink">{channelLabels[p.channel]}</Text>
-              <Status label={report.sharingMode==='manual' && report.status==='approved' ? 'Ready for you to share' : statuses[p.status][0]} color={statuses[p.status][1]} />
+              <Status label={report.sharingMode==='manual' && (reporterSharing || report.status==='approved') ? 'Ready for you to share' : statuses[p.status][0]} color={statuses[p.status][1]} />
             </View>
-            {p.reason && !(report.sharingMode==='manual' && report.status==='approved') ? <Text className="text-sm leading-5 text-muted">{p.reason}</Text> : null}
+            {p.reason && !(report.sharingMode==='manual' && (reporterSharing || report.status==='approved')) ? <Text className="text-sm leading-5 text-muted">{p.reason}</Text> : null}
             {p.providerId ? <Text selectable className="text-xs text-muted">Provider reference: {p.providerId}</Text> : null}
           </View>)}
         </View>
       </View> : null}
       {session ? <ComplaintFlow key={`${session.user.id}:${report.id}`} report={report} userId={session.user.id} token={session.token}/> : null}
-      {session ? <UserSharing report={report} token={session.token}/> : null}
-      <Notice>Review and publication do not guarantee that an authority has seen or acted on the report. For urgent danger, contact local emergency services.</Notice>
+      <Notice>Sharing does not guarantee that an authority has seen or acted on the report. For urgent danger, contact local emergency services.</Notice>
     </> : null}
   </ScrollView></SafeAreaView>;
 }
