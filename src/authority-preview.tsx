@@ -1,5 +1,6 @@
+import { Text } from './text';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Linking, Pressable, Text, View } from 'react-native';
+import { Linking, Pressable, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import type { AuthorityPreview as Preview, Category, Location } from '../shared/contracts';
 import { request } from './api';

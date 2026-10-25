@@ -40,3 +40,14 @@ Use real API-connected builds for TestFlight. Do not ship demo paths or fixtures
 Public Apple App Store and Google Play releases require the user's explicit
 confirmation after their TestFlight testing. TestFlight approval is not approval
 for a public store release or an unapproved backend migration/cloud rollout.
+
+
+## Selection controls
+
+Use the shared native single-choice dropdown for compact form choices and filters.
+Use SocialDestinationSelect for social app multi-selection in capture and reviewed
+sharing; keep Select all/Clear inside its native sheet, with Cancel and explicit
+Done. Preserve existing choices on cancellation and prevent stale native callbacks
+from applying to a changed form. Keep touch targets at least 44 points, allow text
+to wrap, and keep sheet content scrollable at large accessibility sizes. Check
+related selection controls for the same inconsistency when refining a screen.

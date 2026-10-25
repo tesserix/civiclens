@@ -1,2 +1,2 @@
 import { Redirect } from 'expo-router';
-export default function Callback() { return <Redirect href="/" />; }
+export default function Callback() { return <Redirect href="/sign-in" />; }

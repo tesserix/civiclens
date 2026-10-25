@@ -71,3 +71,18 @@ Use simulator GPS inside Melbourne municipality (for example -37.814, 144.9633)
 with `AU` and waste. San Francisco's default simulator GPS should show US coverage
 missing. Editing a town/country label never moves the coordinate. St Kilda is
 outside the City of Melbourne municipality and must not match this seed.
+
+The new India/Nepal/NZ reference inventory, source hashes, complaint-channel review
+and explicit coverage gaps are recorded in
+[multicountry-2026-10-25.md](multicountry-2026-10-25.md). These new local imports do
+not change the released API's verified Melbourne-only responsibility coverage.
+
+## India crime integration tracker
+
+Use the [India crime reporting tracker](../india-crime/README.md) to work through
+all 36 states/UTs and the pinned 784-district administrative baseline one scope at
+a time. Each state file records official-source discovery, API/media/access gaps
+and district mapping/resolution checkboxes. Tamil Nadu is the first API candidate;
+no state or district crime integration is marked resolved. The
+[initial API feasibility audit](india-crime-api-feasibility-2026-10-25.md) retains
+the inspected Tamil Nadu and Madhya Pradesh contracts and their limitations.

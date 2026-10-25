@@ -1,12 +1,14 @@
+import { Text } from './text';
 import { useEffect, useRef, useState } from 'react';
-import { FlatList, Modal, Platform, Pressable, ScrollView, Text, View, useWindowDimensions } from 'react-native';
+import { FlatList, Modal, Platform, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import type { AssistInput, AssistMode, AssistSuggestion, AssistTone, Category, Location } from '../shared/contracts';
+import { CommunitySelect } from './community-select';
 import {HashtagSelect} from './hashtag-select';
 import { ApiError, request } from './api';
 import { languages, useWritingLanguage } from './languages';
-import { Button, Chip, Notice, palette } from './ui';
+import { Button, Notice, palette } from './ui';
 
 export function WritingAssist({ userId, token, category, description, hasPhoto, readPhoto, onUse, disabled = false, available = true, sourceId = '', location = null, contextual = false, suggestedHashtags = [], selectedHashtags, onHashtagsChange, hashtagsBusy = false, hashtagsError = false, onHashtagsRetry }: {
   userId: string; token: string; category: Category; description: string; hasPhoto: boolean;
@@ -70,10 +72,7 @@ export function WritingAssist({ userId, token, category, description, hasPhoto, 
       <Ionicons name="chevron-down" size={15} color={palette.muted} />
     </Pressable>
     {contextual ? <View className="gap-2">
-      <Text className="text-[13px] font-semibold text-ink">Caption tone</Text>
-      <View accessibilityRole="radiogroup" className="flex-row flex-wrap gap-2">
-        {([['serious','Serious'],['satirical','Light satire'],['balanced','Balanced']] as const).map(([value,label])=><Chip key={value} label={label} selected={tone===value} disabled={locked} onPress={()=>setTone(value)}/>)}
-      </View>
+      <CommunitySelect<AssistTone> label="Caption tone" value={tone} options={[{id:'serious',label:'Serious'},{id:'satirical',label:'Light satire'},{id:'balanced',label:'Balanced'}]} disabled={locked} onChange={setTone}/>
       <Text className="text-xs leading-5 text-muted">Humour stays constructive, with factual details and a clear request for action. No personal attacks or unsupported blame.</Text>
     </View> : null}
     <View className={actionsClass}>

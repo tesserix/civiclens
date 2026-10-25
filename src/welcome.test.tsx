@@ -1,7 +1,7 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react-native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { SessionProvider } from './session';
-import Welcome from '../app/index';
+import Welcome from '../app/sign-in';
 
 test('offers an optional nickname and holds sign-in when providers are unconfigured', async () => {
   globalThis.fetch = jest.fn().mockResolvedValue({ ok: true, json: async () => ({ google: false, facebook: false, publishing: { facebook: false, instagram: false, whatsapp: false } }) });

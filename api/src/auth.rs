@@ -117,6 +117,7 @@ struct IdentityClaims {
     organization_id: Option<String>,
     sub: String,
     nonce: Option<String>,
+    picture: Option<String>,
 }
 
 async fn verify(
@@ -124,7 +125,7 @@ async fn verify(
     provider: &str,
     token: &str,
     nonce: &str,
-) -> Result<String, Error> {
+) -> Result<IdentityClaims, Error> {
     if ["google", "facebook", "apple"].contains(&provider) {
         if state.config.oidc_project_id.is_empty() || state.config.oidc_organization_id.is_empty() {
             return Err(Error::Unavailable);
@@ -175,7 +176,7 @@ async fn verify(
         {
             return Err(Error::Unauthorized);
         }
-        Ok(claims.sub)
+        Ok(claims)
     } else {
         Err(Error::NotFound)
     }
@@ -198,7 +199,9 @@ pub async fn login(
     .fetch_optional(&state.pool)
     .await?
     .ok_or(Error::Unauthorized)?;
-    let subject = verify(&state, &provider, &input.token, &nonce).await?;
+    let identity = verify(&state, &provider, &input.token, &nonce).await?;
+    let picture = crate::profile::picture_url(identity.picture.as_deref());
+    let subject = identity.sub;
     let mut mac = Hmac::<Sha256>::new_from_slice(state.config.secrets.identity_key.as_bytes())
         .map_err(|_| Error::Internal)?;
     mac.update(format!("{}:{subject}", state.config.oidc_issuer).as_bytes());
@@ -240,9 +243,10 @@ pub async fn login(
             nickname,
         }
     };
-    sqlx::query("UPDATE users SET identity_subject=$2 WHERE id=$1")
+    sqlx::query("UPDATE users SET identity_subject=$2,sign_in_photo_url=$3 WHERE id=$1")
         .bind(Uuid::parse_str(&user.id).map_err(|_| Error::Internal)?)
         .bind(subject)
+        .bind(picture)
         .execute(&mut *tx)
         .await?;
     let token = opaque();

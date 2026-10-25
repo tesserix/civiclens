@@ -1,5 +1,6 @@
+import { Text } from '../../src/text';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, KeyboardAvoidingView, Platform, Pressable, ScrollView, Switch, Text, View, useWindowDimensions } from 'react-native';
+import { ActivityIndicator, KeyboardAvoidingView, Platform, Pressable, ScrollView, Switch, View, useWindowDimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Image } from 'expo-image';
 import * as ImagePicker from 'expo-image-picker';
@@ -7,7 +8,7 @@ import * as FileSystem from 'expo-file-system/legacy';
 import { Ionicons } from '@expo/vector-icons';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useFocusEffect, useRouter } from 'expo-router';
-import { Button, Chip, Field, Loading, Notice, Step, Title, Viewfinder, palette } from '../../src/ui';
+import { Button, Field, Loading, Notice, Step, Title, Viewfinder, palette } from '../../src/ui';
 import { useSession } from '../../src/session';
 import { draftPhotos, isDraftPhotoUri, useDraft } from '../../src/useDraft';
 import { preparePhoto } from '../../src/report-photo';
@@ -18,13 +19,12 @@ import { PlacePicker } from '../../src/place-picker';
 import { useDeviceLocation } from '../../src/useDeviceLocation';
 import { request } from '../../src/api';
 import { WritingAssist } from '../../src/writing-assist';
+import { SocialDestinationSelect } from '../../src/social-destination-select';
 import {HashtagSelect} from '../../src/hashtag-select';
 import { AuthorityPreview } from '../../src/authority-preview';
 import { CategorySelect, LocationFields } from '../../src/report-details';
 import { channels, communityRulesVersion, type AuthorityPreview as Preview, type Capabilities, type Report } from '../../shared/contracts';
 
-const channelIcons = { facebook: 'logo-facebook', instagram: 'logo-instagram', whatsapp: 'logo-whatsapp' } as const;
-const channelLabels = { facebook: 'Facebook', instagram: 'Instagram', whatsapp: 'WhatsApp' } as const;
 
 export default function Capture() {
   const { width, fontScale } = useWindowDimensions();
@@ -41,6 +41,8 @@ export default function Capture() {
   const photos = draftPhotos(draft);
   const sharingMode = 'manual' as const;
   const manualReady = capabilities.data?.manualSharing === true;
+  const availableChannels = channels.filter(channel => capabilities.data?.manualShareChannels?.includes(channel) ?? channel !== 'tiktok');
+  const destinationsReady = draft.channels.every(channel => availableChannels.includes(channel));
   const maxPhotos = capabilities.data?.maxPhotos === 5 ? 5 : 1;
   const rulesReady = capabilities.data?.communityRulesVersion === communityRulesVersion;
   const rulesAccepted = draft.communityRulesVersion === communityRulesVersion;
@@ -64,6 +66,7 @@ export default function Capture() {
   const submit = useMutation({ mutationFn: async () => {
     if (!session || !draft.location) throw new Error('Sign in and confirm the location first.');
     if (draft.hashtags !== undefined && capabilities.data?.hashtagSelection !== true) throw new Error('Hashtag choices can’t be saved right now. Please retry shortly.');
+    if (!destinationsReady) throw new Error('Some saved destinations are unavailable. Keep your draft and retry or change your selection.');
     if (!manualReady) throw new Error('Sharing with your own apps is being updated. Keep your draft and retry with the latest CivicLens.');
     if (!rulesReady || !rulesAccepted) throw new Error('Read and accept the current community rules before submitting.');
     if (photos.length>maxPhotos) throw new Error('Extra photos are temporarily unavailable. Keep your draft and retry shortly.');
@@ -72,7 +75,7 @@ export default function Capture() {
     for (const uri of photos.slice(1)) additionalPhotosBase64.push(await readPhoto(uri));
     const photoBase64 = await readPhoto();
     return request<Report>('/v1/reports', { token: session.token, method: 'POST', key: draft.key, timeoutMs: 90000,
-      body: { category: draft.category, description: draft.description, location: draft.location, photoBase64, additionalPhotosBase64, locationSource: draft.locationSource, communityRulesVersion, ...(capabilities.data?.manualSharing === true ? {sharingMode} : {}), channels: draft.channels, consent: draft.consent, ...(draft.hashtags === undefined ? {} : {hashtags:draft.hashtags}) } });
+      body: { category: draft.category, description: draft.description, location: draft.location, photoBase64, additionalPhotosBase64, locationSource: draft.locationSource, communityRulesVersion, ...(capabilities.data?.complaintPreparation===true && draft.complaintRequested===true ? {complaintRequested:true} : {}), ...(capabilities.data?.manualSharing === true ? {sharingMode} : {}), channels: draft.channels, consent: draft.consent, ...(draft.hashtags === undefined ? {} : {hashtags:draft.hashtags}) } });
   }, onSuccess: async () => {
     await reset();
     await client.invalidateQueries({ queryKey: ['reports', session?.user.id] });
@@ -129,7 +132,7 @@ export default function Capture() {
   if (!ready) return <SafeAreaView className="flex-1 justify-center bg-canvas"><Loading label="Opening your draft" /></SafeAreaView>;
   const located = !!draft.location && /^[A-Z]{2}$/.test(draft.location.countryCode) && draft.location.locality.trim().length > 1;
   const described = draft.description.trim().length >= 10;
-  const shared = draft.consent && draft.channels.length > 0 && rulesAccepted && rulesReady && manualReady;
+  const shared = draft.consent && (draft.channels.length > 0 || (draft.complaintRequested===true && capabilities.data?.complaintPreparation===true)) && rulesAccepted && rulesReady && manualReady && destinationsReady;
   const locked = submit.isPending || discarding || confirmDiscard;
   const removePhoto = (index: number) => {
     const remaining = photos.filter((_,i)=>i!==index);
@@ -153,7 +156,7 @@ export default function Capture() {
         <Viewfinder className="p-2">
           {draft.photoUri ? <Image source={{ uri: draft.photoUri }} contentFit="cover" style={{ height: 240, borderRadius: 12 }} accessibilityLabel="Your report photo" />
             : <Pressable accessibilityRole="button" accessibilityLabel="Take a photo" disabled={working !== '' || locked} onPress={() => void photo(true)}
-              className="h-56 items-center justify-center gap-3 rounded-xl bg-ink px-6" style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}>
+              className="min-h-56 items-center justify-center gap-3 rounded-xl bg-ink px-6" style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}>
               {working === 'photo' ? <ActivityIndicator color={palette.hivis} /> : <Ionicons name="camera" size={34} color={palette.hivis} />}
               <Text className="text-lg font-semibold text-white">Take a photo</Text>
               <Text className="text-center text-sm leading-5 text-white/70">Keep a safe distance. Leave faces and number plates out of frame.</Text>
@@ -199,13 +202,11 @@ export default function Capture() {
       <Step number={5} title="Share after review" done={shared}>
         <Text className="text-sm leading-5 text-muted">You choose the group, Channel or account in your social app after review. You own the community and manage its members there. Select one, several or all destinations. Your social profile, username or phone number may be visible; the caption credits your CivicLens nickname.</Text>
         {!manualReady && capabilities.isSuccess ? <Notice>Sharing with your own apps is being updated. Keep your draft and retry with the latest CivicLens.</Notice> : null}
-        <View className="flex-row flex-wrap gap-2">
-          {channels.map(channel => <Chip key={channel} role="checkbox" label={channelLabels[channel]} icon={channelIcons[channel]} selected={draft.channels.includes(channel)} disabled={locked}
-            onPress={() => update({ channels: draft.channels.includes(channel) ? draft.channels.filter(c => c !== channel) : [...draft.channels, channel] })} />)}
-        </View>
-        <View className="flex-row flex-wrap gap-2"><Button title="Select all social apps" compact variant="quiet" disabled={locked} onPress={()=>update({channels:[...channels]})}/><Button title="Clear social apps" compact variant="quiet" disabled={locked} onPress={()=>update({channels:[]})}/></View>
+        {!destinationsReady ? <Notice>Some saved destinations are unavailable. Keep your draft and retry or change your selection.</Notice> : null}
+        <SocialDestinationSelect value={draft.channels} options={availableChannels} disabled={locked} onChange={channels => update({channels})}/>
+        {capabilities.data?.complaintPreparation===true?<View className="flex-row items-start gap-3 rounded-xl border border-line bg-surface p-4"><Text className="flex-1 text-sm leading-5 text-ink">Prepare a complaint for the responsible body after review. You will confirm the destination and finish on its official form. You can use this without social apps.</Text><Switch accessibilityLabel="Request official complaint preparation" value={draft.complaintRequested===true} disabled={locked} onValueChange={complaintRequested=>update({complaintRequested})} trackColor={{true:palette.brand}}/></View>:null}
         <View className="flex-row items-start gap-3 rounded-xl border border-line bg-surface p-4">
-          <Text className="flex-1 text-sm leading-5 text-ink">I agree to public sharing after review, using my nickname and an approximate location. I’ve checked every photo for identifying details.</Text>
+          <Text className="flex-1 text-sm leading-5 text-ink">I agree to prepare my selected destinations after review, using my nickname and an approximate location. I’ve checked every photo for identifying details.</Text>
           <Switch accessibilityLabel="Consent to reviewed public sharing" value={draft.consent} disabled={locked} onValueChange={consent => update({ consent })} trackColor={{ true: palette.brand }} />
         </View>
         <View className="gap-3 rounded-xl border border-line bg-surface p-4">

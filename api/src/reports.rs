@@ -52,8 +52,12 @@ fn validate(input: &ReportInput) -> Result<(), Error> {
                 || tags.iter().collect::<HashSet<_>>().len() != tags.len()
         })
         || !input.consent
-        || input.channels.is_empty()
-        || input.channels.len() > 3
+        || (input.channels.is_empty() && input.complaint_requested != Some(true))
+        || (input.complaint_requested == Some(true)
+            && input.sharing_mode != Some(SharingMode::Manual))
+        || input.channels.len() > crate::contracts::Channel::ALL.len()
+        || (input.channels.contains(&crate::contracts::Channel::Tiktok)
+            && input.sharing_mode != Some(SharingMode::Manual))
         || input
             .channels
             .iter()
@@ -180,6 +184,7 @@ pub async fn create(
         }
     }
     let report = Report {
+        complaint_requested: input.complaint_requested,
         sharing_mode: input.sharing_mode,
         id: id.to_string(),
         nickname: member.nickname,
@@ -412,6 +417,17 @@ pub async fn approve(
             "Review the photo, public description and locality before approval.",
         ));
     }
+    if input
+        .complaint_description
+        .as_ref()
+        .is_some_and(|text| !description_valid(text))
+        || (input.complaint_description.is_some()
+            != (input.complaint_factual_reviewed == Some(true)))
+    {
+        return Err(Error::Invalid(
+            "Provide factual complaint text and confirm its separate review.",
+        ));
+    }
     let mut tx = state.pool.begin().await?;
     let row = sqlx::query("SELECT report,owner_id,approval FROM reports WHERE id=$1 FOR UPDATE")
         .bind(id)
@@ -422,6 +438,11 @@ pub async fn approve(
         return Err(Error::Forbidden);
     }
     let mut report = row.get::<sqlx::types::Json<Report>, _>("report").0;
+    if report.complaint_requested == Some(true)
+        && (input.complaint_description.is_none() || input.complaint_factual_reviewed != Some(true))
+    {
+        return Err(Error::Invalid("This report requests a government complaint. Separately review factual complaint text before approval."));
+    }
     let count = report.photo_count.unwrap_or(1);
     if (count > 1 && input.reviewed_photo_count != Some(count))
         || input.reviewed_photo_count.is_some_and(|n| n != count)
@@ -482,59 +503,70 @@ pub async fn approve(
     Ok(Json(read(&state, id, None).await?))
 }
 
-pub async fn share_package(
-    State(state): State<Arc<AppState>>,
-    member: Member,
-    Path(id): Path<Uuid>,
-    Json(input): Json<ShareRequest>,
-) -> Result<Json<SharePackage>, Error> {
+pub async fn reviewed_export(
+    state: &AppState,
+    owner: Uuid,
+    id: Uuid,
+) -> Result<(Report, Approval), Error> {
     let row = sqlx::query("SELECT report,approval FROM reports WHERE id=$1 AND owner_id=$2")
         .bind(id)
-        .bind(member.id)
+        .bind(owner)
         .fetch_optional(&state.pool)
         .await?
         .ok_or(Error::NotFound)?;
-    if !input.identity_acknowledged {
-        return Err(Error::Invalid(
-            "Confirm that your social account identity may be visible before sharing.",
-        ));
-    }
     let report = row.get::<sqlx::types::Json<Report>, _>("report").0;
     let approval: Approval = row
         .get::<Option<serde_json::Value>, _>("approval")
         .ok_or(Error::Conflict(
-            "Every photo, the caption and responsible authority need review before sharing.",
+            "Every photo, text and responsible authority need independent review first.",
         ))
         .and_then(|value| serde_json::from_value(value).map_err(|_| Error::Internal))?;
     let count = report.photo_count.unwrap_or(1);
     if report.status != "approved"
         || report.sharing_mode != Some(SharingMode::Manual)
-        || !report
-            .publications
-            .iter()
-            .any(|p| p.channel == input.channel)
         || report.community_rules_version.as_deref() != Some(COMMUNITY_RULES_VERSION)
         || !(1..=5).contains(&count)
         || !approval.photo_privacy_reviewed
         || (count > 1 && approval.reviewed_photo_count != Some(count))
     {
         return Err(Error::Conflict(
+            "This report needs fresh review before preparing an export.",
+        ));
+    }
+    let offices = reviewed_offices(state, &report, approval.include_parents)?;
+    if offices.iter().map(|a| &a.name).collect::<Vec<_>>()
+        != report.routing.authority_names.iter().collect::<Vec<_>>()
+    {
+        return Err(Error::Conflict(
+            "Responsible authorities changed; a fresh review is required.",
+        ));
+    }
+    Ok((report, approval))
+}
+
+pub async fn share_package(
+    State(state): State<Arc<AppState>>,
+    member: Member,
+    Path(id): Path<Uuid>,
+    Json(input): Json<ShareRequest>,
+) -> Result<Json<SharePackage>, Error> {
+    if !input.identity_acknowledged {
+        return Err(Error::Invalid(
+            "Confirm that your social account identity may be visible before sharing.",
+        ));
+    }
+    let (report, approval) = reviewed_export(&state, member.id, id).await?;
+    if !report
+        .publications
+        .iter()
+        .any(|p| p.channel == input.channel)
+    {
+        return Err(Error::Conflict(
             "This report is not approved for this user-sharing destination.",
         ));
     }
+    let count = report.photo_count.unwrap_or(1);
     let offices = reviewed_offices(&state, &report, approval.include_parents)?;
-    if offices.iter().map(|a| a.name.as_str()).collect::<Vec<_>>()
-        != report
-            .routing
-            .authority_names
-            .iter()
-            .map(String::as_str)
-            .collect::<Vec<_>>()
-    {
-        return Err(Error::Conflict(
-            "Responsible authorities changed; a fresh review is required before sharing.",
-        ));
-    }
     let caption = authority::caption(
         &report,
         &approval.public_description,

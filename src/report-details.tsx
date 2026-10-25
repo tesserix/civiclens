@@ -1,5 +1,6 @@
+import { Text } from './text';
 import { useEffect, useRef, useState } from 'react';
-import { ActionSheetIOS, FlatList, KeyboardAvoidingView, Modal, Platform, Pressable, Text, TextInput, View, useWindowDimensions } from 'react-native';
+import { ActionSheetIOS, FlatList, KeyboardAvoidingView, Modal, Platform, Pressable, TextInput, View, useWindowDimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Picker } from '@react-native-picker/picker';
 import { Ionicons } from '@expo/vector-icons';

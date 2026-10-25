@@ -52,6 +52,14 @@ jobs:
       - run: npm ci
       - run: npm run export
       - run: node --test scripts/ci/*.test.mjs
+      - name: Validate authority import scripts
+        run: |
+          python3 -m venv "$RUNNER_TEMP/civiclens-authorities"
+          "$RUNNER_TEMP/civiclens-authorities/bin/python" -m pip install --require-hashes -r scripts/authorities/requirements-test.txt
+          "$RUNNER_TEMP/civiclens-authorities/bin/python" -m pytest scripts/authorities
+          "$RUNNER_TEMP/civiclens-authorities/bin/ruff" check scripts/authorities/administrative_reference.py scripts/authorities/refresh_nz_profiles.py scripts/authorities/test_administrative_reference.py
+          "$RUNNER_TEMP/civiclens-authorities/bin/ruff" format --check scripts/authorities/administrative_reference.py scripts/authorities/refresh_nz_profiles.py scripts/authorities/test_administrative_reference.py
+          "$RUNNER_TEMP/civiclens-authorities/bin/mypy" --strict scripts/authorities/administrative_reference.py scripts/authorities/refresh_nz_profiles.py
   contracts:
     runs-on: ubuntu-24.04
     steps:

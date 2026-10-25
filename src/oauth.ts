@@ -17,7 +17,7 @@ export async function providerLogin(provider: LoginProvider, nickname: string): 
   const redirectUri = 'civiclens:/auth/callback';
   const discovery = { authorizationEndpoint: `${auth.issuer}/oauth/v2/authorize`, tokenEndpoint: `${auth.issuer}/oauth/v2/token` };
   const oauth = new AuthSession.AuthRequest({ clientId, redirectUri, responseType: AuthSession.ResponseType.Code,
-    scopes: ['openid', `urn:zitadel:iam:org:id:${auth.organizationId}`, 'urn:zitadel:iam:user:resourceowner', `urn:zitadel:iam:org:project:id:${auth.projectId}:aud`, `urn:zitadel:iam:org:idp:id:${idp}`], usePKCE: true,
+    scopes: ['openid', 'profile', `urn:zitadel:iam:org:id:${auth.organizationId}`, 'urn:zitadel:iam:user:resourceowner', `urn:zitadel:iam:org:project:id:${auth.projectId}:aud`, `urn:zitadel:iam:org:idp:id:${idp}`], usePKCE: true,
     extraParams: { nonce: challenge.nonce, prompt: 'select_account' } });
   const result = await oauth.promptAsync(discovery);
   if (result.type !== 'success') throw new Error(result.type === 'cancel' || result.type === 'dismiss' ? 'Sign-in cancelled.' : 'Sign-in could not be completed.');

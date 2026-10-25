@@ -25,7 +25,7 @@ test.each([['ios', 'apple'], ['ios', 'google'], ['ios', 'facebook'], ['android',
   await expect(providerLogin(provider, ' RiverFox ')).resolves.toEqual(session);
   expect(AuthSession.AuthRequest).toHaveBeenCalledWith(expect.objectContaining({
     clientId: `${platform}-client`, usePKCE: true, redirectUri: 'civiclens:/auth/callback',
-    scopes: expect.arrayContaining(['urn:zitadel:iam:org:id:consumer-civiclens', 'urn:zitadel:iam:user:resourceowner', `urn:zitadel:iam:org:idp:id:civic-${provider}`]),
+    scopes: expect.arrayContaining(['openid', 'profile', 'urn:zitadel:iam:org:id:consumer-civiclens', 'urn:zitadel:iam:user:resourceowner', `urn:zitadel:iam:org:idp:id:civic-${provider}`]),
     extraParams: expect.objectContaining({ nonce: 'server-nonce' }),
   }));
   expect(AuthSession.exchangeCodeAsync).toHaveBeenCalledWith(expect.objectContaining({ extraParams: { code_verifier: 'device-verifier' } }), expect.anything());

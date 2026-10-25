@@ -1,0 +1,1452 @@
+{
+  "sourceId": "nz-govt-councils",
+  "sourceUrl": "https://www.govt.nz/organisations/",
+  "licenceUrl": "https://www.govt.nz/about/the-govt-nz-website/using-this-website/copyright-and-attribution/",
+  "attribution": "New Zealand Crown / Public Service Commission, Govt.nz organisation directory. 78 council identities and official-profile contact links, CC BY 4.0; overlapping jurisdiction and complaint routing require separate verification.",
+  "retrievedAt": "2026-10-24T15:24:52.398408+00:00",
+  "upstreamSha256": "cbef961255dac6e681cc2adff9d1fb6e2a0e43f326437ee0cd246bf3159318ad",
+  "records": [
+    {
+      "id": "nz",
+      "kind": "administrative_unit",
+      "name": "New Zealand",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": null,
+      "evidenceUrl": "https://www.govt.nz/organisations/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "country",
+        "parentId": null,
+        "officialCode": "NZ",
+        "complaintApiStatus": "unknown",
+        "contactCoverage": {
+          "councils": 78,
+          "profiles": 1,
+          "websites": 1,
+          "contactPages": 1
+        },
+        "sourceManifest": [
+          {
+            "file": "civiclens-nz-organisations.html",
+            "sha256": "8478b375ae751a558843b806b57ca59eb837790e4185ac3304227969540ef270"
+          },
+          {
+            "file": "profiles.json",
+            "sha256": "7c196af15275423cbbbf80f760f246bad8315015389a2a1530343b150406d131"
+          }
+        ],
+        "coverage": {
+          "country": 1,
+          "council": 78
+        }
+      }
+    },
+    {
+      "id": "nz-ashburton-district-council",
+      "kind": "administrative_unit",
+      "name": "Ashburton District Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/ashburton-district-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/ashburton-district-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "ashburton-district-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-auckland-council",
+      "kind": "administrative_unit",
+      "name": "Auckland Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.aucklandcouncil.govt.nz/",
+      "evidenceUrl": "https://www.govt.nz/organisations/auckland-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "auckland-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred",
+        "contactUrl": "https://www.aucklandcouncil.govt.nz/report-problem/Pages/default.aspx",
+        "sourceProfileSha256": "781d5c46db9162cd338e58e1d0ac3a0f6c792f012af6131af8a594433b828bf8"
+      }
+    },
+    {
+      "id": "nz-bay-of-plenty-regional-council",
+      "kind": "administrative_unit",
+      "name": "Bay of Plenty Regional Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/bay-of-plenty-regional-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/bay-of-plenty-regional-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "bay-of-plenty-regional-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "regional_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-buller-district-council",
+      "kind": "administrative_unit",
+      "name": "Buller District Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/buller-district-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/buller-district-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "buller-district-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-carterton-district-council",
+      "kind": "administrative_unit",
+      "name": "Carterton District Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/carterton-district-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/carterton-district-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "carterton-district-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-central-hawkes-bay-district-council",
+      "kind": "administrative_unit",
+      "name": "Central Hawke’s Bay District Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/central-hawkes-bay-district-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/central-hawkes-bay-district-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "central-hawkes-bay-district-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-central-otago-district-council",
+      "kind": "administrative_unit",
+      "name": "Central Otago District Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/central-otago-district-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/central-otago-district-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "central-otago-district-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-chatham-islands-council",
+      "kind": "administrative_unit",
+      "name": "Chatham Islands Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/chatham-islands-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/chatham-islands-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "chatham-islands-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-christchurch-city-council",
+      "kind": "administrative_unit",
+      "name": "Christchurch City Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/christchurch-city-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/christchurch-city-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "christchurch-city-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-clutha-district-council",
+      "kind": "administrative_unit",
+      "name": "Clutha District Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/clutha-district-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/clutha-district-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "clutha-district-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-dunedin-city-council",
+      "kind": "administrative_unit",
+      "name": "Dunedin City Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/dunedin-city-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/dunedin-city-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "dunedin-city-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-environment-canterbury",
+      "kind": "administrative_unit",
+      "name": "Environment Canterbury",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/environment-canterbury/",
+      "evidenceUrl": "https://www.govt.nz/organisations/environment-canterbury/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "environment-canterbury",
+        "complaintApiStatus": "unknown",
+        "unitType": "regional_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-environment-southland",
+      "kind": "administrative_unit",
+      "name": "Environment Southland",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/environment-southland/",
+      "evidenceUrl": "https://www.govt.nz/organisations/environment-southland/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "environment-southland",
+        "complaintApiStatus": "unknown",
+        "unitType": "regional_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-far-north-district-council",
+      "kind": "administrative_unit",
+      "name": "Far North District Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/far-north-district-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/far-north-district-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "far-north-district-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-gisborne-district-council",
+      "kind": "administrative_unit",
+      "name": "Gisborne District Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/gisborne-district-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/gisborne-district-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "gisborne-district-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-gore-district-council",
+      "kind": "administrative_unit",
+      "name": "Gore District Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/gore-district-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/gore-district-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "gore-district-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-greater-wellington-regional-council",
+      "kind": "administrative_unit",
+      "name": "Greater Wellington Regional Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/greater-wellington-regional-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/greater-wellington-regional-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "greater-wellington-regional-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "regional_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-grey-district-council",
+      "kind": "administrative_unit",
+      "name": "Grey District Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/grey-district-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/grey-district-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "grey-district-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-hamilton-city-council",
+      "kind": "administrative_unit",
+      "name": "Hamilton City Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/hamilton-city-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/hamilton-city-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "hamilton-city-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-hastings-district-council",
+      "kind": "administrative_unit",
+      "name": "Hastings District Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/hastings-district-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/hastings-district-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "hastings-district-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-hauraki-district-council",
+      "kind": "administrative_unit",
+      "name": "Hauraki District Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/hauraki-district-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/hauraki-district-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "hauraki-district-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-hawkes-bay-regional-council",
+      "kind": "administrative_unit",
+      "name": "Hawke’s Bay Regional Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/hawkes-bay-regional-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/hawkes-bay-regional-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "hawkes-bay-regional-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "regional_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-horizons-regional-council",
+      "kind": "administrative_unit",
+      "name": "Horizons Regional Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/horizons-regional-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/horizons-regional-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "horizons-regional-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "regional_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-horowhenua-district-council",
+      "kind": "administrative_unit",
+      "name": "Horowhenua District Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/horowhenua-district-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/horowhenua-district-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "horowhenua-district-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-hurunui-district-council",
+      "kind": "administrative_unit",
+      "name": "Hurunui District Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/hurunui-district-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/hurunui-district-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "hurunui-district-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-hutt-city-council",
+      "kind": "administrative_unit",
+      "name": "Hutt City Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/hutt-city-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/hutt-city-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "hutt-city-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-invercargill-city-council",
+      "kind": "administrative_unit",
+      "name": "Invercargill City Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/invercargill-city-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/invercargill-city-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "invercargill-city-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-kaikoura-district-council",
+      "kind": "administrative_unit",
+      "name": "Kaikōura District Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/kaikoura-district-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/kaikoura-district-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "kaikoura-district-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-kaipara-district-council",
+      "kind": "administrative_unit",
+      "name": "Kaipara District Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/kaipara-district-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/kaipara-district-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "kaipara-district-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-kapiti-coast-district-council",
+      "kind": "administrative_unit",
+      "name": "Kapiti Coast District Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/kapiti-coast-district-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/kapiti-coast-district-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "kapiti-coast-district-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-kawerau-district-council",
+      "kind": "administrative_unit",
+      "name": "Kawerau District Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/kawerau-district-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/kawerau-district-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "kawerau-district-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-mackenzie-district-council",
+      "kind": "administrative_unit",
+      "name": "Mackenzie District Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/mackenzie-district-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/mackenzie-district-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "mackenzie-district-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-manawatu-district-council",
+      "kind": "administrative_unit",
+      "name": "Manawatu District Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/manawatu-district-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/manawatu-district-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "manawatu-district-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-marlborough-district-council",
+      "kind": "administrative_unit",
+      "name": "Marlborough District Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/marlborough-district-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/marlborough-district-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "marlborough-district-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-masterton-district-council",
+      "kind": "administrative_unit",
+      "name": "Masterton District Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/masterton-district-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/masterton-district-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "masterton-district-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-matamata-piako-district-council",
+      "kind": "administrative_unit",
+      "name": "Matamata-Piako District Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/matamata-piako-district-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/matamata-piako-district-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "matamata-piako-district-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-napier-city-council",
+      "kind": "administrative_unit",
+      "name": "Napier City Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/napier-city-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/napier-city-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "napier-city-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-nelson-city-council",
+      "kind": "administrative_unit",
+      "name": "Nelson City Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/nelson-city-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/nelson-city-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "nelson-city-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-new-plymouth-district-council",
+      "kind": "administrative_unit",
+      "name": "New Plymouth District Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/new-plymouth-district-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/new-plymouth-district-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "new-plymouth-district-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-northland-regional-council",
+      "kind": "administrative_unit",
+      "name": "Northland Regional Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/northland-regional-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/northland-regional-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "northland-regional-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "regional_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-opotiki-district-council",
+      "kind": "administrative_unit",
+      "name": "Ōpōtiki District Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/opotiki-district-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/opotiki-district-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "opotiki-district-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-otago-regional-council",
+      "kind": "administrative_unit",
+      "name": "Otago Regional Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/otago-regional-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/otago-regional-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "otago-regional-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "regional_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-otorohanga-district-council",
+      "kind": "administrative_unit",
+      "name": "Otorohanga District Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/otorohanga-district-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/otorohanga-district-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "otorohanga-district-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-palmerston-north-city-council",
+      "kind": "administrative_unit",
+      "name": "Palmerston North City Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/palmerston-north-city-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/palmerston-north-city-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "palmerston-north-city-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-porirua-city-council",
+      "kind": "administrative_unit",
+      "name": "Porirua City Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/porirua-city-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/porirua-city-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "porirua-city-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-queenstown-lakes-district-council",
+      "kind": "administrative_unit",
+      "name": "Queenstown-Lakes District Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/queenstown-lakes-district-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/queenstown-lakes-district-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "queenstown-lakes-district-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-rangitikei-district-council",
+      "kind": "administrative_unit",
+      "name": "Rangitikei District Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/rangitikei-district-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/rangitikei-district-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "rangitikei-district-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-rotorua-lakes-council",
+      "kind": "administrative_unit",
+      "name": "Rotorua Lakes Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/rotorua-lakes-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/rotorua-lakes-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "rotorua-lakes-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-ruapehu-district-council",
+      "kind": "administrative_unit",
+      "name": "Ruapehu District Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/ruapehu-district-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/ruapehu-district-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "ruapehu-district-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-selwyn-district-council",
+      "kind": "administrative_unit",
+      "name": "Selwyn District Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/selwyn-district-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/selwyn-district-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "selwyn-district-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-south-taranaki-district-council",
+      "kind": "administrative_unit",
+      "name": "South Taranaki District Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/south-taranaki-district-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/south-taranaki-district-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "south-taranaki-district-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-south-waikato-district-council",
+      "kind": "administrative_unit",
+      "name": "South Waikato District Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/south-waikato-district-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/south-waikato-district-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "south-waikato-district-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-south-wairarapa-district-council",
+      "kind": "administrative_unit",
+      "name": "South Wairarapa District Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/south-wairarapa-district-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/south-wairarapa-district-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "south-wairarapa-district-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-southland-district-council",
+      "kind": "administrative_unit",
+      "name": "Southland District Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/southland-district-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/southland-district-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "southland-district-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-stratford-district-council",
+      "kind": "administrative_unit",
+      "name": "Stratford District Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/stratford-district-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/stratford-district-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "stratford-district-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-taranaki-regional-council",
+      "kind": "administrative_unit",
+      "name": "Taranaki Regional Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/taranaki-regional-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/taranaki-regional-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "taranaki-regional-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "regional_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-tararua-district-council",
+      "kind": "administrative_unit",
+      "name": "Tararua District Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/tararua-district-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/tararua-district-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "tararua-district-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-tasman-district-council",
+      "kind": "administrative_unit",
+      "name": "Tasman District Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/tasman-district-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/tasman-district-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "tasman-district-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-taupo-district-council",
+      "kind": "administrative_unit",
+      "name": "Taupō District Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/taupo-district-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/taupo-district-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "taupo-district-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-tauranga-city-council",
+      "kind": "administrative_unit",
+      "name": "Tauranga City Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/tauranga-city-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/tauranga-city-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "tauranga-city-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-thames-coromandel-district-council",
+      "kind": "administrative_unit",
+      "name": "Thames-Coromandel District Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/thames-coromandel-district-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/thames-coromandel-district-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "thames-coromandel-district-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-timaru-district-council",
+      "kind": "administrative_unit",
+      "name": "Timaru District Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/timaru-district-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/timaru-district-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "timaru-district-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-upper-hutt-city-council",
+      "kind": "administrative_unit",
+      "name": "Upper Hutt City Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/upper-hutt-city-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/upper-hutt-city-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "upper-hutt-city-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-waikato-district-council",
+      "kind": "administrative_unit",
+      "name": "Waikato District Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/waikato-district-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/waikato-district-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "waikato-district-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-waikato-regional-council",
+      "kind": "administrative_unit",
+      "name": "Waikato Regional Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/waikato-regional-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/waikato-regional-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "waikato-regional-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "regional_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-waimakariri-district-council",
+      "kind": "administrative_unit",
+      "name": "Waimakariri District Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/waimakariri-district-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/waimakariri-district-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "waimakariri-district-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-waimate-district-council",
+      "kind": "administrative_unit",
+      "name": "Waimate District Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/waimate-district-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/waimate-district-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "waimate-district-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-waipa-district-council",
+      "kind": "administrative_unit",
+      "name": "Waipā District Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/waipa-district-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/waipa-district-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "waipa-district-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-wairoa-district-council",
+      "kind": "administrative_unit",
+      "name": "Wairoa District Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/wairoa-district-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/wairoa-district-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "wairoa-district-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-waitaki-district-council",
+      "kind": "administrative_unit",
+      "name": "Waitaki District Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/waitaki-district-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/waitaki-district-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "waitaki-district-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-waitomo-district-council",
+      "kind": "administrative_unit",
+      "name": "Waitomo District Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/waitomo-district-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/waitomo-district-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "waitomo-district-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-wellington-city-council",
+      "kind": "administrative_unit",
+      "name": "Wellington City Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/wellington-city-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/wellington-city-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "wellington-city-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-west-coast-regional-council",
+      "kind": "administrative_unit",
+      "name": "West Coast Regional Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/west-coast-regional-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/west-coast-regional-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "west-coast-regional-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "regional_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-western-bay-of-plenty-district-council",
+      "kind": "administrative_unit",
+      "name": "Western Bay of Plenty District Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/western-bay-of-plenty-district-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/western-bay-of-plenty-district-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "western-bay-of-plenty-district-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-westland-district-council",
+      "kind": "administrative_unit",
+      "name": "Westland District Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/westland-district-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/westland-district-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "westland-district-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-whakatane-district-council",
+      "kind": "administrative_unit",
+      "name": "Whakatāne District Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/whakatane-district-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/whakatane-district-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "whakatane-district-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-whanganui-district-council",
+      "kind": "administrative_unit",
+      "name": "Whanganui District Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/whanganui-district-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/whanganui-district-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "whanganui-district-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    },
+    {
+      "id": "nz-whangarei-district-council",
+      "kind": "administrative_unit",
+      "name": "Whangarei District Council",
+      "countryCode": "NZ",
+      "regionCode": null,
+      "officialUrl": "https://www.govt.nz/organisations/whangarei-district-council/",
+      "evidenceUrl": "https://www.govt.nz/organisations/whangarei-district-council/",
+      "verificationStatus": "reference",
+      "details": {
+        "adminLevel": "council",
+        "parentId": "nz",
+        "officialCode": "whangarei-district-council",
+        "complaintApiStatus": "unknown",
+        "unitType": "local_council",
+        "hierarchyStatus": "regional_and_territorial_overlap_not_inferred"
+      }
+    }
+  ]
+}

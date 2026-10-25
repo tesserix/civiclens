@@ -427,6 +427,7 @@ async fn database_enforces_ownership_roles_idempotency_and_transactional_publica
             .unwrap();
     });
     let config = config::Config {
+        community_share_origin: "https://civiclns-api.tesserix.app".into(),
         secrets: config::Secrets {
             database_url: url,
             identity_key: "local-tests-only-identity-key-32-characters".into(),
@@ -815,7 +816,7 @@ async fn database_enforces_ownership_roles_idempotency_and_transactional_publica
         assert_eq!(challenge_status, StatusCode::OK, "{challenge}");
         let mut header = jsonwebtoken::Header::new(jsonwebtoken::Algorithm::RS256);
         header.kid = Some("test-key".into());
-        let claims = json!({"sub":format!("private-provider-subject-{nickname:?}"),"iss":issuer,"aud":"test-ios","exp":time::OffsetDateTime::now_utc().unix_timestamp()+300,"nonce":challenge["nonce"],"urn:zitadel:iam:user:resourceowner:id":"consumer-civiclens","name":"Private Legal Name","email":"private@example.invalid"});
+        let claims = json!({"sub":format!("private-provider-subject-{nickname:?}"),"iss":issuer,"aud":"test-ios","exp":time::OffsetDateTime::now_utc().unix_timestamp()+300,"nonce":challenge["nonce"],"urn:zitadel:iam:user:resourceowner:id":"consumer-civiclens","name":"Private Legal Name","email":"private@example.invalid","picture":"https://lh3.googleusercontent.com/a/fixture-avatar"});
         let mut wrong_org = claims.clone();
         wrong_org["urn:zitadel:iam:user:resourceowner:id"] = json!("another-product");
         let wrong_token = jsonwebtoken::encode(&header, &wrong_org, &signing).unwrap();
@@ -847,6 +848,19 @@ async fn database_enforces_ownership_roles_idempotency_and_transactional_publica
         assert_eq!(status, StatusCode::OK, "{session}");
         assert!(!session.to_string().contains("Private Legal Name"));
         assert!(!session.to_string().contains("private@example.invalid"));
+        assert!(!session.to_string().contains("fixture-avatar"));
+        let (profile_status, profile) = send(
+            &app,
+            "GET",
+            "/v1/me/profile",
+            session["token"].as_str(),
+            Value::Null,
+            None,
+        )
+        .await;
+        assert_eq!(profile_status, StatusCode::OK);
+        assert_eq!(profile["signInPhotoAvailable"], true);
+        assert!(profile["photoBase64"].is_null());
         if let Some(nickname) = nickname {
             assert_eq!(session["user"]["nickname"], nickname);
         } else {
@@ -1399,6 +1413,7 @@ fn reviewed_topic_tags_reject_mentions_links_and_unbounded_lists() {
 
 fn caption_report(location: contracts::Location) -> contracts::Report {
     contracts::Report {
+        complaint_requested: None,
         sharing_mode: None,
         id: "qa-report".into(),
         nickname: "RiverFox".into(),

@@ -1,3 +1,4 @@
+import { ActionSheetIOS } from 'react-native';
 import {useState,type ReactElement} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
@@ -115,7 +116,10 @@ test('sends a selected tone and coarse place without coordinates and invalidates
   globalThis.fetch=jest.fn().mockResolvedValue(reply(200,{text:'Plastic bottles are scattered on the grass in Melbourne.'}));
   const props={userId:'u1',token:'t1',category:'waste' as const,description:'',hasPhoto:true,readPhoto:async()=>'cGhvdG8=',onUse:jest.fn(),contextual:true,location:{latitude:-37.814,longitude:144.9633,locality:'Melbourne, VIC',countryCode:'AU'}};
   const view=renderOpenAssist(<WritingAssist {...props}/>);
-  fireEvent.press(await screen.findByRole('radio',{name:'Light satire'}));
+  const sheet=jest.spyOn(ActionSheetIOS,'showActionSheetWithOptions').mockImplementation((_options,choose)=>choose(1));
+  fireEvent.press(await screen.findByRole('button',{name:'Caption tone, Balanced'}));
+  sheet.mockRestore();
+  expect(screen.getByRole('button',{name:'Caption tone, Light satire'})).toBeOnTheScreen();
   fireEvent.press(screen.getByRole('button',{name:'Write it for me'}));
   expect(await screen.findByText('Plastic bottles are scattered on the grass in Melbourne.')).toBeOnTheScreen();
   expect(sent()).toMatchObject({tone:'satirical',place:{locality:'Melbourne, VIC',countryCode:'AU'}});
@@ -131,8 +135,10 @@ test('does not revive a reviewed caption when a tone is changed and then changed
   fireEvent.press(await screen.findByRole('button',{name:'Write it for me'}));
   expect(await screen.findByText('Litter is scattered on the grass. Please arrange a clean-up.')).toBeOnTheScreen();
   fireEvent.press(screen.getByRole('checkbox',{name:'I checked the caption and photo for identifying details'}));
-  fireEvent.press(screen.getByRole('radio',{name:'Serious'}));
-  fireEvent.press(screen.getByRole('radio',{name:'Balanced'}));
+  const sheet=jest.spyOn(ActionSheetIOS,'showActionSheetWithOptions').mockImplementationOnce((_options,choose)=>choose(0)).mockImplementationOnce((_options,choose)=>choose(2));
+  fireEvent.press(screen.getByRole('button',{name:'Caption tone, Balanced'}));
+  fireEvent.press(screen.getByRole('button',{name:'Caption tone, Serious'}));
+  sheet.mockRestore();
   expect(screen.queryByRole('button',{name:'Use this'})).not.toBeOnTheScreen();
 });
 

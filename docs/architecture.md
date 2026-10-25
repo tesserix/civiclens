@@ -242,3 +242,88 @@ are checked for respectful language before and after generation. The publisher
 also checks the final caption and holds it when safety cannot be established,
 including during a model outage. These controls do not replace photo privacy
 review or platform-policy review; see ADR-0003 for boundaries and evaluation.
+
+## Civic participation and official complaint preparation
+
+ADR-0009 adds account-backed requests, independently moderated opinions and timed
+Yes/No/Don't know polls. There is no money or wagering. One account has one current
+response per card; account uniqueness does not establish unique people or electoral
+eligibility. PostgreSQL checks deadlines after locking the card. Interim poll
+counts remain private; final totals include all three choices and disclose rounding.
+New-client capabilities hide these features against the older released API.
+
+The directory browser exposes source-backed reference identities with provenance,
+licence and explicit API-unknown status. See
+[the multicountry audit](authority-sources/multicountry-2026-10-25.md) for actual
+counts and gaps. These records do not expand the verified routing directory.
+
+A reporter can select official complaint preparation with or without social apps.
+No complaint is automatically filed. Owner-scoped preparation repeats current
+all-photo, rules and authority checks, requires separately reviewed factual text
+(`complaintDescription` and `complaintFactualReviewed` on independent report approval),
+and rechecks content safety. Social humour is not reused as complaint prose.
+The package excludes original metadata, precise coordinates and private sign-in
+identity. The user confirms destination/data and explicitly opens the official
+form or saves evidence. They supply any required identity directly to that service.
+Preparation and `handoff_requested` are persisted and audited, never labelled an
+official receipt. Each export/open rechecks current channel expiry and review;
+retries cannot create duplicate destination intents. No government API credentials
+are collected until a real documented, authorized integration exists.
+
+The `/sign-in` route is explicit because `/` also identifies the capture tab.
+Authenticated community links are strictly allowlisted, remembered through sign-in
+without credentials in AsyncStorage, and cleared on arrival. Sign-out removes
+SecureStore credentials and private query data before best-effort server revocation;
+if that server call fails, the user sees that the old session expires automatically.
+A device-storage failure leaves the session visible for retry. Drafts remain scoped
+to their original account. Export/erasure must include participation and complaint
+records; see the fulfilment runbook. No new expansion migration or rollout is live.
+
+## Reusable official complaint gateway
+
+ADR-0010 adds country/region-neutral provider discovery, a pinned administrative
+reference catalogue, readiness checks and private owner-scoped internal requests.
+The first catalogue covers India's 36 states/UTs and 784 administrative districts;
+Tamil Nadu and MP have separately scoped documented provider candidates. LGD
+references are never provider police identifiers. Invalid cross-region/country
+selections are rejected. Unknown providers have no fabricated coverage, and
+reference/contract expiry are explicit.
+
+Migration 0010 stores blocked request snapshots and report/account references.
+Same-key retries are transactional; quotas are checked under a database lock.
+Composite ownership constraints prevent linking another account's report. A
+database check forbids snapshots claiming dispatch readiness. No legal identity,
+original evidence, external token or duplicated caption is collected by this API;
+there is no government client/worker. Publication review and municipal official
+form handoff retain their existing behavior.
+
+The [API guide](india-crime/api.md) covers endpoints, pagination, provider
+registration and first-adapter prerequisites. Internal IDs are not official
+complaint numbers. Authorized provider access, verified police mapping, evidence
+and identity contracts, independent review, receipts and timeout reconciliation
+remain required before an adapter or live rollout. Migration 0010 has only been
+exercised on isolated local schemas.
+
+## Account profiles and live typography
+
+ADR-0013 adds owner-only photo/bio editing. The photo and bio are never included in
+public report captions, community payloads or social exports. Profile metadata
+comes from `/v1/me/profile`; photos are stripped and resized to 256 px. Optional
+import candidates come only from verified broker `picture` claims after the OIDC
+`profile` scope and are fetched only on an explicit import action. Missing claims
+leave device photo selection available. No additional deployed credentials are
+created.
+
+Shared display text observes system font scale through TypographyProvider. Only
+native text nodes remount when Dynamic Type changes; fields, draft state, routes
+and editor state remain mounted. This fixes stale native text measurements that
+left huge blank areas after restoring normal text size. Community lists no longer
+need to remount their entire contents for a font-scale change.
+
+### TikTok reviewed export
+
+ADR-0014 extends user-owned sharing to TikTok with capability-gated selection,
+a native chooser and explicit save/copy/open fallback. TikTok is manual only;
+independent review and owner-scoped fresh exports apply before every action.
+No managed TikTok publishing or provider delivery receipt is supported. Native
+photo copies remain under user control, including device photo backup settings.

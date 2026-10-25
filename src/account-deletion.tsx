@@ -1,5 +1,6 @@
+import { Text } from './text';
 import { useEffect, useState } from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import type { DeletionRequest } from '../shared/generated';
 import { ApiError, request } from './api';
 import { Button, Loading, Notice } from './ui';

@@ -8,6 +8,7 @@ import { focusManager, onlineManager, QueryClient, QueryClientProvider } from '@
 import NetInfo from '@react-native-community/netinfo';
 import { SessionProvider } from '../src/session';
 import { palette } from '../src/ui';
+import { TypographyProvider } from '../src/text';
 
 export default function RootLayout() {
   const [client] = useState(() => new QueryClient({ defaultOptions: { queries: { staleTime: 30_000, retry: 1 }, mutations: { retry: false } } }));
@@ -16,7 +17,7 @@ export default function RootLayout() {
     const app = AppState.addEventListener('change',state => { if (Platform.OS !== 'web') focusManager.setFocused(state === 'active'); });
     return () => { net(); app.remove(); };
   }, []);
-  return <SafeAreaProvider><QueryClientProvider client={client}><SessionProvider>
+  return <SafeAreaProvider><TypographyProvider><QueryClientProvider client={client}><SessionProvider>
     <StatusBar style="dark" /><Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: palette.canvas } }} />
-  </SessionProvider></QueryClientProvider></SafeAreaProvider>;
+  </SessionProvider></QueryClientProvider></TypographyProvider></SafeAreaProvider>;
 }

@@ -179,7 +179,7 @@ pub fn caption(
             let handle = match channel {
                 Channel::Facebook => &a.handles.facebook,
                 Channel::Instagram => &a.handles.instagram,
-                Channel::Whatsapp => &None,
+                Channel::Whatsapp | Channel::Tiktok => &None,
             };
             handle
                 .as_ref()
