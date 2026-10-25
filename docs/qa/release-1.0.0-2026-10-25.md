@@ -64,3 +64,22 @@ Complete accurate store declarations, screenshots, reviewer access and exact
 artifact inspection before submission. Store review/approval is external and
 cannot be represented as an immediate public release. Physical installed-provider
 social delivery remains user-confirmed manual sharing, not automated publishing.
+
+## Approved merge and build corrections
+
+The owner explicitly approved migrations 0007–0012, the production API rollout,
+and admin merge. PR #15 merged as `1f8ffc6`; repository visibility is PUBLIC.
+The first API image run failed before deployment: its Docker context lacked the
+compile-time shared app-links JSON and logo, and a clean web export could not
+hash NativeWind's generated CSS file. Both failures were reproduced. The corrected
+container built locally and passed the full TLS database/migrations/runtime-grants/
+protected-routes smoke. Precreating the generated CSS entry before Metro scans
+also passed a fresh-cache web export, all-platform export, 188 mobile tests,
+typecheck/lint and all CI-script checks. Signing credentials are now explicitly
+ignored and local download copies remain under a private temporary directory.
+
+The first iOS archive was rejected by Xcode because the older provisioning
+profile lacked Associated Domains. The CivicLens App ID capability was enabled
+using the existing Apple Developer browser session. A compatible profile must
+be generated with the existing distribution certificate; no certificate rotation
+or other app identifier change is part of the fix.

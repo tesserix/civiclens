@@ -5,6 +5,8 @@ FROM ${RUST_BUILDER} AS build
 WORKDIR /src
 COPY Cargo.toml Cargo.lock ./
 COPY api ./api
+COPY shared/app-links.json ./shared/app-links.json
+COPY assets/civiclens-icon.png ./assets/civiclens-icon.png
 RUN --mount=type=cache,target=/usr/local/cargo/registry \
     --mount=type=cache,target=/src/target \
     cargo build --locked --release -p civiclens-api \
