@@ -36,6 +36,23 @@ afterward. A further integration test verifies that an upload error keeps the
 photo and description, and a retry sends the identical payload and idempotency
 key. Existing tests cover five-photo submission and current rules acceptance.
 
+`npm run check` passed 39 suites / 209 tests, TypeScript and ESLint. Expo Doctor
+passed 21/21 and `npm run export` passed for iOS, Android and web. PR #23 CI
+passed all enabled checks, including real database coverage.
+
+Production Android candidate 9 is built from commit `7243973`. Its signed AAB
+passed signature and bundletool checks, contains the production API URL, and
+all 50 checked ARM64/x86_64 libraries have at least 16 KB LOAD alignment. SHA-256:
+`60b0c518e5c225a4bfa1653ff7c7a0f330870545fee84173d855493b9957c426`.
+The emulator APK was generated from that exact bundle with debug signing.
+
+The earlier Android emulator, its SDK runtime and its AVD were no longer present
+when installing candidate 9. The official emulator and Google Play API 36 image
+were restored for CivicLens alone. A windowed boot hit display-context errors;
+only the verified CivicLens AVD was stopped and restarted headlessly for ADB QA.
+Candidate 9 authentication and submission have not yet been verified on that
+restored device. Candidate 8's completed submission evidence remains separate.
+
 ## Apple verification in progress
 
 Built an API-connected Release configuration for a dedicated CivicLens Submit QA
