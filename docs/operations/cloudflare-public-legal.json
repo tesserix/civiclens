@@ -6,6 +6,9 @@
   "expression": "(http.host eq \"civiclns-api.tesserix.app\" and http.request.method in {\"GET\" \"HEAD\"} and http.request.uri.path in {\"/v1/privacy\" \"/v1/terms\" \"/v1/account-deletion\"})",
   "description": "CivicLens public legal pages: allow policy and store-review fetchers",
   "enabled": true,
+  "position": {
+    "after": "914232ba8454405dbd8f873932522982"
+  },
   "logging": {
     "enabled": true
   }

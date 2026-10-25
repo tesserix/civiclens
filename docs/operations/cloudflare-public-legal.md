@@ -26,11 +26,16 @@ automation token cannot edit the ruleset; do not widen its permissions to
 apply this rule. Use the authenticated owner dashboard and the required
 action-time browser confirmation.
 
-Before deployment, the dashboard showed four existing custom rules. Append
-this rule without modifying those entries. Select only **Browser Integrity
+Before deployment, the dashboard showed four existing custom rules. Place
+this rule after the Agent Registry rule and before Allow Country, preserving
+the relative order and configuration of every existing entry. Allow Country
+skips all remaining custom rules, so appending the exception prevents it from
+running for matching countries. Select only **Browser Integrity
 Check** in the Skip components, keep logging enabled and the rule active.
-Confirm the expression matches the JSON exactly. Deployment remains pending
-until the dashboard visibly confirms success.
+Confirm the expression matches the JSON exactly. The owner approved deployment
+on 25 October 2026. The dashboard confirmed active rule
+`10193714f04a41caa1c1d5e051d769e5`; initial checks exposed the ordering issue
+above. Reachability verification must follow the corrected placement.
 
 ## Verification and recovery
 
