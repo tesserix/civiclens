@@ -43,6 +43,7 @@ enum ReferenceKind {
     Role,
     Officeholder,
     ServiceDirectory,
+    AdministrativeUnit,
 }
 
 impl ReferenceKind {
@@ -53,6 +54,7 @@ impl ReferenceKind {
             Self::Role => "role",
             Self::Officeholder => "officeholder",
             Self::ServiceDirectory => "service_directory",
+            Self::AdministrativeUnit => "administrative_unit",
         }
     }
 }
@@ -84,7 +86,9 @@ fn parse_reference(bytes: &[u8]) -> Result<Snapshot, Error> {
     }
     let snapshot: Snapshot = serde_json::from_slice(bytes).map_err(|_| invalid())?;
     let mut ids = HashSet::new();
-    if !snapshot.source_id.starts_with("au-")
+    if !["au-", "in-", "np-", "nz-"]
+        .iter()
+        .any(|prefix| snapshot.source_id.starts_with(prefix))
         || !identity(&snapshot.source_id)
         || !https(&snapshot.source_url)
         || !https(&snapshot.licence_url)
@@ -100,18 +104,29 @@ fn parse_reference(bytes: &[u8]) -> Result<Snapshot, Error> {
     {
         return Err(invalid());
     }
+    let country = snapshot
+        .source_id
+        .split('-')
+        .next()
+        .ok_or_else(invalid)?
+        .to_ascii_uppercase();
+    let region_prefix = if country == "NP" {
+        "NP".to_owned()
+    } else {
+        format!("{country}-")
+    };
     for r in &snapshot.records {
         if !identity(&r.id)
             || !ids.insert(&r.id)
             || r.name.trim().is_empty()
             || r.name.len() > 2000
             || r.name.chars().any(char::is_control)
-            || r.country_code != "AU"
+            || r.country_code != country
             || !https(&r.evidence_url)
             || r.official_url.as_ref().is_some_and(|u| !https(u))
             || r.region_code
                 .as_ref()
-                .is_some_and(|v| !v.starts_with("AU-") || v.len() > 20)
+                .is_some_and(|v| !v.starts_with(&region_prefix) || v.len() > 20)
             || r.verification_status != "reference"
             || !r.details.is_object()
             || r.details.to_string().len() > 8192
@@ -119,7 +134,124 @@ fn parse_reference(bytes: &[u8]) -> Result<Snapshot, Error> {
             return Err(invalid());
         }
     }
+    validate_administrative_hierarchy(&snapshot.records)?;
     Ok(snapshot)
+}
+
+fn validate_administrative_hierarchy(records: &[ReferenceRecord]) -> Result<(), Error> {
+    let units: std::collections::HashMap<_, _> = records
+        .iter()
+        .filter(|r| matches!(r.kind, ReferenceKind::AdministrativeUnit))
+        .map(|r| (r.id.as_str(), r))
+        .collect();
+    if units.is_empty() {
+        return Ok(());
+    }
+    let mut roots = 0;
+    for record in units.values() {
+        let level = record
+            .details
+            .get("adminLevel")
+            .and_then(serde_json::Value::as_str)
+            .ok_or_else(invalid)?;
+        if !matches!(
+            level,
+            "country"
+                | "state"
+                | "province"
+                | "region"
+                | "district"
+                | "municipality"
+                | "council"
+                | "protected_area"
+        ) {
+            return Err(invalid());
+        }
+        let code = record
+            .details
+            .get("officialCode")
+            .and_then(serde_json::Value::as_str)
+            .ok_or_else(invalid)?;
+        if code.is_empty() || code.len() > 120 {
+            return Err(invalid());
+        }
+        let parent = record
+            .details
+            .get("parentId")
+            .and_then(serde_json::Value::as_str);
+        if level == "country" {
+            if parent.is_some() {
+                return Err(invalid());
+            }
+            roots += 1;
+        } else if parent.is_none() {
+            return Err(invalid());
+        }
+        let api = record
+            .details
+            .get("complaintApiStatus")
+            .and_then(serde_json::Value::as_str)
+            .unwrap_or("unknown");
+        if !matches!(api, "unknown" | "documented" | "not_offered") {
+            return Err(invalid());
+        }
+        let mut current = *record;
+        let mut seen = HashSet::new();
+        while let Some(parent) = current
+            .details
+            .get("parentId")
+            .and_then(serde_json::Value::as_str)
+        {
+            if !seen.insert(current.id.as_str()) || seen.len() > 8 {
+                return Err(invalid());
+            }
+            let child_level = current
+                .details
+                .get("adminLevel")
+                .and_then(serde_json::Value::as_str)
+                .ok_or_else(invalid)?;
+            let parent = *units.get(parent).ok_or_else(invalid)?;
+            let parent_level = parent
+                .details
+                .get("adminLevel")
+                .and_then(serde_json::Value::as_str)
+                .ok_or_else(invalid)?;
+            let valid_parent = match child_level {
+                "state" | "province" | "region" => parent_level == "country",
+                "district" => matches!(parent_level, "country" | "state" | "province" | "region"),
+                "municipality" | "protected_area" => matches!(
+                    parent_level,
+                    "country" | "state" | "province" | "region" | "district"
+                ),
+                "council" => matches!(parent_level, "country" | "region"),
+                _ => false,
+            };
+            if !valid_parent || parent.country_code != record.country_code {
+                return Err(invalid());
+            }
+            current = parent;
+        }
+        if let Some(districts) = record.details.get("districtIds") {
+            for district in districts.as_array().ok_or_else(invalid)? {
+                let district = *units
+                    .get(district.as_str().ok_or_else(invalid)?)
+                    .ok_or_else(invalid)?;
+                if district.country_code != record.country_code
+                    || district
+                        .details
+                        .get("adminLevel")
+                        .and_then(serde_json::Value::as_str)
+                        != Some("district")
+                {
+                    return Err(invalid());
+                }
+            }
+        }
+    }
+    if roots != 1 {
+        return Err(invalid());
+    }
+    Ok(())
 }
 
 struct StoredRecord {
@@ -495,6 +627,12 @@ pub(crate) mod tests {
         );
         assert_eq!(report["areaCoverage"]["AU-VIC"]["nonSpecialAreas"], 79);
         assert_eq!(load_verified(pool).await.unwrap().len(), 1);
+        let countries:Vec<(String,i64)>=sqlx::query_as("SELECT country_code,count(*) FROM current_authority_directory WHERE kind='administrative_unit' GROUP BY country_code ORDER BY country_code").fetch_all(pool).await.unwrap();
+        assert_eq!(
+            countries,
+            vec![("IN".into(), 5871), ("NP".into(), 860), ("NZ".into(), 79)]
+        );
+        assert_eq!(sqlx::query_scalar::<_,i64>("SELECT count(*) FROM current_authority_directory WHERE administrative_level='municipality' AND country_code='NP'").fetch_one(pool).await.unwrap(),753);
     }
 
     #[test]
@@ -544,6 +682,58 @@ pub(crate) mod tests {
                 parse_reference(&serde_json::to_vec(&bad).unwrap()).is_err(),
                 "{bad}"
             );
+        }
+    }
+
+    #[test]
+    fn administrative_references_validate_country_hierarchy_without_granting_routing() {
+        for (name, country, count) in [
+            ("in-lgd-administrative.json", "IN", 5871),
+            ("np-hdx-administrative.json", "NP", 860),
+            ("nz-govt-councils.json", "NZ", 79),
+        ] {
+            let bytes = std::fs::read(
+                std::path::Path::new(concat!(env!("CARGO_MANIFEST_DIR"), "/data/directory"))
+                    .join(name),
+            )
+            .unwrap();
+            let parsed = parse_reference(&bytes).unwrap();
+            assert_eq!(parsed.records.len(), count);
+            assert!(parsed
+                .records
+                .iter()
+                .all(|r| r.country_code == country && r.verification_status == "reference"));
+        }
+        let source = include_bytes!("../data/directory/nz-govt-councils.json");
+        let good: serde_json::Value = serde_json::from_slice(source).unwrap();
+        for bad in [
+            {
+                let mut v = good.clone();
+                v["records"][1]["details"]["parentId"] = v["records"][2]["id"].clone();
+                v
+            },
+            {
+                let mut v = good.clone();
+                v["records"][1]["details"]["parentId"] = json!("not-a-parent");
+                v
+            },
+            {
+                let mut v = good.clone();
+                v["records"][1]["details"]["parentId"] = v["records"][1]["id"].clone();
+                v
+            },
+            {
+                let mut v = good.clone();
+                v["records"][1]["countryCode"] = json!("IN");
+                v
+            },
+            {
+                let mut v = good.clone();
+                v["records"][0]["details"]["parentId"] = v["records"][1]["id"].clone();
+                v
+            },
+        ] {
+            assert!(parse_reference(&serde_json::to_vec(&bad).unwrap()).is_err());
         }
     }
 }

@@ -1,11 +1,19 @@
-import { ActivityIndicator, Pressable, Text, TextInput, View, type TextInputProps, type ViewStyle } from 'react-native';
+import { Text } from './text';
+import { ActivityIndicator, Platform, Pressable, TextInput, View, type TextInputProps, type ViewStyle } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useState, type ComponentProps, type PropsWithChildren, type ReactNode } from 'react';
-import type { Category } from '../shared/contracts';
+import type { Category, Channel } from '../shared/contracts';
 import palette from './palette.json';
 
 export { palette };
 type Icon = ComponentProps<typeof Ionicons>['name'];
+
+export const cardShadow: ViewStyle = Platform.select({
+  web: { boxShadow: '0 6px 24px rgba(20, 43, 36, 0.09)' },
+  default: { shadowColor: '#142B24', shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.09, shadowRadius: 16, elevation: 4 },
+});
+
+export const channelIcons: Record<Channel, Icon> = { facebook: 'logo-facebook', instagram: 'logo-instagram', whatsapp: 'logo-whatsapp', tiktok: 'logo-tiktok' };
 
 export const categoryIcons: Record<Category, Icon> = {
   waste: 'trash-outline', pollution: 'cloud-outline', roads: 'construct-outline', water: 'water-outline', public_safety: 'warning-outline',
@@ -23,7 +31,7 @@ export function Button({ title, onPress, busy = false, disabled = false, variant
     className={`${compact ? 'min-h-11 px-3' : 'min-h-[52px] px-5'} flex-row items-center justify-center gap-2 rounded-xl border ${surfaces[variant]}`}
     style={({ pressed }) => ({ opacity: disabled ? 0.4 : busy ? 0.8 : pressed ? 0.7 : 1 })}>
     {busy ? <ActivityIndicator color={tint} /> : icon ? <Ionicons name={icon} size={compact ? 18 : 20} color={tint} /> : null}
-    <Text className={`${compact ? 'text-[15px]' : 'text-base'} font-semibold ${inverse ? 'text-white' : variant === 'quiet' ? 'text-brand' : 'text-ink'}`}>{title}</Text>
+    <Text style={{flexShrink:1,textAlign:'center'}} className={`${compact ? 'text-[15px]' : 'text-base'} font-semibold ${inverse ? 'text-white' : variant === 'quiet' ? 'text-brand' : 'text-ink'}`}>{title}</Text>
   </Pressable>;
 }
 
@@ -77,7 +85,7 @@ export function Viewfinder({ children, className = '' }: PropsWithChildren<{ cla
 export function Step({ number, title, done = false, aside, children }: PropsWithChildren<{ number: number; title: string; done?: boolean; aside?: ReactNode }>) {
   return <View className="gap-3.5">
     <View className="flex-row items-center gap-2.5">
-      <View className={`h-6 w-6 items-center justify-center rounded-full ${done ? 'bg-brand' : 'border border-ink'}`}>
+      <View className={`min-h-6 min-w-6 px-1 items-center justify-center rounded-full ${done ? 'bg-brand' : 'border border-ink'}`}>
         {done ? <Ionicons name="checkmark" size={14} color="#FFFFFF" /> : <Text className="text-xs font-bold text-ink" style={{ fontVariant: ['tabular-nums'] }}>{number}</Text>}
       </View>
       <Text accessibilityRole="header" accessibilityLabel={`Step ${number}, ${title}${done ? ', done' : ''}`} className="flex-1 text-[17px] font-semibold text-ink">{title}</Text>
@@ -92,9 +100,9 @@ export function Chip({ label, selected, onPress, icon, role = 'radio', disabled 
 }) {
   return <Pressable accessibilityRole={role} accessibilityLabel={label} accessibilityState={{ checked: selected, disabled }} disabled={disabled} onPress={onPress}
     className={`min-h-11 flex-row items-center gap-2 rounded-full border px-3.5 ${selected ? 'border-brand bg-mint' : 'border-line bg-surface'}`}
-    style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}>
+    style={({ pressed }) => ({ maxWidth:'100%', opacity: pressed ? 0.7 : 1 })}>
     {icon ? <Ionicons name={icon} size={16} color={selected ? palette.brand : palette.muted} /> : null}
-    <Text className={`text-sm ${selected ? 'font-semibold text-brand' : 'text-ink'}`}>{label}</Text>
+    <Text style={{flexShrink:1}} className={`text-sm ${selected ? 'font-semibold text-brand' : 'text-ink'}`}>{label}</Text>
   </Pressable>;
 }
 

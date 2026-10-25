@@ -1,0 +1,34 @@
+[
+  {
+    "id": "in-tamil-nadu-police-umang",
+    "name": "Tamil Nadu Police / UMANG",
+    "countryCode": "IN",
+    "regionId": "in-state-33",
+    "issueTypes": ["crime"],
+    "documentationUrl": "https://directory.apisetu.gov.in/api-collection/tngov",
+    "specificationUrl": "https://cf-media.api-setu.in/specfiles/1714048321_UMANG-TNPolice.yaml",
+    "specificationVersion": "1.0.0",
+    "reviewedAt": "2026-10-25T00:00:00Z",
+    "expiresAt": "2027-01-23T00:00:00Z",
+    "documentedOperations": ["complaint_create", "complaint_status", "csr_status", "fir_status", "district_lookup", "police_station_lookup"],
+    "photoContract": {"verified": false, "mimeTypes": [], "maxPhotos": null, "maxBytesPerPhoto": null, "originalsRequired": null},
+    "blockers": ["provider_access_pending", "incident_scope_unverified", "police_jurisdiction_unverified", "evidence_contract_unverified", "receipt_contract_unverified", "sandbox_unavailable", "adapter_not_implemented"],
+    "submissionSupported": false
+  },
+  {
+    "id": "in-madhya-pradesh-police-umang",
+    "name": "Madhya Pradesh Police / UMANG",
+    "countryCode": "IN",
+    "regionId": "in-state-23",
+    "issueTypes": ["crime"],
+    "documentationUrl": "https://directory.apisetu.gov.in/api-collection/mppolice",
+    "specificationUrl": "https://cf-media.api-setu.in/specfiles/1681369249_UMANG-MPeCop.yaml",
+    "specificationVersion": "1.0.0",
+    "reviewedAt": "2026-10-25T00:00:00Z",
+    "expiresAt": "2027-01-23T00:00:00Z",
+    "documentedOperations": ["district_lookup", "police_station_lookup", "user_authentication", "missing_person_lookup", "vehicle_lookup"],
+    "photoContract": {"verified": false, "mimeTypes": [], "maxPhotos": null, "maxBytesPerPhoto": null, "originalsRequired": null},
+    "blockers": ["complaint_create_undocumented", "provider_access_pending", "incident_scope_unverified", "police_jurisdiction_unverified", "evidence_contract_unverified", "receipt_contract_unverified", "adapter_not_implemented"],
+    "submissionSupported": false
+  }
+]

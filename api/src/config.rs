@@ -18,6 +18,7 @@ pub const PRIVATE_AI_GATEWAY: &str =
     "http://civiclens-ai.agentgateway-system.svc.cluster.local:8080";
 
 pub struct Config {
+    pub community_share_origin: String,
     pub secrets: Secrets,
     pub media_bucket: Option<String>,
     pub facebook_page_id: Option<String>,
@@ -143,6 +144,10 @@ impl Config {
             ));
         }
         Ok(Self {
+            community_share_origin: crate::community_links::origin(
+                get("CIVICLENS_PUBLIC_SHARE_ORIGIN"),
+                production,
+            )?,
             media_bucket,
             secrets,
             facebook_page_id: get("CIVICLENS_FACEBOOK_PAGE_ID").filter(|s| !s.is_empty()),

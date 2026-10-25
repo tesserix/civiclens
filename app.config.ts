@@ -1,18 +1,22 @@
 import type { ExpoConfig } from 'expo/config';
+import appLinks from './shared/app-links.json';
+const linkHost=new URL(appLinks.publicOrigin).hostname;
 
 const config: ExpoConfig = {
-  name: 'CivicLens', slug: 'civiclens', owner: 'tesserix-org', version: '0.1.5', scheme: 'civiclens',
-  runtimeVersion: '0.1.5-user-sharing-1', orientation: 'portrait', userInterfaceStyle: 'light', icon: './assets/civiclens-icon.png',
-  ios: { icon: './assets/civiclens-icon.png', bundleIdentifier: 'app.tesserix.civiclens', appleTeamId: '2CRHRRYBPL', supportsTablet: true, buildNumber: '11',
+  name: 'CivicLens', slug: 'civiclens', owner: 'tesserix-org', version: '1.0.0', scheme: 'civiclens',
+  runtimeVersion: '1.0.0-civic-participation-1', orientation: 'default', userInterfaceStyle: 'light', icon: './assets/civiclens-icon.png',
+  ios: { icon: './assets/civiclens-icon.png', bundleIdentifier: appLinks.iosBundleId, appleTeamId: appLinks.appleTeamId, supportsTablet: true, buildNumber: '15',
+    associatedDomains:[`applinks:${linkHost}`],
     privacyManifests: { NSPrivacyTracking: false, NSPrivacyTrackingDomains: [],
-      NSPrivacyCollectedDataTypes: ['Name', 'EmailAddress', 'UserID', 'PreciseLocation', 'PhotosorVideos', 'OtherUserContent'].map(type => ({
+      NSPrivacyCollectedDataTypes: ['Name', 'EmailAddress', 'UserID', 'PreciseLocation', 'PhotosorVideos', 'OtherUserContent', 'SensitiveInfo'].map(type => ({
         NSPrivacyCollectedDataType: `NSPrivacyCollectedDataType${type}`, NSPrivacyCollectedDataTypeLinked: true,
         NSPrivacyCollectedDataTypeTracking: false, NSPrivacyCollectedDataTypePurposes: ['NSPrivacyCollectedDataTypePurposeAppFunctionality'],
       })),
     },
-    infoPlist: { ITSAppUsesNonExemptEncryption: false, NSLocationWhenInUseUsageDescription: 'CivicLens uses your location to suggest the place and responsible office for your report.' } },
-  android: { icon: './assets/civiclens-icon.png', adaptiveIcon: { foregroundImage: './assets/civiclens-icon.png', backgroundColor: '#3858F5' }, package: 'app.tesserix.civiclens', versionCode: 2, allowBackup: false,
-    blockedPermissions: ['android.permission.RECORD_AUDIO', 'android.permission.READ_MEDIA_IMAGES', 'android.permission.READ_MEDIA_VIDEO', 'android.permission.READ_EXTERNAL_STORAGE', 'android.permission.WRITE_EXTERNAL_STORAGE', 'android.permission.ACCESS_BACKGROUND_LOCATION', 'android.permission.ACTIVITY_RECOGNITION'],
+    infoPlist: { ITSAppUsesNonExemptEncryption: false, NSPhotoLibraryAddUsageDescription: 'Save reviewed CivicLens photos so you can upload them to TikTok when you choose.', NSLocationWhenInUseUsageDescription: 'CivicLens uses your location to suggest the place and responsible office for your report.' } },
+  android: { icon: './assets/civiclens-icon.png', adaptiveIcon: { foregroundImage: './assets/civiclens-icon.png', backgroundColor: '#3858F5' }, package: appLinks.androidPackageName, versionCode: 5, allowBackup: false,
+    intentFilters:[{action:'VIEW',autoVerify:true,data:[{scheme:'https',host:linkHost,pathPrefix:'/community/'}],category:['BROWSABLE','DEFAULT']}],
+    blockedPermissions: ['android.permission.RECORD_AUDIO', 'android.permission.READ_MEDIA_VISUAL_USER_SELECTED', 'android.permission.READ_MEDIA_AUDIO', 'android.permission.READ_MEDIA_IMAGES', 'android.permission.READ_MEDIA_VIDEO', 'android.permission.READ_EXTERNAL_STORAGE', 'android.permission.WRITE_EXTERNAL_STORAGE', 'android.permission.ACCESS_BACKGROUND_LOCATION', 'android.permission.ACTIVITY_RECOGNITION'],
     permissions: ['android.permission.ACCESS_COARSE_LOCATION', 'android.permission.ACCESS_FINE_LOCATION', 'android.permission.CAMERA'] },
   plugins: ['expo-router', ['expo-secure-store', { faceIDPermission: false }], 'expo-web-browser', ['expo-image-picker', {
     photosPermission: 'Choose a photo of the civic issue you want to report.', cameraPermission: 'Take a photo for your civic report.', microphonePermission: false,

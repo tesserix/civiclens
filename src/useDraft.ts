@@ -6,7 +6,7 @@ import * as Crypto from 'expo-crypto';
 import type { LocationSource } from './photo-location';
 import type { Category, Channel, Location, SharingMode } from '../shared/contracts';
 
-export type Draft = { key: string; sharingMode?: SharingMode; category: Category; description: string; photoUri: string; additionalPhotoUris?: string[]; photoFiles?: string[]; communityRulesVersion?: string; location: Location | null; locationSource?: LocationSource; channels: Channel[]; consent: boolean; hashtags?: string[] };
+export type Draft = { key: string; complaintRequested?: boolean; sharingMode?: SharingMode; category: Category; description: string; photoUri: string; additionalPhotoUris?: string[]; photoFiles?: string[]; communityRulesVersion?: string; location: Location | null; locationSource?: LocationSource; channels: Channel[]; consent: boolean; hashtags?: string[] };
 export const draftPhotos = (draft: Pick<Draft, 'photoUri' | 'additionalPhotoUris'>): string[] => [draft.photoUri, ...(draft.additionalPhotoUris || [])].filter(uri => typeof uri === 'string' && !!uri).slice(0, 5);
 export function isDraftPhotoUri(uri: string): boolean {
   const prefix = FileSystem.documentDirectory && `${FileSystem.documentDirectory}civiclens-photo-`;

@@ -1,4 +1,5 @@
-import {Pressable,Text,View} from 'react-native';
+import { Text } from './text';
+import { Pressable, View } from 'react-native';
 import {Button,Chip} from './ui';
 
 type Props={suggestions:string[];selected?:string[];onChange:(tags:string[])=>void;loading?:boolean;disabled?:boolean;error?:boolean;onRetry?:()=>void};

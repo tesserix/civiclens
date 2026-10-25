@@ -1,0 +1,6574 @@
+[
+  {
+    "sourceId": "in-lgd-2026-10-24",
+    "countryCode": "IN",
+    "sourceUrl": "https://lgdirectory.gov.in/",
+    "licenceUrl": "https://lgdirectory.gov.in/copyRightPolicy.do",
+    "retrievedAt": "2026-10-24T15:24:52.398408+00:00",
+    "sourceSha256": "9f2b37f508f4f8a1dd638db884b4535ab0ada8c03bb039b14cb22370f305b14b",
+    "reviewedAt": "2026-10-25T00:00:00Z",
+    "expiresAt": "2027-01-23T00:00:00Z",
+    "units": [
+      {
+        "id": "in-state-35",
+        "name": "Andaman And Nicobar Islands",
+        "countryCode": "IN",
+        "level": "region",
+        "parentId": null,
+        "officialCode": "35"
+      },
+      {
+        "id": "in-state-28",
+        "name": "Andhra Pradesh",
+        "countryCode": "IN",
+        "level": "region",
+        "parentId": null,
+        "officialCode": "28"
+      },
+      {
+        "id": "in-state-12",
+        "name": "Arunachal Pradesh",
+        "countryCode": "IN",
+        "level": "region",
+        "parentId": null,
+        "officialCode": "12"
+      },
+      {
+        "id": "in-state-18",
+        "name": "Assam",
+        "countryCode": "IN",
+        "level": "region",
+        "parentId": null,
+        "officialCode": "18"
+      },
+      {
+        "id": "in-state-10",
+        "name": "Bihar",
+        "countryCode": "IN",
+        "level": "region",
+        "parentId": null,
+        "officialCode": "10"
+      },
+      {
+        "id": "in-state-4",
+        "name": "Chandigarh",
+        "countryCode": "IN",
+        "level": "region",
+        "parentId": null,
+        "officialCode": "4"
+      },
+      {
+        "id": "in-state-22",
+        "name": "Chhattisgarh",
+        "countryCode": "IN",
+        "level": "region",
+        "parentId": null,
+        "officialCode": "22"
+      },
+      {
+        "id": "in-state-7",
+        "name": "Delhi",
+        "countryCode": "IN",
+        "level": "region",
+        "parentId": null,
+        "officialCode": "7"
+      },
+      {
+        "id": "in-state-30",
+        "name": "Goa",
+        "countryCode": "IN",
+        "level": "region",
+        "parentId": null,
+        "officialCode": "30"
+      },
+      {
+        "id": "in-state-24",
+        "name": "Gujarat",
+        "countryCode": "IN",
+        "level": "region",
+        "parentId": null,
+        "officialCode": "24"
+      },
+      {
+        "id": "in-state-6",
+        "name": "Haryana",
+        "countryCode": "IN",
+        "level": "region",
+        "parentId": null,
+        "officialCode": "6"
+      },
+      {
+        "id": "in-state-2",
+        "name": "Himachal Pradesh",
+        "countryCode": "IN",
+        "level": "region",
+        "parentId": null,
+        "officialCode": "2"
+      },
+      {
+        "id": "in-state-1",
+        "name": "Jammu And Kashmir",
+        "countryCode": "IN",
+        "level": "region",
+        "parentId": null,
+        "officialCode": "1"
+      },
+      {
+        "id": "in-state-20",
+        "name": "Jharkhand",
+        "countryCode": "IN",
+        "level": "region",
+        "parentId": null,
+        "officialCode": "20"
+      },
+      {
+        "id": "in-state-29",
+        "name": "Karnataka",
+        "countryCode": "IN",
+        "level": "region",
+        "parentId": null,
+        "officialCode": "29"
+      },
+      {
+        "id": "in-state-32",
+        "name": "Kerala",
+        "countryCode": "IN",
+        "level": "region",
+        "parentId": null,
+        "officialCode": "32"
+      },
+      {
+        "id": "in-state-37",
+        "name": "Ladakh",
+        "countryCode": "IN",
+        "level": "region",
+        "parentId": null,
+        "officialCode": "37"
+      },
+      {
+        "id": "in-state-31",
+        "name": "Lakshadweep",
+        "countryCode": "IN",
+        "level": "region",
+        "parentId": null,
+        "officialCode": "31"
+      },
+      {
+        "id": "in-state-23",
+        "name": "Madhya Pradesh",
+        "countryCode": "IN",
+        "level": "region",
+        "parentId": null,
+        "officialCode": "23"
+      },
+      {
+        "id": "in-state-27",
+        "name": "Maharashtra",
+        "countryCode": "IN",
+        "level": "region",
+        "parentId": null,
+        "officialCode": "27"
+      },
+      {
+        "id": "in-state-14",
+        "name": "Manipur",
+        "countryCode": "IN",
+        "level": "region",
+        "parentId": null,
+        "officialCode": "14"
+      },
+      {
+        "id": "in-state-17",
+        "name": "Meghalaya",
+        "countryCode": "IN",
+        "level": "region",
+        "parentId": null,
+        "officialCode": "17"
+      },
+      {
+        "id": "in-state-15",
+        "name": "Mizoram",
+        "countryCode": "IN",
+        "level": "region",
+        "parentId": null,
+        "officialCode": "15"
+      },
+      {
+        "id": "in-state-13",
+        "name": "Nagaland",
+        "countryCode": "IN",
+        "level": "region",
+        "parentId": null,
+        "officialCode": "13"
+      },
+      {
+        "id": "in-state-21",
+        "name": "Odisha",
+        "countryCode": "IN",
+        "level": "region",
+        "parentId": null,
+        "officialCode": "21"
+      },
+      {
+        "id": "in-state-34",
+        "name": "Puducherry",
+        "countryCode": "IN",
+        "level": "region",
+        "parentId": null,
+        "officialCode": "34"
+      },
+      {
+        "id": "in-state-3",
+        "name": "Punjab",
+        "countryCode": "IN",
+        "level": "region",
+        "parentId": null,
+        "officialCode": "3"
+      },
+      {
+        "id": "in-state-8",
+        "name": "Rajasthan",
+        "countryCode": "IN",
+        "level": "region",
+        "parentId": null,
+        "officialCode": "8"
+      },
+      {
+        "id": "in-state-11",
+        "name": "Sikkim",
+        "countryCode": "IN",
+        "level": "region",
+        "parentId": null,
+        "officialCode": "11"
+      },
+      {
+        "id": "in-state-33",
+        "name": "Tamil Nadu",
+        "countryCode": "IN",
+        "level": "region",
+        "parentId": null,
+        "officialCode": "33"
+      },
+      {
+        "id": "in-state-36",
+        "name": "Telangana",
+        "countryCode": "IN",
+        "level": "region",
+        "parentId": null,
+        "officialCode": "36"
+      },
+      {
+        "id": "in-state-38",
+        "name": "The Dadra And Nagar Haveli And Daman And Diu",
+        "countryCode": "IN",
+        "level": "region",
+        "parentId": null,
+        "officialCode": "38"
+      },
+      {
+        "id": "in-state-16",
+        "name": "Tripura",
+        "countryCode": "IN",
+        "level": "region",
+        "parentId": null,
+        "officialCode": "16"
+      },
+      {
+        "id": "in-state-5",
+        "name": "Uttarakhand",
+        "countryCode": "IN",
+        "level": "region",
+        "parentId": null,
+        "officialCode": "5"
+      },
+      {
+        "id": "in-state-9",
+        "name": "Uttar Pradesh",
+        "countryCode": "IN",
+        "level": "region",
+        "parentId": null,
+        "officialCode": "9"
+      },
+      {
+        "id": "in-state-19",
+        "name": "West Bengal",
+        "countryCode": "IN",
+        "level": "region",
+        "parentId": null,
+        "officialCode": "19"
+      },
+      {
+        "id": "in-district-603",
+        "name": "Nicobars",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-35",
+        "officialCode": "603"
+      },
+      {
+        "id": "in-district-632",
+        "name": "North And Middle Andaman",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-35",
+        "officialCode": "632"
+      },
+      {
+        "id": "in-district-602",
+        "name": "South Andamans",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-35",
+        "officialCode": "602"
+      },
+      {
+        "id": "in-district-745",
+        "name": "Alluri Sitharama Raju",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-28",
+        "officialCode": "745"
+      },
+      {
+        "id": "in-district-744",
+        "name": "Anakapalli",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-28",
+        "officialCode": "744"
+      },
+      {
+        "id": "in-district-502",
+        "name": "Ananthapuramu",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-28",
+        "officialCode": "502"
+      },
+      {
+        "id": "in-district-753",
+        "name": "Annamayya",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-28",
+        "officialCode": "753"
+      },
+      {
+        "id": "in-district-750",
+        "name": "Bapatla",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-28",
+        "officialCode": "750"
+      },
+      {
+        "id": "in-district-503",
+        "name": "Chittoor",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-28",
+        "officialCode": "503"
+      },
+      {
+        "id": "in-district-747",
+        "name": "Dr. B.R. Ambedkar Konaseema",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-28",
+        "officialCode": "747"
+      },
+      {
+        "id": "in-district-505",
+        "name": "East Godavari",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-28",
+        "officialCode": "505"
+      },
+      {
+        "id": "in-district-748",
+        "name": "Eluru",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-28",
+        "officialCode": "748"
+      },
+      {
+        "id": "in-district-506",
+        "name": "Guntur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-28",
+        "officialCode": "506"
+      },
+      {
+        "id": "in-district-746",
+        "name": "Kakinada",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-28",
+        "officialCode": "746"
+      },
+      {
+        "id": "in-district-510",
+        "name": "Krishna",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-28",
+        "officialCode": "510"
+      },
+      {
+        "id": "in-district-511",
+        "name": "Kurnool",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-28",
+        "officialCode": "511"
+      },
+      {
+        "id": "in-district-790",
+        "name": "Markapuram",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-28",
+        "officialCode": "790"
+      },
+      {
+        "id": "in-district-755",
+        "name": "Nandyal",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-28",
+        "officialCode": "755"
+      },
+      {
+        "id": "in-district-749",
+        "name": "Ntr",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-28",
+        "officialCode": "749"
+      },
+      {
+        "id": "in-district-751",
+        "name": "Palnadu",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-28",
+        "officialCode": "751"
+      },
+      {
+        "id": "in-district-743",
+        "name": "Parvathipuram Manyam",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-28",
+        "officialCode": "743"
+      },
+      {
+        "id": "in-district-791",
+        "name": "Polavaram",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-28",
+        "officialCode": "791"
+      },
+      {
+        "id": "in-district-517",
+        "name": "Prakasam",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-28",
+        "officialCode": "517"
+      },
+      {
+        "id": "in-district-519",
+        "name": "Srikakulam",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-28",
+        "officialCode": "519"
+      },
+      {
+        "id": "in-district-515",
+        "name": "Sri Potti Sriramulu Nellore",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-28",
+        "officialCode": "515"
+      },
+      {
+        "id": "in-district-754",
+        "name": "Sri Sathya Sai",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-28",
+        "officialCode": "754"
+      },
+      {
+        "id": "in-district-752",
+        "name": "Tirupati",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-28",
+        "officialCode": "752"
+      },
+      {
+        "id": "in-district-520",
+        "name": "Visakhapatnam",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-28",
+        "officialCode": "520"
+      },
+      {
+        "id": "in-district-521",
+        "name": "Vizianagaram",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-28",
+        "officialCode": "521"
+      },
+      {
+        "id": "in-district-523",
+        "name": "West Godavari",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-28",
+        "officialCode": "523"
+      },
+      {
+        "id": "in-district-504",
+        "name": "Y.S.R. Kadapa",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-28",
+        "officialCode": "504"
+      },
+      {
+        "id": "in-district-628",
+        "name": "Anjaw",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-12",
+        "officialCode": "628"
+      },
+      {
+        "id": "in-district-787",
+        "name": "Bichom",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-12",
+        "officialCode": "787"
+      },
+      {
+        "id": "in-district-229",
+        "name": "Changlang",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-12",
+        "officialCode": "229"
+      },
+      {
+        "id": "in-district-230",
+        "name": "Dibang Valley",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-12",
+        "officialCode": "230"
+      },
+      {
+        "id": "in-district-231",
+        "name": "East Kameng",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-12",
+        "officialCode": "231"
+      },
+      {
+        "id": "in-district-232",
+        "name": "East Siang",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-12",
+        "officialCode": "232"
+      },
+      {
+        "id": "in-district-718",
+        "name": "Kamle",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-12",
+        "officialCode": "718"
+      },
+      {
+        "id": "in-district-786",
+        "name": "Keyi Panyor",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-12",
+        "officialCode": "786"
+      },
+      {
+        "id": "in-district-677",
+        "name": "Kra Daadi",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-12",
+        "officialCode": "677"
+      },
+      {
+        "id": "in-district-233",
+        "name": "Kurung Kumey",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-12",
+        "officialCode": "233"
+      },
+      {
+        "id": "in-district-724",
+        "name": "Leparada",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-12",
+        "officialCode": "724"
+      },
+      {
+        "id": "in-district-234",
+        "name": "Lohit",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-12",
+        "officialCode": "234"
+      },
+      {
+        "id": "in-district-666",
+        "name": "Longding",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-12",
+        "officialCode": "666"
+      },
+      {
+        "id": "in-district-235",
+        "name": "Lower Dibang Valley",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-12",
+        "officialCode": "235"
+      },
+      {
+        "id": "in-district-719",
+        "name": "Lower Siang",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-12",
+        "officialCode": "719"
+      },
+      {
+        "id": "in-district-236",
+        "name": "Lower Subansiri",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-12",
+        "officialCode": "236"
+      },
+      {
+        "id": "in-district-678",
+        "name": "Namsai",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-12",
+        "officialCode": "678"
+      },
+      {
+        "id": "in-district-723",
+        "name": "Pakke Kessang",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-12",
+        "officialCode": "723"
+      },
+      {
+        "id": "in-district-237",
+        "name": "Papum Pare",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-12",
+        "officialCode": "237"
+      },
+      {
+        "id": "in-district-725",
+        "name": "Shi Yomi",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-12",
+        "officialCode": "725"
+      },
+      {
+        "id": "in-district-679",
+        "name": "Siang",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-12",
+        "officialCode": "679"
+      },
+      {
+        "id": "in-district-238",
+        "name": "Tawang",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-12",
+        "officialCode": "238"
+      },
+      {
+        "id": "in-district-239",
+        "name": "Tirap",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-12",
+        "officialCode": "239"
+      },
+      {
+        "id": "in-district-240",
+        "name": "Upper Siang",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-12",
+        "officialCode": "240"
+      },
+      {
+        "id": "in-district-241",
+        "name": "Upper Subansiri",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-12",
+        "officialCode": "241"
+      },
+      {
+        "id": "in-district-242",
+        "name": "West Kameng",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-12",
+        "officialCode": "242"
+      },
+      {
+        "id": "in-district-243",
+        "name": "West Siang",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-12",
+        "officialCode": "243"
+      },
+      {
+        "id": "in-district-739",
+        "name": "Bajali",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-18",
+        "officialCode": "739"
+      },
+      {
+        "id": "in-district-616",
+        "name": "Baksa",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-18",
+        "officialCode": "616"
+      },
+      {
+        "id": "in-district-280",
+        "name": "Barpeta",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-18",
+        "officialCode": "280"
+      },
+      {
+        "id": "in-district-705",
+        "name": "Biswanath",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-18",
+        "officialCode": "705"
+      },
+      {
+        "id": "in-district-281",
+        "name": "Bongaigaon",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-18",
+        "officialCode": "281"
+      },
+      {
+        "id": "in-district-282",
+        "name": "Cachar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-18",
+        "officialCode": "282"
+      },
+      {
+        "id": "in-district-708",
+        "name": "Charaideo",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-18",
+        "officialCode": "708"
+      },
+      {
+        "id": "in-district-612",
+        "name": "Chirang",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-18",
+        "officialCode": "612"
+      },
+      {
+        "id": "in-district-283",
+        "name": "Darrang",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-18",
+        "officialCode": "283"
+      },
+      {
+        "id": "in-district-284",
+        "name": "Dhemaji",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-18",
+        "officialCode": "284"
+      },
+      {
+        "id": "in-district-285",
+        "name": "Dhubri",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-18",
+        "officialCode": "285"
+      },
+      {
+        "id": "in-district-286",
+        "name": "Dibrugarh",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-18",
+        "officialCode": "286"
+      },
+      {
+        "id": "in-district-299",
+        "name": "Dima Hasao",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-18",
+        "officialCode": "299"
+      },
+      {
+        "id": "in-district-287",
+        "name": "Goalpara",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-18",
+        "officialCode": "287"
+      },
+      {
+        "id": "in-district-288",
+        "name": "Golaghat",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-18",
+        "officialCode": "288"
+      },
+      {
+        "id": "in-district-289",
+        "name": "Hailakandi",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-18",
+        "officialCode": "289"
+      },
+      {
+        "id": "in-district-709",
+        "name": "Hojai",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-18",
+        "officialCode": "709"
+      },
+      {
+        "id": "in-district-290",
+        "name": "Jorhat",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-18",
+        "officialCode": "290"
+      },
+      {
+        "id": "in-district-291",
+        "name": "Kamrup",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-18",
+        "officialCode": "291"
+      },
+      {
+        "id": "in-district-618",
+        "name": "Kamrup Metro",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-18",
+        "officialCode": "618"
+      },
+      {
+        "id": "in-district-292",
+        "name": "Karbi Anglong",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-18",
+        "officialCode": "292"
+      },
+      {
+        "id": "in-district-294",
+        "name": "Kokrajhar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-18",
+        "officialCode": "294"
+      },
+      {
+        "id": "in-district-295",
+        "name": "Lakhimpur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-18",
+        "officialCode": "295"
+      },
+      {
+        "id": "in-district-706",
+        "name": "Majuli",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-18",
+        "officialCode": "706"
+      },
+      {
+        "id": "in-district-296",
+        "name": "Marigaon",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-18",
+        "officialCode": "296"
+      },
+      {
+        "id": "in-district-297",
+        "name": "Nagaon",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-18",
+        "officialCode": "297"
+      },
+      {
+        "id": "in-district-298",
+        "name": "Nalbari",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-18",
+        "officialCode": "298"
+      },
+      {
+        "id": "in-district-300",
+        "name": "Sivasagar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-18",
+        "officialCode": "300"
+      },
+      {
+        "id": "in-district-301",
+        "name": "Sonitpur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-18",
+        "officialCode": "301"
+      },
+      {
+        "id": "in-district-707",
+        "name": "South Salmara Mancachar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-18",
+        "officialCode": "707"
+      },
+      {
+        "id": "in-district-293",
+        "name": "Sribhumi",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-18",
+        "officialCode": "293"
+      },
+      {
+        "id": "in-district-756",
+        "name": "Tamulpur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-18",
+        "officialCode": "756"
+      },
+      {
+        "id": "in-district-302",
+        "name": "Tinsukia",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-18",
+        "officialCode": "302"
+      },
+      {
+        "id": "in-district-617",
+        "name": "Udalguri",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-18",
+        "officialCode": "617"
+      },
+      {
+        "id": "in-district-710",
+        "name": "West Karbi Anglong",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-18",
+        "officialCode": "710"
+      },
+      {
+        "id": "in-district-188",
+        "name": "Araria",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-10",
+        "officialCode": "188"
+      },
+      {
+        "id": "in-district-611",
+        "name": "Arwal",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-10",
+        "officialCode": "611"
+      },
+      {
+        "id": "in-district-189",
+        "name": "Aurangabad",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-10",
+        "officialCode": "189"
+      },
+      {
+        "id": "in-district-190",
+        "name": "Banka",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-10",
+        "officialCode": "190"
+      },
+      {
+        "id": "in-district-191",
+        "name": "Begusarai",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-10",
+        "officialCode": "191"
+      },
+      {
+        "id": "in-district-192",
+        "name": "Bhagalpur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-10",
+        "officialCode": "192"
+      },
+      {
+        "id": "in-district-193",
+        "name": "Bhojpur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-10",
+        "officialCode": "193"
+      },
+      {
+        "id": "in-district-194",
+        "name": "Buxar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-10",
+        "officialCode": "194"
+      },
+      {
+        "id": "in-district-195",
+        "name": "Darbhanga",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-10",
+        "officialCode": "195"
+      },
+      {
+        "id": "in-district-196",
+        "name": "Gaya",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-10",
+        "officialCode": "196"
+      },
+      {
+        "id": "in-district-197",
+        "name": "Gopalganj",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-10",
+        "officialCode": "197"
+      },
+      {
+        "id": "in-district-198",
+        "name": "Jamui",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-10",
+        "officialCode": "198"
+      },
+      {
+        "id": "in-district-199",
+        "name": "Jehanabad",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-10",
+        "officialCode": "199"
+      },
+      {
+        "id": "in-district-200",
+        "name": "Kaimur (Bhabua)",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-10",
+        "officialCode": "200"
+      },
+      {
+        "id": "in-district-201",
+        "name": "Katihar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-10",
+        "officialCode": "201"
+      },
+      {
+        "id": "in-district-202",
+        "name": "Khagaria",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-10",
+        "officialCode": "202"
+      },
+      {
+        "id": "in-district-203",
+        "name": "Kishanganj",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-10",
+        "officialCode": "203"
+      },
+      {
+        "id": "in-district-204",
+        "name": "Lakhisarai",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-10",
+        "officialCode": "204"
+      },
+      {
+        "id": "in-district-205",
+        "name": "Madhepura",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-10",
+        "officialCode": "205"
+      },
+      {
+        "id": "in-district-206",
+        "name": "Madhubani",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-10",
+        "officialCode": "206"
+      },
+      {
+        "id": "in-district-207",
+        "name": "Munger",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-10",
+        "officialCode": "207"
+      },
+      {
+        "id": "in-district-208",
+        "name": "Muzaffarpur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-10",
+        "officialCode": "208"
+      },
+      {
+        "id": "in-district-209",
+        "name": "Nalanda",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-10",
+        "officialCode": "209"
+      },
+      {
+        "id": "in-district-210",
+        "name": "Nawada",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-10",
+        "officialCode": "210"
+      },
+      {
+        "id": "in-district-211",
+        "name": "Pashchim Champaran",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-10",
+        "officialCode": "211"
+      },
+      {
+        "id": "in-district-212",
+        "name": "Patna",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-10",
+        "officialCode": "212"
+      },
+      {
+        "id": "in-district-213",
+        "name": "Purbi Champaran",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-10",
+        "officialCode": "213"
+      },
+      {
+        "id": "in-district-214",
+        "name": "Purnia",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-10",
+        "officialCode": "214"
+      },
+      {
+        "id": "in-district-215",
+        "name": "Rohtas",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-10",
+        "officialCode": "215"
+      },
+      {
+        "id": "in-district-216",
+        "name": "Saharsa",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-10",
+        "officialCode": "216"
+      },
+      {
+        "id": "in-district-217",
+        "name": "Samastipur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-10",
+        "officialCode": "217"
+      },
+      {
+        "id": "in-district-218",
+        "name": "Saran",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-10",
+        "officialCode": "218"
+      },
+      {
+        "id": "in-district-219",
+        "name": "Sheikhpura",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-10",
+        "officialCode": "219"
+      },
+      {
+        "id": "in-district-220",
+        "name": "Sheohar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-10",
+        "officialCode": "220"
+      },
+      {
+        "id": "in-district-221",
+        "name": "Sitamarhi",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-10",
+        "officialCode": "221"
+      },
+      {
+        "id": "in-district-222",
+        "name": "Siwan",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-10",
+        "officialCode": "222"
+      },
+      {
+        "id": "in-district-223",
+        "name": "Supaul",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-10",
+        "officialCode": "223"
+      },
+      {
+        "id": "in-district-224",
+        "name": "Vaishali",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-10",
+        "officialCode": "224"
+      },
+      {
+        "id": "in-district-44",
+        "name": "Chandigarh",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-4",
+        "officialCode": "44"
+      },
+      {
+        "id": "in-district-646",
+        "name": "Balod",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-22",
+        "officialCode": "646"
+      },
+      {
+        "id": "in-district-644",
+        "name": "Balodabazar-Bhatapara",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-22",
+        "officialCode": "644"
+      },
+      {
+        "id": "in-district-649",
+        "name": "Balrampur-Ramanujganj",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-22",
+        "officialCode": "649"
+      },
+      {
+        "id": "in-district-374",
+        "name": "Bastar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-22",
+        "officialCode": "374"
+      },
+      {
+        "id": "in-district-650",
+        "name": "Bemetara",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-22",
+        "officialCode": "650"
+      },
+      {
+        "id": "in-district-636",
+        "name": "Bijapur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-22",
+        "officialCode": "636"
+      },
+      {
+        "id": "in-district-375",
+        "name": "Bilaspur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-22",
+        "officialCode": "375"
+      },
+      {
+        "id": "in-district-376",
+        "name": "Dakshin Bastar Dantewada",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-22",
+        "officialCode": "376"
+      },
+      {
+        "id": "in-district-377",
+        "name": "Dhamtari",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-22",
+        "officialCode": "377"
+      },
+      {
+        "id": "in-district-378",
+        "name": "Durg",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-22",
+        "officialCode": "378"
+      },
+      {
+        "id": "in-district-645",
+        "name": "Gariyaband",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-22",
+        "officialCode": "645"
+      },
+      {
+        "id": "in-district-734",
+        "name": "Gaurela-Pendra-Marwahi",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-22",
+        "officialCode": "734"
+      },
+      {
+        "id": "in-district-379",
+        "name": "Janjgir-Champa",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-22",
+        "officialCode": "379"
+      },
+      {
+        "id": "in-district-380",
+        "name": "Jashpur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-22",
+        "officialCode": "380"
+      },
+      {
+        "id": "in-district-382",
+        "name": "Kabeerdham",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-22",
+        "officialCode": "382"
+      },
+      {
+        "id": "in-district-759",
+        "name": "Khairagarh-Chhuikhadan-Gandai",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-22",
+        "officialCode": "759"
+      },
+      {
+        "id": "in-district-643",
+        "name": "Kondagaon",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-22",
+        "officialCode": "643"
+      },
+      {
+        "id": "in-district-383",
+        "name": "Korba",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-22",
+        "officialCode": "383"
+      },
+      {
+        "id": "in-district-384",
+        "name": "Korea",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-22",
+        "officialCode": "384"
+      },
+      {
+        "id": "in-district-385",
+        "name": "Mahasamund",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-22",
+        "officialCode": "385"
+      },
+      {
+        "id": "in-district-760",
+        "name": "Manendragarh-Chirmiri-Bharatpur(M C B)",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-22",
+        "officialCode": "760"
+      },
+      {
+        "id": "in-district-761",
+        "name": "Mohla-Manpur-Ambagarh Chouki",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-22",
+        "officialCode": "761"
+      },
+      {
+        "id": "in-district-647",
+        "name": "Mungeli",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-22",
+        "officialCode": "647"
+      },
+      {
+        "id": "in-district-637",
+        "name": "Narayanpur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-22",
+        "officialCode": "637"
+      },
+      {
+        "id": "in-district-386",
+        "name": "Raigarh",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-22",
+        "officialCode": "386"
+      },
+      {
+        "id": "in-district-387",
+        "name": "Raipur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-22",
+        "officialCode": "387"
+      },
+      {
+        "id": "in-district-388",
+        "name": "Rajnandgaon",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-22",
+        "officialCode": "388"
+      },
+      {
+        "id": "in-district-762",
+        "name": "Sakti",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-22",
+        "officialCode": "762"
+      },
+      {
+        "id": "in-district-763",
+        "name": "Sarangarh-Bilaigarh",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-22",
+        "officialCode": "763"
+      },
+      {
+        "id": "in-district-642",
+        "name": "Sukma",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-22",
+        "officialCode": "642"
+      },
+      {
+        "id": "in-district-648",
+        "name": "Surajpur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-22",
+        "officialCode": "648"
+      },
+      {
+        "id": "in-district-389",
+        "name": "Surguja",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-22",
+        "officialCode": "389"
+      },
+      {
+        "id": "in-district-381",
+        "name": "Uttar Bastar Kanker",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-22",
+        "officialCode": "381"
+      },
+      {
+        "id": "in-district-77",
+        "name": "Central",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-7",
+        "officialCode": "77"
+      },
+      {
+        "id": "in-district-796",
+        "name": "Central North",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-7",
+        "officialCode": "796"
+      },
+      {
+        "id": "in-district-78",
+        "name": "East",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-7",
+        "officialCode": "78"
+      },
+      {
+        "id": "in-district-79",
+        "name": "New Delhi",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-7",
+        "officialCode": "79"
+      },
+      {
+        "id": "in-district-80",
+        "name": "North",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-7",
+        "officialCode": "80"
+      },
+      {
+        "id": "in-district-81",
+        "name": "North East",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-7",
+        "officialCode": "81"
+      },
+      {
+        "id": "in-district-82",
+        "name": "North West",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-7",
+        "officialCode": "82"
+      },
+      {
+        "id": "in-district-795",
+        "name": "Old Delhi",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-7",
+        "officialCode": "795"
+      },
+      {
+        "id": "in-district-794",
+        "name": "Outer North",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-7",
+        "officialCode": "794"
+      },
+      {
+        "id": "in-district-83",
+        "name": "South",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-7",
+        "officialCode": "83"
+      },
+      {
+        "id": "in-district-670",
+        "name": "South East",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-7",
+        "officialCode": "670"
+      },
+      {
+        "id": "in-district-84",
+        "name": "South West",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-7",
+        "officialCode": "84"
+      },
+      {
+        "id": "in-district-85",
+        "name": "West",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-7",
+        "officialCode": "85"
+      },
+      {
+        "id": "in-district-793",
+        "name": "Kushavati",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-30",
+        "officialCode": "793"
+      },
+      {
+        "id": "in-district-551",
+        "name": "North Goa",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-30",
+        "officialCode": "551"
+      },
+      {
+        "id": "in-district-552",
+        "name": "South Goa",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-30",
+        "officialCode": "552"
+      },
+      {
+        "id": "in-district-438",
+        "name": "Ahmedabad",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-24",
+        "officialCode": "438"
+      },
+      {
+        "id": "in-district-439",
+        "name": "Amreli",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-24",
+        "officialCode": "439"
+      },
+      {
+        "id": "in-district-440",
+        "name": "Anand",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-24",
+        "officialCode": "440"
+      },
+      {
+        "id": "in-district-672",
+        "name": "Arvalli",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-24",
+        "officialCode": "672"
+      },
+      {
+        "id": "in-district-441",
+        "name": "Banas Kantha",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-24",
+        "officialCode": "441"
+      },
+      {
+        "id": "in-district-442",
+        "name": "Bharuch",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-24",
+        "officialCode": "442"
+      },
+      {
+        "id": "in-district-443",
+        "name": "Bhavnagar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-24",
+        "officialCode": "443"
+      },
+      {
+        "id": "in-district-676",
+        "name": "Botad",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-24",
+        "officialCode": "676"
+      },
+      {
+        "id": "in-district-668",
+        "name": "Chhotaudepur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-24",
+        "officialCode": "668"
+      },
+      {
+        "id": "in-district-445",
+        "name": "Dahod",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-24",
+        "officialCode": "445"
+      },
+      {
+        "id": "in-district-444",
+        "name": "Dangs",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-24",
+        "officialCode": "444"
+      },
+      {
+        "id": "in-district-674",
+        "name": "Devbhumi Dwarka",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-24",
+        "officialCode": "674"
+      },
+      {
+        "id": "in-district-446",
+        "name": "Gandhinagar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-24",
+        "officialCode": "446"
+      },
+      {
+        "id": "in-district-675",
+        "name": "Gir Somnath",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-24",
+        "officialCode": "675"
+      },
+      {
+        "id": "in-district-447",
+        "name": "Jamnagar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-24",
+        "officialCode": "447"
+      },
+      {
+        "id": "in-district-448",
+        "name": "Junagadh",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-24",
+        "officialCode": "448"
+      },
+      {
+        "id": "in-district-449",
+        "name": "Kachchh",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-24",
+        "officialCode": "449"
+      },
+      {
+        "id": "in-district-450",
+        "name": "Kheda",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-24",
+        "officialCode": "450"
+      },
+      {
+        "id": "in-district-451",
+        "name": "Mahesana",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-24",
+        "officialCode": "451"
+      },
+      {
+        "id": "in-district-669",
+        "name": "Mahisagar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-24",
+        "officialCode": "669"
+      },
+      {
+        "id": "in-district-673",
+        "name": "Morbi",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-24",
+        "officialCode": "673"
+      },
+      {
+        "id": "in-district-452",
+        "name": "Narmada",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-24",
+        "officialCode": "452"
+      },
+      {
+        "id": "in-district-453",
+        "name": "Navsari",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-24",
+        "officialCode": "453"
+      },
+      {
+        "id": "in-district-454",
+        "name": "Panch Mahals",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-24",
+        "officialCode": "454"
+      },
+      {
+        "id": "in-district-455",
+        "name": "Patan",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-24",
+        "officialCode": "455"
+      },
+      {
+        "id": "in-district-456",
+        "name": "Porbandar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-24",
+        "officialCode": "456"
+      },
+      {
+        "id": "in-district-457",
+        "name": "Rajkot",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-24",
+        "officialCode": "457"
+      },
+      {
+        "id": "in-district-458",
+        "name": "Sabar Kantha",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-24",
+        "officialCode": "458"
+      },
+      {
+        "id": "in-district-459",
+        "name": "Surat",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-24",
+        "officialCode": "459"
+      },
+      {
+        "id": "in-district-460",
+        "name": "Surendranagar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-24",
+        "officialCode": "460"
+      },
+      {
+        "id": "in-district-641",
+        "name": "Tapi",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-24",
+        "officialCode": "641"
+      },
+      {
+        "id": "in-district-461",
+        "name": "Vadodara",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-24",
+        "officialCode": "461"
+      },
+      {
+        "id": "in-district-462",
+        "name": "Valsad",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-24",
+        "officialCode": "462"
+      },
+      {
+        "id": "in-district-789",
+        "name": "Vav-Tharad",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-24",
+        "officialCode": "789"
+      },
+      {
+        "id": "in-district-58",
+        "name": "Ambala",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-6",
+        "officialCode": "58"
+      },
+      {
+        "id": "in-district-59",
+        "name": "Bhiwani",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-6",
+        "officialCode": "59"
+      },
+      {
+        "id": "in-district-701",
+        "name": "Charkhi Dadri",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-6",
+        "officialCode": "701"
+      },
+      {
+        "id": "in-district-60",
+        "name": "Faridabad",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-6",
+        "officialCode": "60"
+      },
+      {
+        "id": "in-district-61",
+        "name": "Fatehabad",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-6",
+        "officialCode": "61"
+      },
+      {
+        "id": "in-district-62",
+        "name": "Gurugram",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-6",
+        "officialCode": "62"
+      },
+      {
+        "id": "in-district-792",
+        "name": "Hansi",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-6",
+        "officialCode": "792"
+      },
+      {
+        "id": "in-district-63",
+        "name": "Hisar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-6",
+        "officialCode": "63"
+      },
+      {
+        "id": "in-district-64",
+        "name": "Jhajjar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-6",
+        "officialCode": "64"
+      },
+      {
+        "id": "in-district-65",
+        "name": "Jind",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-6",
+        "officialCode": "65"
+      },
+      {
+        "id": "in-district-66",
+        "name": "Kaithal",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-6",
+        "officialCode": "66"
+      },
+      {
+        "id": "in-district-67",
+        "name": "Karnal",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-6",
+        "officialCode": "67"
+      },
+      {
+        "id": "in-district-68",
+        "name": "Kurukshetra",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-6",
+        "officialCode": "68"
+      },
+      {
+        "id": "in-district-69",
+        "name": "Mahendragarh",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-6",
+        "officialCode": "69"
+      },
+      {
+        "id": "in-district-604",
+        "name": "Nuh",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-6",
+        "officialCode": "604"
+      },
+      {
+        "id": "in-district-619",
+        "name": "Palwal",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-6",
+        "officialCode": "619"
+      },
+      {
+        "id": "in-district-70",
+        "name": "Panchkula",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-6",
+        "officialCode": "70"
+      },
+      {
+        "id": "in-district-71",
+        "name": "Panipat",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-6",
+        "officialCode": "71"
+      },
+      {
+        "id": "in-district-72",
+        "name": "Rewari",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-6",
+        "officialCode": "72"
+      },
+      {
+        "id": "in-district-73",
+        "name": "Rohtak",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-6",
+        "officialCode": "73"
+      },
+      {
+        "id": "in-district-74",
+        "name": "Sirsa",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-6",
+        "officialCode": "74"
+      },
+      {
+        "id": "in-district-75",
+        "name": "Sonipat",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-6",
+        "officialCode": "75"
+      },
+      {
+        "id": "in-district-76",
+        "name": "Yamunanagar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-6",
+        "officialCode": "76"
+      },
+      {
+        "id": "in-district-15",
+        "name": "Bilaspur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-2",
+        "officialCode": "15"
+      },
+      {
+        "id": "in-district-16",
+        "name": "Chamba",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-2",
+        "officialCode": "16"
+      },
+      {
+        "id": "in-district-17",
+        "name": "Hamirpur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-2",
+        "officialCode": "17"
+      },
+      {
+        "id": "in-district-18",
+        "name": "Kangra",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-2",
+        "officialCode": "18"
+      },
+      {
+        "id": "in-district-19",
+        "name": "Kinnaur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-2",
+        "officialCode": "19"
+      },
+      {
+        "id": "in-district-20",
+        "name": "Kullu",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-2",
+        "officialCode": "20"
+      },
+      {
+        "id": "in-district-21",
+        "name": "Lahaul And Spiti",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-2",
+        "officialCode": "21"
+      },
+      {
+        "id": "in-district-22",
+        "name": "Mandi",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-2",
+        "officialCode": "22"
+      },
+      {
+        "id": "in-district-23",
+        "name": "Shimla",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-2",
+        "officialCode": "23"
+      },
+      {
+        "id": "in-district-24",
+        "name": "Sirmaur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-2",
+        "officialCode": "24"
+      },
+      {
+        "id": "in-district-25",
+        "name": "Solan",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-2",
+        "officialCode": "25"
+      },
+      {
+        "id": "in-district-26",
+        "name": "Una",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-2",
+        "officialCode": "26"
+      },
+      {
+        "id": "in-district-1",
+        "name": "Anantnag",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-1",
+        "officialCode": "1"
+      },
+      {
+        "id": "in-district-623",
+        "name": "Bandipora",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-1",
+        "officialCode": "623"
+      },
+      {
+        "id": "in-district-3",
+        "name": "Baramulla",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-1",
+        "officialCode": "3"
+      },
+      {
+        "id": "in-district-2",
+        "name": "Budgam",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-1",
+        "officialCode": "2"
+      },
+      {
+        "id": "in-district-4",
+        "name": "Doda",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-1",
+        "officialCode": "4"
+      },
+      {
+        "id": "in-district-626",
+        "name": "Ganderbal",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-1",
+        "officialCode": "626"
+      },
+      {
+        "id": "in-district-5",
+        "name": "Jammu",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-1",
+        "officialCode": "5"
+      },
+      {
+        "id": "in-district-7",
+        "name": "Kathua",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-1",
+        "officialCode": "7"
+      },
+      {
+        "id": "in-district-620",
+        "name": "Kishtwar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-1",
+        "officialCode": "620"
+      },
+      {
+        "id": "in-district-622",
+        "name": "Kulgam",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-1",
+        "officialCode": "622"
+      },
+      {
+        "id": "in-district-8",
+        "name": "Kupwara",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-1",
+        "officialCode": "8"
+      },
+      {
+        "id": "in-district-10",
+        "name": "Poonch",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-1",
+        "officialCode": "10"
+      },
+      {
+        "id": "in-district-11",
+        "name": "Pulwama",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-1",
+        "officialCode": "11"
+      },
+      {
+        "id": "in-district-12",
+        "name": "Rajouri",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-1",
+        "officialCode": "12"
+      },
+      {
+        "id": "in-district-621",
+        "name": "Ramban",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-1",
+        "officialCode": "621"
+      },
+      {
+        "id": "in-district-627",
+        "name": "Reasi",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-1",
+        "officialCode": "627"
+      },
+      {
+        "id": "in-district-624",
+        "name": "Samba",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-1",
+        "officialCode": "624"
+      },
+      {
+        "id": "in-district-625",
+        "name": "Shopian",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-1",
+        "officialCode": "625"
+      },
+      {
+        "id": "in-district-13",
+        "name": "Srinagar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-1",
+        "officialCode": "13"
+      },
+      {
+        "id": "in-district-14",
+        "name": "Udhampur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-1",
+        "officialCode": "14"
+      },
+      {
+        "id": "in-district-322",
+        "name": "Bokaro",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-20",
+        "officialCode": "322"
+      },
+      {
+        "id": "in-district-323",
+        "name": "Chatra",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-20",
+        "officialCode": "323"
+      },
+      {
+        "id": "in-district-324",
+        "name": "Deoghar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-20",
+        "officialCode": "324"
+      },
+      {
+        "id": "in-district-325",
+        "name": "Dhanbad",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-20",
+        "officialCode": "325"
+      },
+      {
+        "id": "in-district-326",
+        "name": "Dumka",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-20",
+        "officialCode": "326"
+      },
+      {
+        "id": "in-district-327",
+        "name": "East Singhbum",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-20",
+        "officialCode": "327"
+      },
+      {
+        "id": "in-district-328",
+        "name": "Garhwa",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-20",
+        "officialCode": "328"
+      },
+      {
+        "id": "in-district-329",
+        "name": "Giridih",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-20",
+        "officialCode": "329"
+      },
+      {
+        "id": "in-district-330",
+        "name": "Godda",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-20",
+        "officialCode": "330"
+      },
+      {
+        "id": "in-district-331",
+        "name": "Gumla",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-20",
+        "officialCode": "331"
+      },
+      {
+        "id": "in-district-332",
+        "name": "Hazaribagh",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-20",
+        "officialCode": "332"
+      },
+      {
+        "id": "in-district-333",
+        "name": "Jamtara",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-20",
+        "officialCode": "333"
+      },
+      {
+        "id": "in-district-606",
+        "name": "Khunti",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-20",
+        "officialCode": "606"
+      },
+      {
+        "id": "in-district-334",
+        "name": "Koderma",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-20",
+        "officialCode": "334"
+      },
+      {
+        "id": "in-district-335",
+        "name": "Latehar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-20",
+        "officialCode": "335"
+      },
+      {
+        "id": "in-district-336",
+        "name": "Lohardaga",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-20",
+        "officialCode": "336"
+      },
+      {
+        "id": "in-district-337",
+        "name": "Pakur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-20",
+        "officialCode": "337"
+      },
+      {
+        "id": "in-district-338",
+        "name": "Palamu",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-20",
+        "officialCode": "338"
+      },
+      {
+        "id": "in-district-607",
+        "name": "Ramgarh",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-20",
+        "officialCode": "607"
+      },
+      {
+        "id": "in-district-339",
+        "name": "Ranchi",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-20",
+        "officialCode": "339"
+      },
+      {
+        "id": "in-district-340",
+        "name": "Sahebganj",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-20",
+        "officialCode": "340"
+      },
+      {
+        "id": "in-district-341",
+        "name": "Saraikela Kharsawan",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-20",
+        "officialCode": "341"
+      },
+      {
+        "id": "in-district-342",
+        "name": "Simdega",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-20",
+        "officialCode": "342"
+      },
+      {
+        "id": "in-district-343",
+        "name": "West Singhbhum",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-20",
+        "officialCode": "343"
+      },
+      {
+        "id": "in-district-524",
+        "name": "Bagalkote",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-29",
+        "officialCode": "524"
+      },
+      {
+        "id": "in-district-528",
+        "name": "Ballari",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-29",
+        "officialCode": "528"
+      },
+      {
+        "id": "in-district-527",
+        "name": "Belagavi",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-29",
+        "officialCode": "527"
+      },
+      {
+        "id": "in-district-526",
+        "name": "Bengaluru Rural",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-29",
+        "officialCode": "526"
+      },
+      {
+        "id": "in-district-631",
+        "name": "Bengaluru South",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-29",
+        "officialCode": "631"
+      },
+      {
+        "id": "in-district-525",
+        "name": "Bengaluru Urban",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-29",
+        "officialCode": "525"
+      },
+      {
+        "id": "in-district-529",
+        "name": "Bidar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-29",
+        "officialCode": "529"
+      },
+      {
+        "id": "in-district-531",
+        "name": "Chamarajanagar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-29",
+        "officialCode": "531"
+      },
+      {
+        "id": "in-district-630",
+        "name": "Chikkaballapura",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-29",
+        "officialCode": "630"
+      },
+      {
+        "id": "in-district-532",
+        "name": "Chikkamagaluru",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-29",
+        "officialCode": "532"
+      },
+      {
+        "id": "in-district-533",
+        "name": "Chitradurga",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-29",
+        "officialCode": "533"
+      },
+      {
+        "id": "in-district-534",
+        "name": "Dakshina Kannada",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-29",
+        "officialCode": "534"
+      },
+      {
+        "id": "in-district-535",
+        "name": "Davanagere",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-29",
+        "officialCode": "535"
+      },
+      {
+        "id": "in-district-536",
+        "name": "Dharwad",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-29",
+        "officialCode": "536"
+      },
+      {
+        "id": "in-district-537",
+        "name": "Gadag",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-29",
+        "officialCode": "537"
+      },
+      {
+        "id": "in-district-539",
+        "name": "Hassan",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-29",
+        "officialCode": "539"
+      },
+      {
+        "id": "in-district-540",
+        "name": "Haveri",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-29",
+        "officialCode": "540"
+      },
+      {
+        "id": "in-district-538",
+        "name": "Kalaburagi",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-29",
+        "officialCode": "538"
+      },
+      {
+        "id": "in-district-541",
+        "name": "Kodagu",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-29",
+        "officialCode": "541"
+      },
+      {
+        "id": "in-district-542",
+        "name": "Kolar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-29",
+        "officialCode": "542"
+      },
+      {
+        "id": "in-district-543",
+        "name": "Koppal",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-29",
+        "officialCode": "543"
+      },
+      {
+        "id": "in-district-544",
+        "name": "Mandya",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-29",
+        "officialCode": "544"
+      },
+      {
+        "id": "in-district-545",
+        "name": "Mysuru",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-29",
+        "officialCode": "545"
+      },
+      {
+        "id": "in-district-546",
+        "name": "Raichur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-29",
+        "officialCode": "546"
+      },
+      {
+        "id": "in-district-547",
+        "name": "Shivamogga",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-29",
+        "officialCode": "547"
+      },
+      {
+        "id": "in-district-548",
+        "name": "Tumakuru",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-29",
+        "officialCode": "548"
+      },
+      {
+        "id": "in-district-549",
+        "name": "Udupi",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-29",
+        "officialCode": "549"
+      },
+      {
+        "id": "in-district-550",
+        "name": "Uttara Kannada",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-29",
+        "officialCode": "550"
+      },
+      {
+        "id": "in-district-738",
+        "name": "Vijayanagara",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-29",
+        "officialCode": "738"
+      },
+      {
+        "id": "in-district-530",
+        "name": "Vijayapura",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-29",
+        "officialCode": "530"
+      },
+      {
+        "id": "in-district-635",
+        "name": "Yadgir",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-29",
+        "officialCode": "635"
+      },
+      {
+        "id": "in-district-554",
+        "name": "Alappuzha",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-32",
+        "officialCode": "554"
+      },
+      {
+        "id": "in-district-555",
+        "name": "Ernakulam",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-32",
+        "officialCode": "555"
+      },
+      {
+        "id": "in-district-556",
+        "name": "Idukki",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-32",
+        "officialCode": "556"
+      },
+      {
+        "id": "in-district-557",
+        "name": "Kannur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-32",
+        "officialCode": "557"
+      },
+      {
+        "id": "in-district-558",
+        "name": "Kasaragod",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-32",
+        "officialCode": "558"
+      },
+      {
+        "id": "in-district-559",
+        "name": "Kollam",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-32",
+        "officialCode": "559"
+      },
+      {
+        "id": "in-district-560",
+        "name": "Kottayam",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-32",
+        "officialCode": "560"
+      },
+      {
+        "id": "in-district-561",
+        "name": "Kozhikode",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-32",
+        "officialCode": "561"
+      },
+      {
+        "id": "in-district-562",
+        "name": "Malappuram",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-32",
+        "officialCode": "562"
+      },
+      {
+        "id": "in-district-563",
+        "name": "Palakkad",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-32",
+        "officialCode": "563"
+      },
+      {
+        "id": "in-district-564",
+        "name": "Pathanamthitta",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-32",
+        "officialCode": "564"
+      },
+      {
+        "id": "in-district-565",
+        "name": "Thiruvananthapuram",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-32",
+        "officialCode": "565"
+      },
+      {
+        "id": "in-district-566",
+        "name": "Thrissur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-32",
+        "officialCode": "566"
+      },
+      {
+        "id": "in-district-567",
+        "name": "Wayanad",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-32",
+        "officialCode": "567"
+      },
+      {
+        "id": "in-district-6",
+        "name": "Kargil",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-37",
+        "officialCode": "6"
+      },
+      {
+        "id": "in-district-9",
+        "name": "Leh Ladakh",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-37",
+        "officialCode": "9"
+      },
+      {
+        "id": "in-district-553",
+        "name": "Lakshadweep District",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-31",
+        "officialCode": "553"
+      },
+      {
+        "id": "in-district-667",
+        "name": "Agar-Malwa",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-23",
+        "officialCode": "667"
+      },
+      {
+        "id": "in-district-639",
+        "name": "Alirajpur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-23",
+        "officialCode": "639"
+      },
+      {
+        "id": "in-district-390",
+        "name": "Anuppur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-23",
+        "officialCode": "390"
+      },
+      {
+        "id": "in-district-391",
+        "name": "Ashoknagar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-23",
+        "officialCode": "391"
+      },
+      {
+        "id": "in-district-392",
+        "name": "Balaghat",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-23",
+        "officialCode": "392"
+      },
+      {
+        "id": "in-district-393",
+        "name": "Barwani",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-23",
+        "officialCode": "393"
+      },
+      {
+        "id": "in-district-394",
+        "name": "Betul",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-23",
+        "officialCode": "394"
+      },
+      {
+        "id": "in-district-395",
+        "name": "Bhind",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-23",
+        "officialCode": "395"
+      },
+      {
+        "id": "in-district-396",
+        "name": "Bhopal",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-23",
+        "officialCode": "396"
+      },
+      {
+        "id": "in-district-397",
+        "name": "Burhanpur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-23",
+        "officialCode": "397"
+      },
+      {
+        "id": "in-district-398",
+        "name": "Chhatarpur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-23",
+        "officialCode": "398"
+      },
+      {
+        "id": "in-district-399",
+        "name": "Chhindwara",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-23",
+        "officialCode": "399"
+      },
+      {
+        "id": "in-district-400",
+        "name": "Damoh",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-23",
+        "officialCode": "400"
+      },
+      {
+        "id": "in-district-401",
+        "name": "Datia",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-23",
+        "officialCode": "401"
+      },
+      {
+        "id": "in-district-402",
+        "name": "Dewas",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-23",
+        "officialCode": "402"
+      },
+      {
+        "id": "in-district-403",
+        "name": "Dhar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-23",
+        "officialCode": "403"
+      },
+      {
+        "id": "in-district-404",
+        "name": "Dindori",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-23",
+        "officialCode": "404"
+      },
+      {
+        "id": "in-district-406",
+        "name": "Guna",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-23",
+        "officialCode": "406"
+      },
+      {
+        "id": "in-district-407",
+        "name": "Gwalior",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-23",
+        "officialCode": "407"
+      },
+      {
+        "id": "in-district-408",
+        "name": "Harda",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-23",
+        "officialCode": "408"
+      },
+      {
+        "id": "in-district-410",
+        "name": "Indore",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-23",
+        "officialCode": "410"
+      },
+      {
+        "id": "in-district-411",
+        "name": "Jabalpur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-23",
+        "officialCode": "411"
+      },
+      {
+        "id": "in-district-412",
+        "name": "Jhabua",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-23",
+        "officialCode": "412"
+      },
+      {
+        "id": "in-district-413",
+        "name": "Katni",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-23",
+        "officialCode": "413"
+      },
+      {
+        "id": "in-district-405",
+        "name": "Khandwa (East Nimar)",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-23",
+        "officialCode": "405"
+      },
+      {
+        "id": "in-district-414",
+        "name": "Khargone (West Nimar)",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-23",
+        "officialCode": "414"
+      },
+      {
+        "id": "in-district-784",
+        "name": "Maihar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-23",
+        "officialCode": "784"
+      },
+      {
+        "id": "in-district-415",
+        "name": "Mandla",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-23",
+        "officialCode": "415"
+      },
+      {
+        "id": "in-district-416",
+        "name": "Mandsaur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-23",
+        "officialCode": "416"
+      },
+      {
+        "id": "in-district-766",
+        "name": "MAUGANJ",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-23",
+        "officialCode": "766"
+      },
+      {
+        "id": "in-district-417",
+        "name": "Morena",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-23",
+        "officialCode": "417"
+      },
+      {
+        "id": "in-district-409",
+        "name": "Narmadapuram",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-23",
+        "officialCode": "409"
+      },
+      {
+        "id": "in-district-418",
+        "name": "Narsimhapur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-23",
+        "officialCode": "418"
+      },
+      {
+        "id": "in-district-419",
+        "name": "Neemuch",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-23",
+        "officialCode": "419"
+      },
+      {
+        "id": "in-district-722",
+        "name": "Niwari",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-23",
+        "officialCode": "722"
+      },
+      {
+        "id": "in-district-785",
+        "name": "Pandhurna",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-23",
+        "officialCode": "785"
+      },
+      {
+        "id": "in-district-420",
+        "name": "Panna",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-23",
+        "officialCode": "420"
+      },
+      {
+        "id": "in-district-421",
+        "name": "Raisen",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-23",
+        "officialCode": "421"
+      },
+      {
+        "id": "in-district-422",
+        "name": "Rajgarh",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-23",
+        "officialCode": "422"
+      },
+      {
+        "id": "in-district-423",
+        "name": "Ratlam",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-23",
+        "officialCode": "423"
+      },
+      {
+        "id": "in-district-424",
+        "name": "Rewa",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-23",
+        "officialCode": "424"
+      },
+      {
+        "id": "in-district-425",
+        "name": "Sagar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-23",
+        "officialCode": "425"
+      },
+      {
+        "id": "in-district-426",
+        "name": "Satna",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-23",
+        "officialCode": "426"
+      },
+      {
+        "id": "in-district-427",
+        "name": "Sehore",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-23",
+        "officialCode": "427"
+      },
+      {
+        "id": "in-district-428",
+        "name": "Seoni",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-23",
+        "officialCode": "428"
+      },
+      {
+        "id": "in-district-429",
+        "name": "Shahdol",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-23",
+        "officialCode": "429"
+      },
+      {
+        "id": "in-district-430",
+        "name": "Shajapur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-23",
+        "officialCode": "430"
+      },
+      {
+        "id": "in-district-431",
+        "name": "Sheopur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-23",
+        "officialCode": "431"
+      },
+      {
+        "id": "in-district-432",
+        "name": "Shivpuri",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-23",
+        "officialCode": "432"
+      },
+      {
+        "id": "in-district-433",
+        "name": "Sidhi",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-23",
+        "officialCode": "433"
+      },
+      {
+        "id": "in-district-638",
+        "name": "Singrauli",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-23",
+        "officialCode": "638"
+      },
+      {
+        "id": "in-district-434",
+        "name": "Tikamgarh",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-23",
+        "officialCode": "434"
+      },
+      {
+        "id": "in-district-435",
+        "name": "Ujjain",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-23",
+        "officialCode": "435"
+      },
+      {
+        "id": "in-district-436",
+        "name": "Umaria",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-23",
+        "officialCode": "436"
+      },
+      {
+        "id": "in-district-437",
+        "name": "Vidisha",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-23",
+        "officialCode": "437"
+      },
+      {
+        "id": "in-district-466",
+        "name": "Ahilyanagar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-27",
+        "officialCode": "466"
+      },
+      {
+        "id": "in-district-467",
+        "name": "Akola",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-27",
+        "officialCode": "467"
+      },
+      {
+        "id": "in-district-468",
+        "name": "Amravati",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-27",
+        "officialCode": "468"
+      },
+      {
+        "id": "in-district-470",
+        "name": "Beed",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-27",
+        "officialCode": "470"
+      },
+      {
+        "id": "in-district-471",
+        "name": "Bhandara",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-27",
+        "officialCode": "471"
+      },
+      {
+        "id": "in-district-472",
+        "name": "Buldhana",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-27",
+        "officialCode": "472"
+      },
+      {
+        "id": "in-district-473",
+        "name": "Chandrapur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-27",
+        "officialCode": "473"
+      },
+      {
+        "id": "in-district-469",
+        "name": "Chhatrapati Sambhajinagar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-27",
+        "officialCode": "469"
+      },
+      {
+        "id": "in-district-488",
+        "name": "Dharashiv",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-27",
+        "officialCode": "488"
+      },
+      {
+        "id": "in-district-474",
+        "name": "Dhule",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-27",
+        "officialCode": "474"
+      },
+      {
+        "id": "in-district-475",
+        "name": "Gadchiroli",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-27",
+        "officialCode": "475"
+      },
+      {
+        "id": "in-district-476",
+        "name": "Gondia",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-27",
+        "officialCode": "476"
+      },
+      {
+        "id": "in-district-477",
+        "name": "Hingoli",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-27",
+        "officialCode": "477"
+      },
+      {
+        "id": "in-district-478",
+        "name": "Jalgaon",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-27",
+        "officialCode": "478"
+      },
+      {
+        "id": "in-district-479",
+        "name": "Jalna",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-27",
+        "officialCode": "479"
+      },
+      {
+        "id": "in-district-480",
+        "name": "Kolhapur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-27",
+        "officialCode": "480"
+      },
+      {
+        "id": "in-district-481",
+        "name": "Latur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-27",
+        "officialCode": "481"
+      },
+      {
+        "id": "in-district-482",
+        "name": "Mumbai",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-27",
+        "officialCode": "482"
+      },
+      {
+        "id": "in-district-483",
+        "name": "Mumbai Suburban",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-27",
+        "officialCode": "483"
+      },
+      {
+        "id": "in-district-484",
+        "name": "Nagpur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-27",
+        "officialCode": "484"
+      },
+      {
+        "id": "in-district-485",
+        "name": "Nanded",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-27",
+        "officialCode": "485"
+      },
+      {
+        "id": "in-district-486",
+        "name": "Nandurbar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-27",
+        "officialCode": "486"
+      },
+      {
+        "id": "in-district-487",
+        "name": "Nashik",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-27",
+        "officialCode": "487"
+      },
+      {
+        "id": "in-district-665",
+        "name": "Palghar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-27",
+        "officialCode": "665"
+      },
+      {
+        "id": "in-district-489",
+        "name": "Parbhani",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-27",
+        "officialCode": "489"
+      },
+      {
+        "id": "in-district-490",
+        "name": "Pune",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-27",
+        "officialCode": "490"
+      },
+      {
+        "id": "in-district-491",
+        "name": "Raigad",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-27",
+        "officialCode": "491"
+      },
+      {
+        "id": "in-district-492",
+        "name": "Ratnagiri",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-27",
+        "officialCode": "492"
+      },
+      {
+        "id": "in-district-493",
+        "name": "Sangli",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-27",
+        "officialCode": "493"
+      },
+      {
+        "id": "in-district-494",
+        "name": "Satara",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-27",
+        "officialCode": "494"
+      },
+      {
+        "id": "in-district-495",
+        "name": "Sindhudurg",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-27",
+        "officialCode": "495"
+      },
+      {
+        "id": "in-district-496",
+        "name": "Solapur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-27",
+        "officialCode": "496"
+      },
+      {
+        "id": "in-district-497",
+        "name": "Thane",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-27",
+        "officialCode": "497"
+      },
+      {
+        "id": "in-district-498",
+        "name": "Wardha",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-27",
+        "officialCode": "498"
+      },
+      {
+        "id": "in-district-499",
+        "name": "Washim",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-27",
+        "officialCode": "499"
+      },
+      {
+        "id": "in-district-500",
+        "name": "Yavatmal",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-27",
+        "officialCode": "500"
+      },
+      {
+        "id": "in-district-252",
+        "name": "Bishnupur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-14",
+        "officialCode": "252"
+      },
+      {
+        "id": "in-district-253",
+        "name": "Chandel",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-14",
+        "officialCode": "253"
+      },
+      {
+        "id": "in-district-254",
+        "name": "Churachandpur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-14",
+        "officialCode": "254"
+      },
+      {
+        "id": "in-district-255",
+        "name": "Imphal East",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-14",
+        "officialCode": "255"
+      },
+      {
+        "id": "in-district-256",
+        "name": "Imphal West",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-14",
+        "officialCode": "256"
+      },
+      {
+        "id": "in-district-713",
+        "name": "Jiribam",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-14",
+        "officialCode": "713"
+      },
+      {
+        "id": "in-district-711",
+        "name": "Kakching",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-14",
+        "officialCode": "711"
+      },
+      {
+        "id": "in-district-717",
+        "name": "Kamjong",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-14",
+        "officialCode": "717"
+      },
+      {
+        "id": "in-district-712",
+        "name": "Kangpokpi",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-14",
+        "officialCode": "712"
+      },
+      {
+        "id": "in-district-714",
+        "name": "Noney",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-14",
+        "officialCode": "714"
+      },
+      {
+        "id": "in-district-715",
+        "name": "Pherzawl",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-14",
+        "officialCode": "715"
+      },
+      {
+        "id": "in-district-257",
+        "name": "Senapati",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-14",
+        "officialCode": "257"
+      },
+      {
+        "id": "in-district-258",
+        "name": "Tamenglong",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-14",
+        "officialCode": "258"
+      },
+      {
+        "id": "in-district-716",
+        "name": "Tengnoupal",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-14",
+        "officialCode": "716"
+      },
+      {
+        "id": "in-district-259",
+        "name": "Thoubal",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-14",
+        "officialCode": "259"
+      },
+      {
+        "id": "in-district-260",
+        "name": "Ukhrul",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-14",
+        "officialCode": "260"
+      },
+      {
+        "id": "in-district-740",
+        "name": "Eastern West Khasi Hills",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-17",
+        "officialCode": "740"
+      },
+      {
+        "id": "in-district-273",
+        "name": "East Garo Hills",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-17",
+        "officialCode": "273"
+      },
+      {
+        "id": "in-district-657",
+        "name": "East Jaintia Hills",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-17",
+        "officialCode": "657"
+      },
+      {
+        "id": "in-district-274",
+        "name": "East Khasi Hills",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-17",
+        "officialCode": "274"
+      },
+      {
+        "id": "in-district-656",
+        "name": "North Garo Hills",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-17",
+        "officialCode": "656"
+      },
+      {
+        "id": "in-district-276",
+        "name": "Ri Bhoi",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-17",
+        "officialCode": "276"
+      },
+      {
+        "id": "in-district-277",
+        "name": "South Garo Hills",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-17",
+        "officialCode": "277"
+      },
+      {
+        "id": "in-district-663",
+        "name": "South West Garo Hills",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-17",
+        "officialCode": "663"
+      },
+      {
+        "id": "in-district-658",
+        "name": "South West Khasi Hills",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-17",
+        "officialCode": "658"
+      },
+      {
+        "id": "in-district-278",
+        "name": "West Garo Hills",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-17",
+        "officialCode": "278"
+      },
+      {
+        "id": "in-district-275",
+        "name": "West Jaintia Hills",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-17",
+        "officialCode": "275"
+      },
+      {
+        "id": "in-district-279",
+        "name": "West Khasi Hills",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-17",
+        "officialCode": "279"
+      },
+      {
+        "id": "in-district-261",
+        "name": "Aizawl",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-15",
+        "officialCode": "261"
+      },
+      {
+        "id": "in-district-262",
+        "name": "Champhai",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-15",
+        "officialCode": "262"
+      },
+      {
+        "id": "in-district-726",
+        "name": "Hnahthial",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-15",
+        "officialCode": "726"
+      },
+      {
+        "id": "in-district-728",
+        "name": "Khawzawl",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-15",
+        "officialCode": "728"
+      },
+      {
+        "id": "in-district-263",
+        "name": "Kolasib",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-15",
+        "officialCode": "263"
+      },
+      {
+        "id": "in-district-264",
+        "name": "Lawngtlai",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-15",
+        "officialCode": "264"
+      },
+      {
+        "id": "in-district-265",
+        "name": "Lunglei",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-15",
+        "officialCode": "265"
+      },
+      {
+        "id": "in-district-266",
+        "name": "Mamit",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-15",
+        "officialCode": "266"
+      },
+      {
+        "id": "in-district-727",
+        "name": "Saitual",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-15",
+        "officialCode": "727"
+      },
+      {
+        "id": "in-district-268",
+        "name": "Serchhip",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-15",
+        "officialCode": "268"
+      },
+      {
+        "id": "in-district-267",
+        "name": "Siaha",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-15",
+        "officialCode": "267"
+      },
+      {
+        "id": "in-district-758",
+        "name": "Chumoukedima",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-13",
+        "officialCode": "758"
+      },
+      {
+        "id": "in-district-244",
+        "name": "Dimapur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-13",
+        "officialCode": "244"
+      },
+      {
+        "id": "in-district-614",
+        "name": "Kiphire",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-13",
+        "officialCode": "614"
+      },
+      {
+        "id": "in-district-245",
+        "name": "Kohima",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-13",
+        "officialCode": "245"
+      },
+      {
+        "id": "in-district-615",
+        "name": "Longleng",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-13",
+        "officialCode": "615"
+      },
+      {
+        "id": "in-district-788",
+        "name": "Meluri",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-13",
+        "officialCode": "788"
+      },
+      {
+        "id": "in-district-246",
+        "name": "Mokokchung",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-13",
+        "officialCode": "246"
+      },
+      {
+        "id": "in-district-247",
+        "name": "Mon",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-13",
+        "officialCode": "247"
+      },
+      {
+        "id": "in-district-764",
+        "name": "Niuland",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-13",
+        "officialCode": "764"
+      },
+      {
+        "id": "in-district-736",
+        "name": "Noklak",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-13",
+        "officialCode": "736"
+      },
+      {
+        "id": "in-district-613",
+        "name": "Peren",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-13",
+        "officialCode": "613"
+      },
+      {
+        "id": "in-district-248",
+        "name": "Phek",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-13",
+        "officialCode": "248"
+      },
+      {
+        "id": "in-district-765",
+        "name": "Shamator",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-13",
+        "officialCode": "765"
+      },
+      {
+        "id": "in-district-757",
+        "name": "Tseminyu",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-13",
+        "officialCode": "757"
+      },
+      {
+        "id": "in-district-249",
+        "name": "Tuensang",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-13",
+        "officialCode": "249"
+      },
+      {
+        "id": "in-district-250",
+        "name": "Wokha",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-13",
+        "officialCode": "250"
+      },
+      {
+        "id": "in-district-251",
+        "name": "Zunheboto",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-13",
+        "officialCode": "251"
+      },
+      {
+        "id": "in-district-344",
+        "name": "Anugola",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-21",
+        "officialCode": "344"
+      },
+      {
+        "id": "in-district-345",
+        "name": "Balangir",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-21",
+        "officialCode": "345"
+      },
+      {
+        "id": "in-district-346",
+        "name": "Baleshwar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-21",
+        "officialCode": "346"
+      },
+      {
+        "id": "in-district-347",
+        "name": "Baragada",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-21",
+        "officialCode": "347"
+      },
+      {
+        "id": "in-district-348",
+        "name": "Bhadrak",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-21",
+        "officialCode": "348"
+      },
+      {
+        "id": "in-district-349",
+        "name": "Boudh",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-21",
+        "officialCode": "349"
+      },
+      {
+        "id": "in-district-351",
+        "name": "Debagada",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-21",
+        "officialCode": "351"
+      },
+      {
+        "id": "in-district-352",
+        "name": "Dhenkanal",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-21",
+        "officialCode": "352"
+      },
+      {
+        "id": "in-district-353",
+        "name": "Gajapati",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-21",
+        "officialCode": "353"
+      },
+      {
+        "id": "in-district-354",
+        "name": "Ganjam",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-21",
+        "officialCode": "354"
+      },
+      {
+        "id": "in-district-355",
+        "name": "Jagatsinghapur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-21",
+        "officialCode": "355"
+      },
+      {
+        "id": "in-district-356",
+        "name": "Jajpur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-21",
+        "officialCode": "356"
+      },
+      {
+        "id": "in-district-357",
+        "name": "Jharsuguda",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-21",
+        "officialCode": "357"
+      },
+      {
+        "id": "in-district-358",
+        "name": "Kalahandi",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-21",
+        "officialCode": "358"
+      },
+      {
+        "id": "in-district-359",
+        "name": "Kandhamala",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-21",
+        "officialCode": "359"
+      },
+      {
+        "id": "in-district-350",
+        "name": "Kataka",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-21",
+        "officialCode": "350"
+      },
+      {
+        "id": "in-district-360",
+        "name": "Kendrapada",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-21",
+        "officialCode": "360"
+      },
+      {
+        "id": "in-district-361",
+        "name": "Kendujhar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-21",
+        "officialCode": "361"
+      },
+      {
+        "id": "in-district-362",
+        "name": "Khordha",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-21",
+        "officialCode": "362"
+      },
+      {
+        "id": "in-district-363",
+        "name": "Koraput",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-21",
+        "officialCode": "363"
+      },
+      {
+        "id": "in-district-364",
+        "name": "Malkangiri",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-21",
+        "officialCode": "364"
+      },
+      {
+        "id": "in-district-365",
+        "name": "Mayurbhanj",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-21",
+        "officialCode": "365"
+      },
+      {
+        "id": "in-district-366",
+        "name": "Nabarangpur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-21",
+        "officialCode": "366"
+      },
+      {
+        "id": "in-district-367",
+        "name": "Nayagada",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-21",
+        "officialCode": "367"
+      },
+      {
+        "id": "in-district-368",
+        "name": "Nuapada",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-21",
+        "officialCode": "368"
+      },
+      {
+        "id": "in-district-369",
+        "name": "Puri",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-21",
+        "officialCode": "369"
+      },
+      {
+        "id": "in-district-370",
+        "name": "Rayagada",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-21",
+        "officialCode": "370"
+      },
+      {
+        "id": "in-district-371",
+        "name": "Sambalpur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-21",
+        "officialCode": "371"
+      },
+      {
+        "id": "in-district-372",
+        "name": "Subarnapur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-21",
+        "officialCode": "372"
+      },
+      {
+        "id": "in-district-373",
+        "name": "Sundaragada",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-21",
+        "officialCode": "373"
+      },
+      {
+        "id": "in-district-598",
+        "name": "Karaikal",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-34",
+        "officialCode": "598"
+      },
+      {
+        "id": "in-district-600",
+        "name": "Puducherry",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-34",
+        "officialCode": "600"
+      },
+      {
+        "id": "in-district-27",
+        "name": "Amritsar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-3",
+        "officialCode": "27"
+      },
+      {
+        "id": "in-district-605",
+        "name": "Barnala",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-3",
+        "officialCode": "605"
+      },
+      {
+        "id": "in-district-28",
+        "name": "Bathinda",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-3",
+        "officialCode": "28"
+      },
+      {
+        "id": "in-district-29",
+        "name": "Faridkot",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-3",
+        "officialCode": "29"
+      },
+      {
+        "id": "in-district-30",
+        "name": "Fatehgarh Sahib",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-3",
+        "officialCode": "30"
+      },
+      {
+        "id": "in-district-651",
+        "name": "Fazilka",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-3",
+        "officialCode": "651"
+      },
+      {
+        "id": "in-district-31",
+        "name": "Ferozepur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-3",
+        "officialCode": "31"
+      },
+      {
+        "id": "in-district-32",
+        "name": "Gurdaspur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-3",
+        "officialCode": "32"
+      },
+      {
+        "id": "in-district-33",
+        "name": "Hoshiarpur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-3",
+        "officialCode": "33"
+      },
+      {
+        "id": "in-district-34",
+        "name": "Jalandhar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-3",
+        "officialCode": "34"
+      },
+      {
+        "id": "in-district-35",
+        "name": "Kapurthala",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-3",
+        "officialCode": "35"
+      },
+      {
+        "id": "in-district-36",
+        "name": "Ludhiana",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-3",
+        "officialCode": "36"
+      },
+      {
+        "id": "in-district-737",
+        "name": "Malerkotla",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-3",
+        "officialCode": "737"
+      },
+      {
+        "id": "in-district-37",
+        "name": "Mansa",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-3",
+        "officialCode": "37"
+      },
+      {
+        "id": "in-district-38",
+        "name": "Moga",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-3",
+        "officialCode": "38"
+      },
+      {
+        "id": "in-district-662",
+        "name": "Pathankot",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-3",
+        "officialCode": "662"
+      },
+      {
+        "id": "in-district-41",
+        "name": "Patiala",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-3",
+        "officialCode": "41"
+      },
+      {
+        "id": "in-district-42",
+        "name": "Rupnagar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-3",
+        "officialCode": "42"
+      },
+      {
+        "id": "in-district-43",
+        "name": "Sangrur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-3",
+        "officialCode": "43"
+      },
+      {
+        "id": "in-district-608",
+        "name": "S.A.S Nagar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-3",
+        "officialCode": "608"
+      },
+      {
+        "id": "in-district-40",
+        "name": "Shahid Bhagat Singh Nagar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-3",
+        "officialCode": "40"
+      },
+      {
+        "id": "in-district-39",
+        "name": "Sri Muktsar Sahib",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-3",
+        "officialCode": "39"
+      },
+      {
+        "id": "in-district-609",
+        "name": "Tarn Taran",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-3",
+        "officialCode": "609"
+      },
+      {
+        "id": "in-district-86",
+        "name": "Ajmer",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-8",
+        "officialCode": "86"
+      },
+      {
+        "id": "in-district-87",
+        "name": "Alwar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-8",
+        "officialCode": "87"
+      },
+      {
+        "id": "in-district-775",
+        "name": "Balotra",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-8",
+        "officialCode": "775"
+      },
+      {
+        "id": "in-district-88",
+        "name": "Banswara",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-8",
+        "officialCode": "88"
+      },
+      {
+        "id": "in-district-89",
+        "name": "Baran",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-8",
+        "officialCode": "89"
+      },
+      {
+        "id": "in-district-90",
+        "name": "Barmer",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-8",
+        "officialCode": "90"
+      },
+      {
+        "id": "in-district-774",
+        "name": "Beawar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-8",
+        "officialCode": "774"
+      },
+      {
+        "id": "in-district-91",
+        "name": "Bharatpur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-8",
+        "officialCode": "91"
+      },
+      {
+        "id": "in-district-92",
+        "name": "Bhilwara",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-8",
+        "officialCode": "92"
+      },
+      {
+        "id": "in-district-93",
+        "name": "Bikaner",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-8",
+        "officialCode": "93"
+      },
+      {
+        "id": "in-district-94",
+        "name": "Bundi",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-8",
+        "officialCode": "94"
+      },
+      {
+        "id": "in-district-95",
+        "name": "Chittorgarh",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-8",
+        "officialCode": "95"
+      },
+      {
+        "id": "in-district-96",
+        "name": "Churu",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-8",
+        "officialCode": "96"
+      },
+      {
+        "id": "in-district-97",
+        "name": "Dausa",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-8",
+        "officialCode": "97"
+      },
+      {
+        "id": "in-district-767",
+        "name": "Deeg",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-8",
+        "officialCode": "767"
+      },
+      {
+        "id": "in-district-98",
+        "name": "Dholpur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-8",
+        "officialCode": "98"
+      },
+      {
+        "id": "in-district-768",
+        "name": "Didwana-Kuchaman",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-8",
+        "officialCode": "768"
+      },
+      {
+        "id": "in-district-99",
+        "name": "Dungarpur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-8",
+        "officialCode": "99"
+      },
+      {
+        "id": "in-district-100",
+        "name": "Ganganagar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-8",
+        "officialCode": "100"
+      },
+      {
+        "id": "in-district-101",
+        "name": "Hanumangarh",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-8",
+        "officialCode": "101"
+      },
+      {
+        "id": "in-district-102",
+        "name": "Jaipur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-8",
+        "officialCode": "102"
+      },
+      {
+        "id": "in-district-103",
+        "name": "Jaisalmer",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-8",
+        "officialCode": "103"
+      },
+      {
+        "id": "in-district-104",
+        "name": "Jalore",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-8",
+        "officialCode": "104"
+      },
+      {
+        "id": "in-district-105",
+        "name": "Jhalawar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-8",
+        "officialCode": "105"
+      },
+      {
+        "id": "in-district-106",
+        "name": "Jhunjhunu",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-8",
+        "officialCode": "106"
+      },
+      {
+        "id": "in-district-107",
+        "name": "Jodhpur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-8",
+        "officialCode": "107"
+      },
+      {
+        "id": "in-district-108",
+        "name": "Karauli",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-8",
+        "officialCode": "108"
+      },
+      {
+        "id": "in-district-770",
+        "name": "Khairthal-Tijara",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-8",
+        "officialCode": "770"
+      },
+      {
+        "id": "in-district-109",
+        "name": "Kota",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-8",
+        "officialCode": "109"
+      },
+      {
+        "id": "in-district-782",
+        "name": "Kotputli-Behror",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-8",
+        "officialCode": "782"
+      },
+      {
+        "id": "in-district-110",
+        "name": "Nagaur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-8",
+        "officialCode": "110"
+      },
+      {
+        "id": "in-district-111",
+        "name": "Pali",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-8",
+        "officialCode": "111"
+      },
+      {
+        "id": "in-district-772",
+        "name": "Phalodi",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-8",
+        "officialCode": "772"
+      },
+      {
+        "id": "in-district-629",
+        "name": "Pratapgarh",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-8",
+        "officialCode": "629"
+      },
+      {
+        "id": "in-district-112",
+        "name": "Rajsamand",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-8",
+        "officialCode": "112"
+      },
+      {
+        "id": "in-district-777",
+        "name": "Salumbar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-8",
+        "officialCode": "777"
+      },
+      {
+        "id": "in-district-113",
+        "name": "Sawai Madhopur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-8",
+        "officialCode": "113"
+      },
+      {
+        "id": "in-district-114",
+        "name": "Sikar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-8",
+        "officialCode": "114"
+      },
+      {
+        "id": "in-district-115",
+        "name": "Sirohi",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-8",
+        "officialCode": "115"
+      },
+      {
+        "id": "in-district-116",
+        "name": "Tonk",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-8",
+        "officialCode": "116"
+      },
+      {
+        "id": "in-district-117",
+        "name": "Udaipur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-8",
+        "officialCode": "117"
+      },
+      {
+        "id": "in-district-225",
+        "name": "Gangtok",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-11",
+        "officialCode": "225"
+      },
+      {
+        "id": "in-district-228",
+        "name": "Gyalshing",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-11",
+        "officialCode": "228"
+      },
+      {
+        "id": "in-district-226",
+        "name": "Mangan",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-11",
+        "officialCode": "226"
+      },
+      {
+        "id": "in-district-227",
+        "name": "Namchi",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-11",
+        "officialCode": "227"
+      },
+      {
+        "id": "in-district-741",
+        "name": "Pakyong",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-11",
+        "officialCode": "741"
+      },
+      {
+        "id": "in-district-742",
+        "name": "Soreng",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-11",
+        "officialCode": "742"
+      },
+      {
+        "id": "in-district-610",
+        "name": "Ariyalur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-33",
+        "officialCode": "610"
+      },
+      {
+        "id": "in-district-730",
+        "name": "Chengalpattu",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-33",
+        "officialCode": "730"
+      },
+      {
+        "id": "in-district-568",
+        "name": "Chennai",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-33",
+        "officialCode": "568"
+      },
+      {
+        "id": "in-district-569",
+        "name": "Coimbatore",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-33",
+        "officialCode": "569"
+      },
+      {
+        "id": "in-district-570",
+        "name": "Cuddalore",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-33",
+        "officialCode": "570"
+      },
+      {
+        "id": "in-district-571",
+        "name": "Dharmapuri",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-33",
+        "officialCode": "571"
+      },
+      {
+        "id": "in-district-572",
+        "name": "Dindigul",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-33",
+        "officialCode": "572"
+      },
+      {
+        "id": "in-district-573",
+        "name": "Erode",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-33",
+        "officialCode": "573"
+      },
+      {
+        "id": "in-district-729",
+        "name": "Kallakurichi",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-33",
+        "officialCode": "729"
+      },
+      {
+        "id": "in-district-574",
+        "name": "Kancheepuram",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-33",
+        "officialCode": "574"
+      },
+      {
+        "id": "in-district-575",
+        "name": "Kanniyakumari",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-33",
+        "officialCode": "575"
+      },
+      {
+        "id": "in-district-576",
+        "name": "Karur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-33",
+        "officialCode": "576"
+      },
+      {
+        "id": "in-district-577",
+        "name": "Krishnagiri",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-33",
+        "officialCode": "577"
+      },
+      {
+        "id": "in-district-578",
+        "name": "Madurai",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-33",
+        "officialCode": "578"
+      },
+      {
+        "id": "in-district-735",
+        "name": "Mayiladuthurai",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-33",
+        "officialCode": "735"
+      },
+      {
+        "id": "in-district-579",
+        "name": "Nagapattinam",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-33",
+        "officialCode": "579"
+      },
+      {
+        "id": "in-district-580",
+        "name": "Namakkal",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-33",
+        "officialCode": "580"
+      },
+      {
+        "id": "in-district-581",
+        "name": "Perambalur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-33",
+        "officialCode": "581"
+      },
+      {
+        "id": "in-district-582",
+        "name": "Pudukkottai",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-33",
+        "officialCode": "582"
+      },
+      {
+        "id": "in-district-583",
+        "name": "Ramanathapuram",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-33",
+        "officialCode": "583"
+      },
+      {
+        "id": "in-district-731",
+        "name": "Ranipet",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-33",
+        "officialCode": "731"
+      },
+      {
+        "id": "in-district-584",
+        "name": "Salem",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-33",
+        "officialCode": "584"
+      },
+      {
+        "id": "in-district-585",
+        "name": "Sivaganga",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-33",
+        "officialCode": "585"
+      },
+      {
+        "id": "in-district-733",
+        "name": "Tenkasi",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-33",
+        "officialCode": "733"
+      },
+      {
+        "id": "in-district-586",
+        "name": "Thanjavur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-33",
+        "officialCode": "586"
+      },
+      {
+        "id": "in-district-588",
+        "name": "Theni",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-33",
+        "officialCode": "588"
+      },
+      {
+        "id": "in-district-587",
+        "name": "The Nilgiris",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-33",
+        "officialCode": "587"
+      },
+      {
+        "id": "in-district-589",
+        "name": "Thiruvallur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-33",
+        "officialCode": "589"
+      },
+      {
+        "id": "in-district-590",
+        "name": "Thiruvarur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-33",
+        "officialCode": "590"
+      },
+      {
+        "id": "in-district-594",
+        "name": "Thoothukkudi",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-33",
+        "officialCode": "594"
+      },
+      {
+        "id": "in-district-591",
+        "name": "Tiruchirappalli",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-33",
+        "officialCode": "591"
+      },
+      {
+        "id": "in-district-592",
+        "name": "Tirunelveli",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-33",
+        "officialCode": "592"
+      },
+      {
+        "id": "in-district-732",
+        "name": "Tirupathur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-33",
+        "officialCode": "732"
+      },
+      {
+        "id": "in-district-634",
+        "name": "Tiruppur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-33",
+        "officialCode": "634"
+      },
+      {
+        "id": "in-district-593",
+        "name": "Tiruvannamalai",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-33",
+        "officialCode": "593"
+      },
+      {
+        "id": "in-district-595",
+        "name": "Vellore",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-33",
+        "officialCode": "595"
+      },
+      {
+        "id": "in-district-596",
+        "name": "Viluppuram",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-33",
+        "officialCode": "596"
+      },
+      {
+        "id": "in-district-597",
+        "name": "Virudhunagar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-33",
+        "officialCode": "597"
+      },
+      {
+        "id": "in-district-501",
+        "name": "Adilabad",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-36",
+        "officialCode": "501"
+      },
+      {
+        "id": "in-district-690",
+        "name": "Bhadradri Kothagudem",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-36",
+        "officialCode": "690"
+      },
+      {
+        "id": "in-district-686",
+        "name": "Hanumakonda",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-36",
+        "officialCode": "686"
+      },
+      {
+        "id": "in-district-507",
+        "name": "Hyderabad",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-36",
+        "officialCode": "507"
+      },
+      {
+        "id": "in-district-681",
+        "name": "Jagitial",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-36",
+        "officialCode": "681"
+      },
+      {
+        "id": "in-district-689",
+        "name": "Jangoan",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-36",
+        "officialCode": "689"
+      },
+      {
+        "id": "in-district-687",
+        "name": "Jayashankar Bhupalapally",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-36",
+        "officialCode": "687"
+      },
+      {
+        "id": "in-district-695",
+        "name": "Jogulamba Gadwal",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-36",
+        "officialCode": "695"
+      },
+      {
+        "id": "in-district-685",
+        "name": "Kamareddy",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-36",
+        "officialCode": "685"
+      },
+      {
+        "id": "in-district-508",
+        "name": "Karimnagar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-36",
+        "officialCode": "508"
+      },
+      {
+        "id": "in-district-509",
+        "name": "Khammam",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-36",
+        "officialCode": "509"
+      },
+      {
+        "id": "in-district-699",
+        "name": "Kumuram Bheem Asifabad",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-36",
+        "officialCode": "699"
+      },
+      {
+        "id": "in-district-688",
+        "name": "Mahabubabad",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-36",
+        "officialCode": "688"
+      },
+      {
+        "id": "in-district-512",
+        "name": "Mahabubnagar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-36",
+        "officialCode": "512"
+      },
+      {
+        "id": "in-district-684",
+        "name": "Mancherial",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-36",
+        "officialCode": "684"
+      },
+      {
+        "id": "in-district-513",
+        "name": "Medak",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-36",
+        "officialCode": "513"
+      },
+      {
+        "id": "in-district-700",
+        "name": "Medchal Malkajgiri",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-36",
+        "officialCode": "700"
+      },
+      {
+        "id": "in-district-720",
+        "name": "Mulugu",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-36",
+        "officialCode": "720"
+      },
+      {
+        "id": "in-district-694",
+        "name": "Nagarkurnool",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-36",
+        "officialCode": "694"
+      },
+      {
+        "id": "in-district-514",
+        "name": "Nalgonda",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-36",
+        "officialCode": "514"
+      },
+      {
+        "id": "in-district-721",
+        "name": "Narayanpet",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-36",
+        "officialCode": "721"
+      },
+      {
+        "id": "in-district-680",
+        "name": "Nirmal",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-36",
+        "officialCode": "680"
+      },
+      {
+        "id": "in-district-516",
+        "name": "Nizamabad",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-36",
+        "officialCode": "516"
+      },
+      {
+        "id": "in-district-682",
+        "name": "Peddapalli",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-36",
+        "officialCode": "682"
+      },
+      {
+        "id": "in-district-683",
+        "name": "Rajanna Sircilla",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-36",
+        "officialCode": "683"
+      },
+      {
+        "id": "in-district-518",
+        "name": "Ranga Reddy",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-36",
+        "officialCode": "518"
+      },
+      {
+        "id": "in-district-691",
+        "name": "Sangareddy",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-36",
+        "officialCode": "691"
+      },
+      {
+        "id": "in-district-692",
+        "name": "Siddipet",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-36",
+        "officialCode": "692"
+      },
+      {
+        "id": "in-district-696",
+        "name": "Suryapet",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-36",
+        "officialCode": "696"
+      },
+      {
+        "id": "in-district-698",
+        "name": "Vikarabad",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-36",
+        "officialCode": "698"
+      },
+      {
+        "id": "in-district-693",
+        "name": "Wanaparthy",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-36",
+        "officialCode": "693"
+      },
+      {
+        "id": "in-district-522",
+        "name": "Warangal",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-36",
+        "officialCode": "522"
+      },
+      {
+        "id": "in-district-697",
+        "name": "Yadadri Bhuvanagiri",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-36",
+        "officialCode": "697"
+      },
+      {
+        "id": "in-district-465",
+        "name": "Dadra And Nagar Haveli",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-38",
+        "officialCode": "465"
+      },
+      {
+        "id": "in-district-463",
+        "name": "Daman",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-38",
+        "officialCode": "463"
+      },
+      {
+        "id": "in-district-464",
+        "name": "Diu",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-38",
+        "officialCode": "464"
+      },
+      {
+        "id": "in-district-269",
+        "name": "Dhalai",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-16",
+        "officialCode": "269"
+      },
+      {
+        "id": "in-district-654",
+        "name": "Gomati",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-16",
+        "officialCode": "654"
+      },
+      {
+        "id": "in-district-652",
+        "name": "Khowai",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-16",
+        "officialCode": "652"
+      },
+      {
+        "id": "in-district-270",
+        "name": "North Tripura",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-16",
+        "officialCode": "270"
+      },
+      {
+        "id": "in-district-653",
+        "name": "Sepahijala",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-16",
+        "officialCode": "653"
+      },
+      {
+        "id": "in-district-271",
+        "name": "South Tripura",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-16",
+        "officialCode": "271"
+      },
+      {
+        "id": "in-district-655",
+        "name": "Unakoti",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-16",
+        "officialCode": "655"
+      },
+      {
+        "id": "in-district-272",
+        "name": "West Tripura",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-16",
+        "officialCode": "272"
+      },
+      {
+        "id": "in-district-45",
+        "name": "Almora",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-5",
+        "officialCode": "45"
+      },
+      {
+        "id": "in-district-46",
+        "name": "Bageshwar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-5",
+        "officialCode": "46"
+      },
+      {
+        "id": "in-district-47",
+        "name": "Chamoli",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-5",
+        "officialCode": "47"
+      },
+      {
+        "id": "in-district-48",
+        "name": "Champawat",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-5",
+        "officialCode": "48"
+      },
+      {
+        "id": "in-district-49",
+        "name": "Dehradun",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-5",
+        "officialCode": "49"
+      },
+      {
+        "id": "in-district-50",
+        "name": "Haridwar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-5",
+        "officialCode": "50"
+      },
+      {
+        "id": "in-district-51",
+        "name": "Nainital",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-5",
+        "officialCode": "51"
+      },
+      {
+        "id": "in-district-52",
+        "name": "Pauri Garhwal",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-5",
+        "officialCode": "52"
+      },
+      {
+        "id": "in-district-53",
+        "name": "Pithoragarh",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-5",
+        "officialCode": "53"
+      },
+      {
+        "id": "in-district-54",
+        "name": "Rudraprayag",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-5",
+        "officialCode": "54"
+      },
+      {
+        "id": "in-district-55",
+        "name": "Tehri Garhwal",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-5",
+        "officialCode": "55"
+      },
+      {
+        "id": "in-district-56",
+        "name": "Udham Singh Nagar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-5",
+        "officialCode": "56"
+      },
+      {
+        "id": "in-district-57",
+        "name": "Uttarkashi",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-5",
+        "officialCode": "57"
+      },
+      {
+        "id": "in-district-118",
+        "name": "Agra",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "118"
+      },
+      {
+        "id": "in-district-119",
+        "name": "Aligarh",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "119"
+      },
+      {
+        "id": "in-district-121",
+        "name": "Ambedkar Nagar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "121"
+      },
+      {
+        "id": "in-district-640",
+        "name": "Amethi",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "640"
+      },
+      {
+        "id": "in-district-154",
+        "name": "Amroha",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "154"
+      },
+      {
+        "id": "in-district-122",
+        "name": "Auraiya",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "122"
+      },
+      {
+        "id": "in-district-140",
+        "name": "Ayodhya",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "140"
+      },
+      {
+        "id": "in-district-123",
+        "name": "Azamgarh",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "123"
+      },
+      {
+        "id": "in-district-124",
+        "name": "Baghpat",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "124"
+      },
+      {
+        "id": "in-district-125",
+        "name": "Bahraich",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "125"
+      },
+      {
+        "id": "in-district-126",
+        "name": "Ballia",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "126"
+      },
+      {
+        "id": "in-district-127",
+        "name": "Balrampur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "127"
+      },
+      {
+        "id": "in-district-128",
+        "name": "Banda",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "128"
+      },
+      {
+        "id": "in-district-129",
+        "name": "Bara Banki",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "129"
+      },
+      {
+        "id": "in-district-130",
+        "name": "Bareilly",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "130"
+      },
+      {
+        "id": "in-district-131",
+        "name": "Basti",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "131"
+      },
+      {
+        "id": "in-district-179",
+        "name": "Bhadohi",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "179"
+      },
+      {
+        "id": "in-district-132",
+        "name": "Bijnor",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "132"
+      },
+      {
+        "id": "in-district-133",
+        "name": "Budaun",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "133"
+      },
+      {
+        "id": "in-district-134",
+        "name": "Bulandshahr",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "134"
+      },
+      {
+        "id": "in-district-135",
+        "name": "Chandauli",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "135"
+      },
+      {
+        "id": "in-district-136",
+        "name": "Chitrakoot",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "136"
+      },
+      {
+        "id": "in-district-137",
+        "name": "Deoria",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "137"
+      },
+      {
+        "id": "in-district-138",
+        "name": "Etah",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "138"
+      },
+      {
+        "id": "in-district-139",
+        "name": "Etawah",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "139"
+      },
+      {
+        "id": "in-district-141",
+        "name": "Farrukhabad",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "141"
+      },
+      {
+        "id": "in-district-142",
+        "name": "Fatehpur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "142"
+      },
+      {
+        "id": "in-district-143",
+        "name": "Firozabad",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "143"
+      },
+      {
+        "id": "in-district-144",
+        "name": "Gautam Buddha Nagar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "144"
+      },
+      {
+        "id": "in-district-145",
+        "name": "Ghaziabad",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "145"
+      },
+      {
+        "id": "in-district-146",
+        "name": "Ghazipur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "146"
+      },
+      {
+        "id": "in-district-147",
+        "name": "Gonda",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "147"
+      },
+      {
+        "id": "in-district-148",
+        "name": "Gorakhpur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "148"
+      },
+      {
+        "id": "in-district-149",
+        "name": "Hamirpur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "149"
+      },
+      {
+        "id": "in-district-661",
+        "name": "Hapur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "661"
+      },
+      {
+        "id": "in-district-150",
+        "name": "Hardoi",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "150"
+      },
+      {
+        "id": "in-district-163",
+        "name": "Hathras",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "163"
+      },
+      {
+        "id": "in-district-151",
+        "name": "Jalaun",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "151"
+      },
+      {
+        "id": "in-district-152",
+        "name": "Jaunpur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "152"
+      },
+      {
+        "id": "in-district-153",
+        "name": "Jhansi",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "153"
+      },
+      {
+        "id": "in-district-155",
+        "name": "Kannauj",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "155"
+      },
+      {
+        "id": "in-district-156",
+        "name": "Kanpur Dehat",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "156"
+      },
+      {
+        "id": "in-district-157",
+        "name": "Kanpur Nagar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "157"
+      },
+      {
+        "id": "in-district-633",
+        "name": "Kasganj",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "633"
+      },
+      {
+        "id": "in-district-158",
+        "name": "Kaushambi",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "158"
+      },
+      {
+        "id": "in-district-159",
+        "name": "Kheri",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "159"
+      },
+      {
+        "id": "in-district-160",
+        "name": "Kushinagar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "160"
+      },
+      {
+        "id": "in-district-161",
+        "name": "Lalitpur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "161"
+      },
+      {
+        "id": "in-district-162",
+        "name": "Lucknow",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "162"
+      },
+      {
+        "id": "in-district-165",
+        "name": "Mahoba",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "165"
+      },
+      {
+        "id": "in-district-164",
+        "name": "Mahrajganj",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "164"
+      },
+      {
+        "id": "in-district-166",
+        "name": "Mainpuri",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "166"
+      },
+      {
+        "id": "in-district-167",
+        "name": "Mathura",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "167"
+      },
+      {
+        "id": "in-district-168",
+        "name": "Mau",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "168"
+      },
+      {
+        "id": "in-district-169",
+        "name": "Meerut",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "169"
+      },
+      {
+        "id": "in-district-170",
+        "name": "Mirzapur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "170"
+      },
+      {
+        "id": "in-district-171",
+        "name": "Moradabad",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "171"
+      },
+      {
+        "id": "in-district-172",
+        "name": "Muzaffarnagar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "172"
+      },
+      {
+        "id": "in-district-173",
+        "name": "Pilibhit",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "173"
+      },
+      {
+        "id": "in-district-174",
+        "name": "Pratapgarh",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "174"
+      },
+      {
+        "id": "in-district-120",
+        "name": "Prayagraj",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "120"
+      },
+      {
+        "id": "in-district-175",
+        "name": "Rae Bareli",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "175"
+      },
+      {
+        "id": "in-district-176",
+        "name": "Rampur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "176"
+      },
+      {
+        "id": "in-district-177",
+        "name": "Saharanpur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "177"
+      },
+      {
+        "id": "in-district-659",
+        "name": "Sambhal",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "659"
+      },
+      {
+        "id": "in-district-178",
+        "name": "Sant Kabir Nagar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "178"
+      },
+      {
+        "id": "in-district-180",
+        "name": "Shahjahanpur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "180"
+      },
+      {
+        "id": "in-district-660",
+        "name": "Shamli",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "660"
+      },
+      {
+        "id": "in-district-181",
+        "name": "Shrawasti",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "181"
+      },
+      {
+        "id": "in-district-182",
+        "name": "Siddharthnagar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "182"
+      },
+      {
+        "id": "in-district-183",
+        "name": "Sitapur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "183"
+      },
+      {
+        "id": "in-district-184",
+        "name": "Sonbhadra",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "184"
+      },
+      {
+        "id": "in-district-185",
+        "name": "Sultanpur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "185"
+      },
+      {
+        "id": "in-district-186",
+        "name": "Unnao",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "186"
+      },
+      {
+        "id": "in-district-187",
+        "name": "Varanasi",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-9",
+        "officialCode": "187"
+      },
+      {
+        "id": "in-district-664",
+        "name": "Alipurduar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-19",
+        "officialCode": "664"
+      },
+      {
+        "id": "in-district-305",
+        "name": "Bankura",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-19",
+        "officialCode": "305"
+      },
+      {
+        "id": "in-district-307",
+        "name": "Birbhum",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-19",
+        "officialCode": "307"
+      },
+      {
+        "id": "in-district-308",
+        "name": "Cooch Behar",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-19",
+        "officialCode": "308"
+      },
+      {
+        "id": "in-district-310",
+        "name": "Dakshin Dinajpur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-19",
+        "officialCode": "310"
+      },
+      {
+        "id": "in-district-309",
+        "name": "Darjeeling",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-19",
+        "officialCode": "309"
+      },
+      {
+        "id": "in-district-312",
+        "name": "Hooghly",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-19",
+        "officialCode": "312"
+      },
+      {
+        "id": "in-district-313",
+        "name": "Howrah",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-19",
+        "officialCode": "313"
+      },
+      {
+        "id": "in-district-314",
+        "name": "Jalpaiguri",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-19",
+        "officialCode": "314"
+      },
+      {
+        "id": "in-district-703",
+        "name": "Jhargram",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-19",
+        "officialCode": "703"
+      },
+      {
+        "id": "in-district-702",
+        "name": "Kalimpong",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-19",
+        "officialCode": "702"
+      },
+      {
+        "id": "in-district-315",
+        "name": "Kolkata",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-19",
+        "officialCode": "315"
+      },
+      {
+        "id": "in-district-316",
+        "name": "Malda",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-19",
+        "officialCode": "316"
+      },
+      {
+        "id": "in-district-319",
+        "name": "Murshidabad",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-19",
+        "officialCode": "319"
+      },
+      {
+        "id": "in-district-320",
+        "name": "Nadia",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-19",
+        "officialCode": "320"
+      },
+      {
+        "id": "in-district-303",
+        "name": "North 24 Parganas",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-19",
+        "officialCode": "303"
+      },
+      {
+        "id": "in-district-704",
+        "name": "Paschim Bardhaman",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-19",
+        "officialCode": "704"
+      },
+      {
+        "id": "in-district-318",
+        "name": "Paschim Medinipur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-19",
+        "officialCode": "318"
+      },
+      {
+        "id": "in-district-306",
+        "name": "Purba Bardhaman",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-19",
+        "officialCode": "306"
+      },
+      {
+        "id": "in-district-317",
+        "name": "Purba Medinipur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-19",
+        "officialCode": "317"
+      },
+      {
+        "id": "in-district-321",
+        "name": "Purulia",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-19",
+        "officialCode": "321"
+      },
+      {
+        "id": "in-district-304",
+        "name": "South 24 Parganas",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-19",
+        "officialCode": "304"
+      },
+      {
+        "id": "in-district-311",
+        "name": "Uttar Dinajpur",
+        "countryCode": "IN",
+        "level": "district",
+        "parentId": "in-state-19",
+        "officialCode": "311"
+      }
+    ]
+  }
+]

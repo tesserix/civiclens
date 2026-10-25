@@ -25,6 +25,45 @@ pub struct PublishingCapabilities {
 
 #[derive(Serialize, Deserialize, TS)]
 pub struct Capabilities {
+    #[serde(
+        rename = "manualShareChannels",
+        default,
+        skip_serializing_if = "Option::is_none"
+    )]
+    #[ts(optional)]
+    pub manual_share_channels: Option<Vec<Channel>>,
+    #[serde(
+        rename = "profileEditing",
+        default,
+        skip_serializing_if = "Option::is_none"
+    )]
+    #[ts(optional)]
+    pub profile_editing: Option<bool>,
+    #[serde(
+        rename = "communityDiscovery",
+        default,
+        skip_serializing_if = "Option::is_none"
+    )]
+    #[ts(optional)]
+    pub community_discovery: Option<bool>,
+    #[serde(
+        rename = "officialComplaintGateway",
+        default,
+        skip_serializing_if = "Option::is_none"
+    )]
+    #[ts(optional)]
+    pub official_complaint_gateway: Option<bool>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[ts(optional)]
+    #[serde(rename = "complaintPreparation")]
+    pub complaint_preparation: Option<bool>,
+    #[serde(
+        rename = "civicParticipation",
+        default,
+        skip_serializing_if = "Option::is_none"
+    )]
+    #[ts(optional)]
+    pub civic_participation: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     #[ts(optional)]
     #[serde(rename = "manualSharing")]
@@ -69,14 +108,22 @@ pub enum Channel {
     Facebook,
     Instagram,
     Whatsapp,
+    Tiktok,
 }
 
 impl Channel {
+    pub const ALL: [Self; 4] = [
+        Self::Facebook,
+        Self::Instagram,
+        Self::Whatsapp,
+        Self::Tiktok,
+    ];
     pub fn as_str(self) -> &'static str {
         match self {
             Self::Facebook => "facebook",
             Self::Instagram => "instagram",
             Self::Whatsapp => "whatsapp",
+            Self::Tiktok => "tiktok",
         }
     }
 }
@@ -125,6 +172,9 @@ pub struct SharePackage {
 #[derive(Deserialize, Serialize, TS)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct ReportInput {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[ts(optional)]
+    pub complaint_requested: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     #[ts(optional)]
     pub sharing_mode: Option<SharingMode>,
@@ -301,6 +351,9 @@ pub struct Routing {
 pub struct Report {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     #[ts(optional)]
+    pub complaint_requested: Option<bool>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[ts(optional)]
     pub sharing_mode: Option<SharingMode>,
     pub id: String,
     pub nickname: String,
@@ -328,6 +381,12 @@ pub struct Report {
 #[derive(Debug, Clone, Serialize, Deserialize, TS)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct Approval {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[ts(optional)]
+    pub complaint_description: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[ts(optional)]
+    pub complaint_factual_reviewed: Option<bool>,
     pub public_description: String,
     pub public_locality: String,
     pub photo_privacy_reviewed: bool,
@@ -353,6 +412,9 @@ mod tests {
     #[test]
     fn export_mobile_contract() {
         let definitions = [
+            crate::profile::AccountProfile::decl(),
+            crate::profile::ProfileInput::decl(),
+            crate::profile::ImportedProfilePhoto::decl(),
             BrokerConfiguration::decl(),
             PublishingCapabilities::decl(),
             Capabilities::decl(),
@@ -363,6 +425,24 @@ mod tests {
             SharingMode::decl(),
             ShareRequest::decl(),
             SharePackage::decl(),
+            crate::complaints::ComplaintChannel::decl(),
+            crate::complaints::ComplaintOptions::decl(),
+            crate::complaints::ComplaintRecord::decl(),
+            crate::complaints::ComplaintInput::decl(),
+            crate::complaints::ComplaintPackage::decl(),
+            crate::official_complaints::OfficialIssue::decl(),
+            crate::official_complaints::OfficialBlocker::decl(),
+            crate::official_complaints::OfficialReferenceSource::decl(),
+            crate::official_complaints::OfficialJurisdiction::decl(),
+            crate::official_complaints::OfficialPhotoContract::decl(),
+            crate::official_complaints::OfficialProvider::decl(),
+            crate::official_complaints::OfficialRouteInput::decl(),
+            crate::official_complaints::OfficialResolution::decl(),
+            crate::official_complaints::OfficialProviderPage::decl(),
+            crate::official_complaints::OfficialJurisdictionPage::decl(),
+            crate::official_complaints::OfficialRequestInput::decl(),
+            crate::official_complaints::OfficialRequest::decl(),
+            crate::official_complaints::OfficialRequestPage::decl(),
             LocationSource::decl(),
             AssistMode::decl(),
             AssistTone::decl(),
@@ -384,6 +464,31 @@ mod tests {
             Report::decl(),
             Approval::decl(),
             DeletionRequest::decl(),
+            crate::community::CivicKind::decl(),
+            crate::community::CivicTopic::decl(),
+            crate::community::CivicTopicOption::decl(),
+            crate::community::CivicSort::decl(),
+            crate::community::CivicFeedState::decl(),
+            crate::community::CivicWatchInput::decl(),
+            crate::community::CivicWatchState::decl(),
+            crate::community_links::CivicShareLink::decl(),
+            crate::administrative::AdministrativeUnit::decl(),
+            crate::administrative::AdministrativePage::decl(),
+            crate::community::CivicAccess::decl(),
+            crate::community::CivicCardInput::decl(),
+            crate::community::CivicCard::decl(),
+            crate::community::CivicCardPage::decl(),
+            crate::community::CivicChoice::decl(),
+            crate::community::CivicResponseInput::decl(),
+            crate::community::CivicResult::decl(),
+            crate::community::CivicResults::decl(),
+            crate::community::CivicReviewDecision::decl(),
+            crate::community::CivicReviewInput::decl(),
+            crate::community::CivicOpinionInput::decl(),
+            crate::community::CivicOpinion::decl(),
+            crate::community::CivicOpinionPage::decl(),
+            crate::community::CivicFlagReason::decl(),
+            crate::community::CivicFlagInput::decl(),
         ];
         let output = format!(
             "// Generated from Rust. Run cargo test export_mobile_contract.\nexport const communityRulesVersion = \"{COMMUNITY_RULES_VERSION}\";\n{}\n",
@@ -391,7 +496,10 @@ mod tests {
         );
         std::fs::write(
             concat!(env!("CARGO_MANIFEST_DIR"), "/../shared/generated.ts"),
-            output,
+            format!(
+                "{output}\nexport const civicTopics = {} as const;\n",
+                serde_json::to_string(&crate::community::topic_options()).unwrap()
+            ),
         )
         .unwrap();
     }

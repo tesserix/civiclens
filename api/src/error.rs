@@ -45,7 +45,7 @@ impl IntoResponse for Error {
                 "FORBIDDEN",
                 "This action requires a different role.",
             ),
-            Self::NotFound => (StatusCode::NOT_FOUND, "NOT_FOUND", "Report not found."),
+            Self::NotFound => (StatusCode::NOT_FOUND, "NOT_FOUND", "Item not found."),
             Self::Conflict(message) => (StatusCode::CONFLICT, "CONFLICT", message),
             Self::RateLimited(message) => (StatusCode::TOO_MANY_REQUESTS, "RATE_LIMITED", message),
             Self::Unavailable => (

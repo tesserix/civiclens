@@ -159,7 +159,7 @@ impl Store {
     }
 }
 
-async fn bounded(mut response: reqwest::Response, max: usize) -> Result<Vec<u8>, Error> {
+pub(crate) async fn bounded(mut response: reqwest::Response, max: usize) -> Result<Vec<u8>, Error> {
     if response.content_length().is_some_and(|n| n > max as u64) {
         return Err(Error::Unavailable);
     }

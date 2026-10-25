@@ -72,6 +72,12 @@ async fn capabilities(State(state): State<Arc<AppState>>) -> Json<crate::contrac
     use crate::contracts::{BrokerConfiguration, Capabilities, PublishingCapabilities};
     let config = &state.config;
     Json(Capabilities {
+        manual_share_channels: Some(crate::contracts::Channel::ALL.to_vec()),
+        profile_editing: Some(true),
+        community_discovery: Some(true),
+        official_complaint_gateway: Some(true),
+        civic_participation: Some(true),
+        complaint_preparation: Some(true),
         manual_sharing: Some(true),
         google: config.provider_configured("google"),
         facebook: config.provider_configured("facebook"),
@@ -106,8 +112,13 @@ async fn ready(State(state): State<Arc<AppState>>) -> Result<Json<serde_json::Va
 }
 
 pub fn router(state: Arc<AppState>) -> Result<Router, Error> {
+    crate::official_complaints::validate_catalogue()?;
     let mut cors = CorsLayer::new()
-        .allow_methods([axum::http::Method::GET, axum::http::Method::POST])
+        .allow_methods([
+            axum::http::Method::GET,
+            axum::http::Method::POST,
+            axum::http::Method::PUT,
+        ])
         .allow_headers([
             header::AUTHORIZATION,
             header::CONTENT_TYPE,
@@ -131,6 +142,96 @@ pub fn router(state: Arc<AppState>) -> Result<Router, Error> {
         .route("/v1/auth/{provider}", post(auth::login))
         .route("/v1/me", get(auth::me))
         .route(
+            "/v1/me/profile",
+            get(crate::profile::get)
+                .put(crate::profile::save)
+                .layer(DefaultBodyLimit::max(2_810_000)),
+        )
+        .route(
+            "/v1/me/profile/sign-in-photo",
+            post(crate::profile::import_photo).layer(DefaultBodyLimit::max(2048)),
+        )
+        .route(
+            "/v1/community",
+            get(crate::community::list).post(crate::community::create),
+        )
+        .route("/v1/community/{id}", get(crate::community::get))
+        .route("/v1/community/access", get(crate::community::access))
+        .route("/v1/community/topics", get(crate::community::topics))
+        .route(
+            "/v1/community/{id}/share-link",
+            post(crate::community_links::share_link).layer(DefaultBodyLimit::max(2048)),
+        )
+        .route("/community/{id}", get(crate::community_links::landing))
+        .route(
+            "/.well-known/apple-app-site-association",
+            get(crate::community_links::apple_association),
+        )
+        .route(
+            "/.well-known/assetlinks.json",
+            get(crate::community_links::android_association),
+        )
+        .route(
+            "/assets/civiclens.png",
+            get(crate::community_links::share_image),
+        )
+        .route(
+            "/v1/community/{id}/watch",
+            post(crate::community::watch).layer(DefaultBodyLimit::max(2048)),
+        )
+        .route("/v1/directory/units", get(crate::administrative::list))
+        .route(
+            "/v1/official-complaints/providers",
+            get(crate::official_complaints::list_providers),
+        )
+        .route(
+            "/v1/official-complaints/jurisdictions",
+            get(crate::official_complaints::list_jurisdictions),
+        )
+        .route(
+            "/v1/official-complaints/resolve",
+            post(crate::official_complaints::resolve).layer(DefaultBodyLimit::max(4096)),
+        )
+        .route(
+            "/v1/official-complaints/requests/{id}",
+            get(crate::official_complaints::get_request),
+        )
+        .route(
+            "/v1/reports/{id}/official-complaints",
+            get(crate::official_complaints::request_history)
+                .post(crate::official_complaints::create_request)
+                .layer(DefaultBodyLimit::max(4096)),
+        )
+        .route(
+            "/v1/community/{id}/response",
+            post(crate::community::respond),
+        )
+        .route(
+            "/v1/community/{id}/opinions",
+            get(crate::community::opinions).post(crate::community::add_opinion),
+        )
+        .route("/v1/community/{id}/flag", post(crate::community::flag))
+        .route(
+            "/v1/moderation/community",
+            get(crate::community::moderation_list),
+        )
+        .route(
+            "/v1/moderation/community/{id}",
+            post(crate::community::review),
+        )
+        .route(
+            "/v1/moderation/community/{id}/opinions",
+            get(crate::community::moderation_opinions),
+        )
+        .route(
+            "/v1/moderation/community/{id}/opinions/{opinion_id}",
+            post(crate::community::review_opinion),
+        )
+        .route(
+            "/v1/moderation/community/flags",
+            get(crate::community::flags),
+        )
+        .route(
             "/v1/me/deletion-request",
             get(crate::account_deletion::get).post(crate::account_deletion::create),
         )
@@ -139,6 +240,14 @@ pub fn router(state: Arc<AppState>) -> Result<Router, Error> {
         .route("/v1/assist", post(crate::assist::assist))
         .route("/v1/authorities/preview", post(crate::authority::preview))
         .route("/v1/reports/{id}", get(reports::get))
+        .route(
+            "/v1/reports/{id}/complaints",
+            get(crate::complaints::options),
+        )
+        .route(
+            "/v1/complaints/{id}/handoff",
+            post(crate::complaints::handoff),
+        )
         .route("/v1/moderation/reports", get(reports::moderation_list))
         .route("/v1/moderation/reports/{id}/photo", get(reports::photo))
         .route(
@@ -165,6 +274,10 @@ pub fn router(state: Arc<AppState>) -> Result<Router, Error> {
                 .route(
                     "/v1/reports/{id}/share-package",
                     post(reports::share_package),
+                )
+                .route(
+                    "/v1/reports/{id}/complaint-package",
+                    post(crate::complaints::prepare),
                 )
                 .layer(DefaultBodyLimit::max(1024))
                 .layer(RequestBodyLimitLayer::new(1024))

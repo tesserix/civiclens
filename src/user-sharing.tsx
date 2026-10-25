@@ -1,11 +1,12 @@
+import { Text } from './text';
 import {useEffect,useRef,useState} from 'react';
-import {Platform,Switch,Text,View} from 'react-native';
+import { Linking, Platform, Switch, View } from 'react-native';
 import {Image} from 'expo-image';
+import { SocialDestinationSelect } from './social-destination-select';
 import {request} from './api';
-import {Button,Chip,Notice,palette} from './ui';
-import type {Channel,Report,SharePackage} from '../shared/contracts';
+import {Button,Notice,palette} from './ui';
+import {channelLabels as labels, type Channel, type Report, type SharePackage} from '../shared/contracts';
 
-const labels:Record<Channel,string>={facebook:'Facebook',instagram:'Instagram',whatsapp:'WhatsApp'};
 export function UserSharing({report,token}:{report:Report;token:string}) {
   const [selected,setSelected]=useState<Channel[]>([]);
   const [acknowledged,setAcknowledged]=useState(false);
@@ -14,9 +15,12 @@ export function UserSharing({report,token}:{report:Report;token:string}) {
   const [busy,setBusy]=useState(false);
   const [message,setMessage]=useState('');
   const generation=useRef(0);
+  const saved=useRef({photos:'',count:0});
+  const working=useRef(false);
   const channelKey=[...new Set(report.publications.map(p=>p.channel))].join(',');
   const available=report.sharingMode==='manual' && report.status==='approved';
   useEffect(()=>{
+    saved.current={photos:'',count:0};working.current=false;
     generation.current++;setAcknowledged(false);setPrepared(null);setOpened([]);setMessage('');setBusy(false);
     setSelected(channelKey ? [channelKey.split(',')[0] as Channel] : []);
     return ()=>{generation.current++;};
@@ -59,26 +63,87 @@ export function UserSharing({report,token}:{report:Report;token:string}) {
     } catch {if(run===generation.current)setMessage('Sharing could not be opened. Your report is safe. Update CivicLens or retry after review and connection are available.');}
     finally {if(run===generation.current)setBusy(false);}
   };
-  if(report.sharingMode!=='manual')return null;
+  const tiktokAction=async(target:SharePackage,action:'save'|'copy'|'open')=>{
+    if(!prepared || !acknowledged || !available || Platform.OS==='web' || working.current || busy)return;
+    working.current=true;
+    const run=generation.current;const active=()=>run===generation.current;
+    setBusy(true);setMessage('');
+    try {
+      const fresh=await packageForShare('tiktok');
+      if(!active())return;
+      if(JSON.stringify(fresh)!==JSON.stringify(target)){setPrepared(null);setMessage('Reviewed content changed. Prepare and check the post again.');return;}
+      if(action==='copy'){
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
+        const clipboard:typeof import('expo-clipboard')=require('expo-clipboard');
+        if(!active())return;
+        if(!await clipboard.setStringAsync(fresh.caption))throw new Error('Clipboard unavailable');
+        if(active())setMessage('Reviewed caption copied. Paste it into TikTok and check it before posting.');
+      } else if(action==='open'){
+        await Linking.openURL('https://www.tiktok.com/');
+        if(active())setMessage('TikTok opened. Choose Upload, select your saved photos in order, paste the caption and confirm your account before posting. CivicLens cannot verify delivery.');
+      } else {
+        if(Platform.OS==='android' && Number(Platform.Version)<33){setMessage('Use the share menu to save photos on this Android version, then upload them in TikTok.');return;}
+        // Explicit legacy entry preserves add-only access; the SDK 57 top-level save method throws.
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
+        const media:typeof import('expo-media-library/legacy')=require('expo-media-library/legacy');
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
+        const files:typeof import('expo-file-system/legacy')=require('expo-file-system/legacy');
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
+        const crypto:typeof import('expo-crypto')=require('expo-crypto');
+        if(Platform.OS==='ios'){
+          const permission=await media.requestPermissionsAsync(true,['photo']);
+          if(!active())return;
+          if(!permission.granted){setMessage('Photo access was not granted. Allow adding photos in Settings or use the share menu. CivicLens does not need to read your photo library.');return;}
+        }
+        if(!files.cacheDirectory)throw new Error('Photo cache unavailable');
+        const photoKey=JSON.stringify(fresh.photosBase64);
+        if(saved.current.photos!==photoKey)saved.current={photos:photoKey,count:0};
+        const progress=saved.current;
+        try {
+          while(progress.count<fresh.photosBase64.length){
+            if(!active())return;
+            const uri=`${files.cacheDirectory}civiclens-share-${crypto.randomUUID()}.jpg`;
+            try {
+              await files.writeAsStringAsync(uri,fresh.photosBase64[progress.count],{encoding:files.EncodingType.Base64});
+              if(!active())return;
+              await media.saveToLibraryAsync(uri);
+              progress.count++;
+            } finally {await files.deleteAsync(uri,{idempotent:true});}
+          }
+          if(active())setMessage(`${progress.count} of ${fresh.photosBase64.length} reviewed photos saved to Photos. Copies remain there until you remove them. Copy the caption, then open TikTok.`);
+        } catch {
+          if(active())setMessage(`${progress.count} of ${fresh.photosBase64.length} photos saved. Check Photos before retrying; an interrupted save may already have created a copy. Retry continues after confirmed saves while this screen stays open.`);
+        }
+      }
+    } catch {if(active())setMessage('TikTok preparation could not continue. Check your connection and review status, update CivicLens if needed, then retry. No delivery is confirmed.');}
+    finally {if(active()){working.current=false;setBusy(false);}}
+  };
+  if(report.sharingMode!=='manual'||!report.publications.length)return null;
   return <View className="gap-3 rounded-2xl border border-line bg-surface p-4">
     <Text accessibilityRole="header" className="text-[17px] font-semibold text-ink">Share to your communities</Text>
     <Text className="text-sm leading-5 text-muted">You own and manage your groups, Channels and accounts in their apps. Choose the destination and confirm the post there. No extra social login is needed in CivicLens.</Text>
     {!available ? <Notice>Sharing is available after every photo, the public caption and responsible authority have been reviewed.</Notice> : <>
       <Text className="text-sm leading-5 text-muted">Your social profile name, username, Page name or phone number may be visible. The caption credits your CivicLens nickname; it does not hide the sender in another app.</Text>
       <Text className="text-sm leading-5 text-muted">Choose one, several or all destinations. Your phone opens one app at a time; confirm each post in the matching app.</Text>
-      <View className="flex-row flex-wrap gap-2">{report.publications.map(p=><Chip key={p.channel} role="checkbox" label={labels[p.channel]} selected={selected.includes(p.channel)} disabled={busy} onPress={()=>choose(selected.includes(p.channel)?selected.filter(c=>c!==p.channel):[...selected,p.channel])}/>)}</View>
-      <View className="flex-row flex-wrap gap-2"><Button title="Select all destinations" compact variant="quiet" disabled={busy} onPress={()=>choose([...new Set(report.publications.map(p=>p.channel))])}/><Button title="Clear destinations" compact variant="quiet" disabled={busy} onPress={()=>choose([])}/></View>
+      <SocialDestinationSelect value={selected} options={report.publications.map(p=>p.channel)} disabled={busy} onChange={choose}/>
       <View className="flex-row items-center gap-3"><Text className="flex-1 text-sm leading-5 text-ink">I understand my social account identity may be visible.</Text><Switch accessibilityLabel="Accept social identity visibility" value={acknowledged} disabled={busy} onValueChange={value=>{setAcknowledged(value);setPrepared(null);setOpened([]);setMessage('');}} trackColor={{true:palette.brand}}/></View>
       <Button title="Prepare reviewed post" variant="secondary" disabled={!acknowledged || !selected.length || busy || Platform.OS==='web'} busy={busy} onPress={()=>void prepare()}/>
       {prepared ? <>
         <Text className="text-sm font-semibold text-ink">{prepared.length} {prepared.length===1?'destination':'destinations'} selected</Text>
-        <Text className="text-sm font-semibold text-ink">{prepared[0].photosBase64.length} reviewed photos</Text>
+        <Text className="text-sm font-semibold text-ink">{prepared[0].photosBase64.length} reviewed {prepared[0].photosBase64.length===1?'photo':'photos'}</Text>
         <View className="flex-row flex-wrap gap-2">{prepared[0].photosBase64.map((photo,index)=><Image key={index} source={{uri:`data:image/jpeg;base64,${photo}`}} accessibilityLabel={`Reviewed photo ${index+1}`} contentFit="cover" style={{width:88,height:88,borderRadius:12}}/>)}</View>
         <Notice>Some apps may omit the caption or limit attachments. Check every photo, the caption, the sending account and the destination before posting.</Notice>
         {prepared.map(target=><View key={target.channel} className="gap-3 border-t border-line pt-3">
           <Text accessibilityRole="header" className="font-semibold text-ink">{labels[target.channel]}</Text>
           <Text selectable className="text-sm leading-6 text-ink">{target.caption}</Text>
           <Button title={prepared.length===1?'Choose app and destination':`Open ${labels[target.channel]} sharing options`} icon="share-outline" disabled={!acknowledged || busy || Platform.OS==='web'} busy={busy} onPress={()=>void share(target)}/>
+          {target.channel==='tiktok'?<View className="gap-3 rounded-xl border border-line p-3">
+            <Text className="text-sm leading-5 text-muted">If TikTok is missing from the share menu, save the reviewed photos, copy the caption, then open TikTok. Choose Upload and select your photos in order. TikTok may require its app or an account. Check every attachment and your sending account before posting.</Text>
+            <Notice>Saving creates copies in your photo library, which may sync through your device’s photo backup settings. Copying places the public caption on your clipboard. CivicLens cannot remove exported copies or confirm a TikTok post.</Notice>
+            <Button title="Save reviewed photos for TikTok" icon="download-outline" variant="secondary" disabled={!acknowledged || busy || Platform.OS==='web'} onPress={()=>void tiktokAction(target,'save')}/>
+            <Button title="Copy TikTok caption" icon="copy-outline" variant="secondary" disabled={!acknowledged || busy || Platform.OS==='web'} onPress={()=>void tiktokAction(target,'copy')}/>
+            <Button title="Open TikTok" icon="logo-tiktok" variant="secondary" disabled={!acknowledged || busy || Platform.OS==='web'} onPress={()=>void tiktokAction(target,'open')}/>
+          </View>:null}
           {opened.includes(target.channel)?<Text className="text-sm leading-5 text-muted">{labels[target.channel]}: options opened; delivery unverified</Text>:null}
         </View>)}
       </> : null}

@@ -70,3 +70,42 @@ marketed as completed erasure. Production activation requires specific schema/AP
 rollout approval, staffed fulfilment, a successful end-to-end deletion drill,
 public HTTPS policy links, backup/restore handling and store disclosures. Build
 0.1.1 (4) predates these changes. No real account or production data was deleted.
+
+## Participation and complaint data (migrations 0007–0010)
+
+Before exporting a verified account, inventory `community_cards.owner_id`,
+`community_responses.user_id`, `community_opinions.owner_id`,
+`community_flags.reporter_id`, `complaint_intents.owner_id` and
+`official_complaint_requests.owner_id`. Include review
+references to that user, their private choices/consent timestamps, drafts, prepared
+text/destination snapshots and relevant audit identifiers. Political opinions and
+support choices are sensitive; deliver exports through verified restricted access,
+never a public issue or a shared link with broad access. Do not expose other users'
+choices, flag reporters or private identities in someone else's export.
+
+For approved erasure, resolve dependent flags, opinions and responses for owned
+cards, retaining other contributors only under a reviewed anonymization/retention
+policy. Remove this account's responses to other cards; final aggregates may change
+unless a separately reviewed anonymous aggregate policy is introduced. The schema
+uses RESTRICT deliberately; no cascading deletion is presented as compliance.
+Review `reviewed_by` references and append-only audit evidence before removing a
+user. Complaint preparation snapshots must be included before report deletion.
+Blocked official-request snapshots include the selected administrative district,
+provider/readiness metadata, consent audit references and creation time. Include
+these private records in verified exports and resolve their RESTRICT references
+before deleting an owned report/account under approved erasure. Internal IDs are
+not police references; there is no government submission to revoke in this version.
+Official-form submissions are controlled by the government service; CivicLens has
+no government receipt or deletion authority merely because a form was opened.
+Native saved evidence and third-party copies need the user's separate removal.
+No erasure automation or live purge is introduced by this expansion. Staffed
+fulfilment and an account export/erasure drill remain launch requirements.
+
+## Private account profile
+
+Include `users.profile_bio`, `users.avatar_jpeg` and `users.sign_in_photo_url` in
+the owner-scoped export and erasure inventory. Export the sanitized JPEG as a
+private file, not a public URL. Erase all three fields when anonymizing an account;
+ordinary row deletion also removes them. Do not leave an imported-photo candidate
+in an anonymized user row. Backup expiration and restore reapplication cover
+these fields too. No user access token is retained by this feature.

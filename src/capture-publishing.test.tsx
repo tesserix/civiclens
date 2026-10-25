@@ -21,7 +21,7 @@ beforeEach(()=>{
   jest.mocked(SecureStore.getItemAsync).mockImplementation(async key=>stored.get(key)||null);
   jest.mocked(SecureStore.setItemAsync).mockImplementation(async(key,value)=>{stored.set(key,value);});
   jest.mocked(SecureStore.deleteItemAsync).mockImplementation(async key=>{stored.delete(key);});
-  globalThis.fetch=jest.fn().mockImplementation(async(url)=>({ok:true,json:async()=>String(url).endsWith('/v1/capabilities') ? {assist:false,authorityPreview:false,manualSharing:true,maxPhotos:5,communityRulesVersion,facebookCountries:['AU'],publishing:{facebook:true}} : {id:'sample-report'}}));
+  globalThis.fetch=jest.fn().mockImplementation(async(url)=>({ok:true,json:async()=>String(url).endsWith('/v1/capabilities') ? {assist:false,authorityPreview:false,manualSharing:true,complaintPreparation:true,maxPhotos:5,communityRulesVersion,facebookCountries:['AU'],publishing:{facebook:true}} : {id:'sample-report'}}));
   jest.mocked(ImagePicker.launchImageLibraryAsync).mockResolvedValue({canceled:false,assets:Array.from({length:5},(_,i)=>({uri:`library-${i}.jpg`,width:1600,height:1200,exif:{GPSLatitude:-37.814,GPSLongitude:144.9633}}))});
 });
 
@@ -41,6 +41,7 @@ test('uploads five photos with the original photo GPS, country destination and e
   const call=jest.mocked(fetch).mock.calls.find(([url])=>String(url).endsWith('/v1/reports'))!;
   const body=JSON.parse(call[1]!.body as string);
   expect(body.additionalPhotosBase64).toHaveLength(4);
+  expect(body).not.toHaveProperty('complaintRequested');
   expect(body.location).toEqual({latitude:-37.814,longitude:144.9633,countryCode:'AU',locality:'Melbourne, VIC'});
   expect(body.sharingMode).toBe('manual');expect(body.locationSource).toBe('photo');expect(body.communityRulesVersion).toBe(communityRulesVersion);
 });
@@ -66,7 +67,40 @@ test('offers user-owned destinations without a CivicLens country-Page mode',asyn
   expect(screen.queryByRole('radio',{name:'CivicLens country Pages'})).toBeNull();
   expect(screen.queryByRole('radio',{name:'Share using my own apps'})).toBeNull();
   expect(screen.getByText(/You choose the group, Channel or account/)).toBeOnTheScreen();
+  expect(screen.queryByRole('checkbox',{name:'Instagram'})).toBeNull();
+  fireEvent.press(screen.getByRole('button',{name:'Social apps, Facebook'}));
   fireEvent.press(screen.getByRole('checkbox',{name:'Instagram'}));
   fireEvent.press(screen.getByRole('checkbox',{name:'WhatsApp'}));
   for(const name of ['Facebook','Instagram','WhatsApp'])expect(screen.getByRole('checkbox',{name})).toBeChecked();
+  fireEvent.press(screen.getByRole('button',{name:'Done'}));
+  expect(screen.getByRole('button',{name:'Social apps, All 3 apps selected'})).toBeOnTheScreen();
+  expect(screen.queryByRole('checkbox',{name:'Instagram'})).toBeNull();
+});
+
+test('offers TikTok only when the server supports it and submits all four as manual destinations',async()=>{
+  jest.mocked(fetch).mockImplementation(async(url)=>({ok:true,json:async()=>String(url).endsWith('/v1/capabilities') ? {manualSharing:true,manualShareChannels:['facebook','instagram','whatsapp','tiktok'],maxPhotos:5,communityRulesVersion} : {id:'sample-report'}}) as Response);
+  open();await screen.findByRole('button',{name:'Social apps, Facebook'});
+  fireEvent.press(screen.getByRole('button',{name:'Social apps, Facebook'}));
+  expect(screen.getByRole('checkbox',{name:'TikTok'})).toBeOnTheScreen();
+  fireEvent.press(screen.getByRole('button',{name:'Select all social apps'}));
+  expect(screen.getByRole('checkbox',{name:'TikTok'})).toBeChecked();
+  fireEvent.press(screen.getByRole('button',{name:'Done'}));
+  expect(screen.getByRole('button',{name:'Social apps, All 4 apps selected'})).toBeOnTheScreen();
+  fireEvent.press(screen.getByRole('button',{name:'Choose from photos'}));
+  await screen.findByText('5 of 5 photos');
+  fireEvent.changeText(screen.getByLabelText('Description'),'Litter is scattered beside the public path.');
+  fireEvent(screen.getByLabelText('Consent to reviewed public sharing'),'valueChange',true);
+  fireEvent(screen.getByLabelText('Accept community rules'),'valueChange',true);
+  fireEvent.press(screen.getByRole('button',{name:'Submit report'}));
+  await waitFor(()=>expect(jest.mocked(fetch).mock.calls.some(([url])=>String(url).endsWith('/v1/reports'))).toBe(true));
+  const call=jest.mocked(fetch).mock.calls.find(([url])=>String(url).endsWith('/v1/reports'))!;
+  expect(JSON.parse(call[1]!.body as string)).toMatchObject({sharingMode:'manual',channels:['facebook','instagram','whatsapp','tiktok']});
+});
+
+test('preserves a TikTok draft but blocks submission against an older server',async()=>{
+  stored.set('civiclens-draft-qa-photo',JSON.stringify({key:'tiktok-draft',sharingMode:'manual',photoUri:'file:///drafts/civiclens-photo-test.jpg',category:'waste',description:'Litter beside the public path.',location:{latitude:-37.814,longitude:144.9633,countryCode:'AU',locality:'Melbourne'},channels:['tiktok'],consent:true,communityRulesVersion}));
+  open();await screen.findByText(/Some saved destinations are unavailable/);
+  expect(screen.queryByRole('checkbox',{name:'TikTok'})).toBeNull();
+  expect(screen.getByRole('button',{name:'Submit report'})).toBeDisabled();
+  expect(screen.getByDisplayValue('Litter beside the public path.')).toBeOnTheScreen();
 });

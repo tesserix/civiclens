@@ -73,11 +73,15 @@ test('supports selecting one, several or all destinations while requiring a sepa
   const share=jest.requireMock('react-native-share').default.open;
   jest.mocked(fetch).mockImplementation(async(_url,options)=>({ok:true,json:async()=>({...packageBody,channel:JSON.parse(options!.body as string).channel})}) as Response);
   render(<UserSharing report={report} token="synthetic-session"/>);
-  fireEvent.press(screen.getByRole('button',{name:'Clear destinations'}));
+  fireEvent.press(screen.getByRole('button',{name:'Social apps, Facebook'}));
+  fireEvent.press(screen.getByRole('button',{name:'Clear social apps'}));
+  fireEvent.press(screen.getByRole('button',{name:'Done'}));
   fireEvent(screen.getByLabelText('Accept social identity visibility'),'valueChange',true);
   expect(screen.getByRole('button',{name:'Prepare reviewed post'})).toBeDisabled();
-  fireEvent.press(screen.getByRole('button',{name:'Select all destinations'}));
+  fireEvent.press(screen.getByRole('button',{name:'Social apps, Choose apps'}));
+  fireEvent.press(screen.getByRole('button',{name:'Select all social apps'}));
   for(const name of ['Facebook','Instagram','WhatsApp'])expect(screen.getByRole('checkbox',{name})).toBeChecked();
+  fireEvent.press(screen.getByRole('button',{name:'Done'}));
   fireEvent.press(screen.getByRole('button',{name:'Prepare reviewed post'}));
   expect(await screen.findByText('3 destinations selected')).toBeOnTheScreen();
   expect(share).not.toHaveBeenCalled();
@@ -89,4 +93,109 @@ test('supports selecting one, several or all destinations while requiring a sepa
   fireEvent.press(screen.getByRole('button',{name:'Open Instagram sharing options'}));
   await waitFor(()=>expect(share).toHaveBeenCalledTimes(2));
   expect(screen.getByText('Instagram: options opened; delivery unverified')).toBeOnTheScreen();
+});
+
+test('does not offer social actions for a government-only report',()=>{
+  render(<UserSharing report={{...report,publications:[]}} token="synthetic-session"/>);
+  expect(screen.queryByText('Share to your communities')).toBeNull();
+});
+
+jest.mock('expo-media-library/legacy',()=>({requestPermissionsAsync:jest.fn(async()=>({granted:true})),saveToLibraryAsync:jest.fn(async()=>{})}));
+jest.mock('expo-clipboard',()=>({setStringAsync:jest.fn(async()=>true)}));
+jest.mock('expo-crypto',()=>({randomUUID:jest.fn(()=>'random-private-id')}));
+jest.mock('expo-file-system/legacy',()=>({cacheDirectory:'file:///cache/',EncodingType:{Base64:'base64'},writeAsStringAsync:jest.fn(async()=>{}),deleteAsync:jest.fn(async()=>{})}));
+const tiktokReport={...report,publications:[{channel:'tiktok',status:'blocked'}]} as Report;
+async function prepareTikTok(){
+  jest.mocked(fetch).mockImplementation(async()=>({ok:true,json:async()=>({...packageBody,channel:'tiktok'})}) as Response);
+  const view=render(<UserSharing report={tiktokReport} token="synthetic-session"/>);
+  fireEvent(screen.getByLabelText('Accept social identity visibility'),'valueChange',true);
+  fireEvent.press(screen.getByRole('button',{name:'Prepare reviewed post'}));
+  await screen.findByText(packageBody.caption);
+  return view;
+}
+test('offers TikTok native handoff and an explicit save, copy and open fallback without claiming delivery',async()=>{
+  const {Linking}=jest.requireActual('react-native');
+  jest.spyOn(Linking,'openURL').mockResolvedValue(true);
+  const media=jest.requireMock('expo-media-library/legacy'),fs=jest.requireMock('expo-file-system/legacy'),clipboard=jest.requireMock('expo-clipboard');
+  await prepareTikTok();
+  expect(screen.getByText(/If TikTok is missing from the share menu/)).toBeOnTheScreen();
+  expect(media.saveToLibraryAsync).not.toHaveBeenCalled();
+  fireEvent.press(screen.getByRole('button',{name:'Save reviewed photos for TikTok'}));
+  await screen.findByText(/5 of 5 reviewed photos saved/);
+  expect(media.requestPermissionsAsync).toHaveBeenCalledWith(true,['photo']);
+  expect(media.saveToLibraryAsync).toHaveBeenCalledTimes(5);
+  expect(fs.writeAsStringAsync.mock.calls.map((call:unknown[])=>call[1])).toEqual(packageBody.photosBase64);
+  expect(fs.deleteAsync).toHaveBeenCalledTimes(5);
+  fireEvent.press(screen.getByRole('button',{name:'Copy TikTok caption'}));
+  await waitFor(()=>expect(clipboard.setStringAsync).toHaveBeenCalledWith(packageBody.caption));
+  await screen.findByText(/Reviewed caption copied/);
+  fireEvent.press(screen.getByRole('button',{name:'Open TikTok'}));
+  await waitFor(()=>expect(Linking.openURL).toHaveBeenCalledWith('https://www.tiktok.com/'));
+  expect(await screen.findByText(/CivicLens cannot verify delivery/)).toBeOnTheScreen();
+  expect(fetch).toHaveBeenCalledTimes(4);
+});
+test('handles add-only photo permission denial without exporting any photo',async()=>{
+  const media=jest.requireMock('expo-media-library/legacy');media.requestPermissionsAsync.mockResolvedValueOnce({granted:false});
+  await prepareTikTok();fireEvent.press(screen.getByRole('button',{name:'Save reviewed photos for TikTok'}));
+  await screen.findByText(/Photo access was not granted/);
+  expect(media.saveToLibraryAsync).not.toHaveBeenCalled();
+});
+test('retries only unsaved photos after partial failure and cleans temporary files',async()=>{
+  const media=jest.requireMock('expo-media-library/legacy'),fs=jest.requireMock('expo-file-system/legacy');
+  media.saveToLibraryAsync.mockResolvedValueOnce(undefined).mockRejectedValueOnce(new Error('storage failure'));
+  await prepareTikTok();fireEvent.press(screen.getByRole('button',{name:'Save reviewed photos for TikTok'}));
+  await screen.findByText(/1 of 5 photos saved/);
+  expect(fs.deleteAsync).toHaveBeenCalledTimes(2);
+  fireEvent.press(screen.getByRole('button',{name:'Save reviewed photos for TikTok'}));
+  await screen.findByText(/5 of 5 reviewed photos saved/);
+  expect(media.saveToLibraryAsync).toHaveBeenCalledTimes(6);
+  expect(fs.writeAsStringAsync.mock.calls.map((call:unknown[])=>call[1])).toEqual([packageBody.photosBase64[0],packageBody.photosBase64[1],...packageBody.photosBase64.slice(1)]);
+});
+test.each(['Save reviewed photos for TikTok','Copy TikTok caption','Open TikTok'])('rechecks review before %s and blocks withdrawn approval',async action=>{
+  await prepareTikTok();
+  jest.mocked(fetch).mockResolvedValueOnce({ok:false,status:409,json:async()=>({code:'CONFLICT',message:'Review required'})} as Response);
+  fireEvent.press(screen.getByRole('button',{name:action}));
+  await screen.findByText(/TikTok preparation could not continue/);
+  expect(jest.requireMock('expo-media-library/legacy').saveToLibraryAsync).not.toHaveBeenCalled();
+  expect(jest.requireMock('expo-clipboard').setStringAsync).not.toHaveBeenCalled();
+});
+test('stops saving remaining photos if the account changes during a native save',async()=>{
+  const media=jest.requireMock('expo-media-library/legacy');let finish!:()=>void;
+  media.saveToLibraryAsync.mockImplementationOnce(()=>new Promise<void>(resolve=>{finish=resolve;}));
+  const view=await prepareTikTok();fireEvent.press(screen.getByRole('button',{name:'Save reviewed photos for TikTok'}));
+  await waitFor(()=>expect(media.saveToLibraryAsync).toHaveBeenCalledTimes(1));
+  view.rerender(<UserSharing report={tiktokReport} token="other-synthetic-session"/>);
+  finish();await waitFor(()=>expect(jest.requireMock('expo-file-system/legacy').deleteAsync).toHaveBeenCalledTimes(1));
+  expect(media.saveToLibraryAsync).toHaveBeenCalledTimes(1);
+  expect(screen.queryByText(packageBody.caption)).toBeNull();
+});
+
+test('hands the TikTok caption and all reviewed images to the chooser without a published receipt',async()=>{
+  await prepareTikTok();
+  fireEvent.press(screen.getByRole('button',{name:'Choose app and destination'}));
+  await waitFor(()=>expect(jest.requireMock('react-native-share').default.open).toHaveBeenCalledWith(expect.objectContaining({title:'Share reviewed post to TikTok',message:packageBody.caption,urls:packageBody.photosBase64.map(p=>`data:image/jpeg;base64,${p}`)})));
+  await screen.findByText('TikTok: options opened; delivery unverified');
+});
+test('requires fresh preparation when the TikTok caption changes',async()=>{
+  await prepareTikTok();
+  jest.mocked(fetch).mockResolvedValueOnce({ok:true,json:async()=>({...packageBody,channel:'tiktok',caption:'A newly reviewed caption.'})} as Response);
+  fireEvent.press(screen.getByRole('button',{name:'Copy TikTok caption'}));
+  await screen.findByText('Reviewed content changed. Prepare and check the post again.');
+  expect(jest.requireMock('expo-clipboard').setStringAsync).not.toHaveBeenCalled();
+  expect(screen.queryByText(packageBody.caption)).toBeNull();
+});
+test('explains when the OS cannot open TikTok and keeps the reviewed package',async()=>{
+  const {Linking}=jest.requireActual('react-native');
+  jest.spyOn(Linking,'openURL').mockRejectedValueOnce(new Error('No browser'));
+  await prepareTikTok();fireEvent.press(screen.getByRole('button',{name:'Open TikTok'}));
+  await screen.findByText(/TikTok preparation could not continue/);
+  expect(screen.getByText(packageBody.caption)).toBeOnTheScreen();
+});
+test('does not save the same confirmed photos twice on repeated taps',async()=>{
+  await prepareTikTok();
+  fireEvent.press(screen.getByRole('button',{name:'Save reviewed photos for TikTok'}));
+  await screen.findByText(/5 of 5 reviewed photos saved/);
+  fireEvent.press(screen.getByRole('button',{name:'Save reviewed photos for TikTok'}));
+  await screen.findByText(/5 of 5 reviewed photos saved/);
+  expect(jest.requireMock('expo-media-library/legacy').saveToLibraryAsync).toHaveBeenCalledTimes(5);
 });

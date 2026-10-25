@@ -25,7 +25,7 @@ external app approval, callback allowlist, or Services ID is working.
 
 ## User-owned social sharing
 
-Users own their Facebook groups/Pages, WhatsApp groups/Channels and Instagram
+Users own their Facebook groups/Pages, WhatsApp groups/Channels and Instagram or TikTok
 accounts, and manage invites/members in those services. CivicLens offers only
 user-owned sharing in the new report UI; no country-Page mode or demo path is
 shipped. Google/Facebook/Apple sign-in remains separate from sharing. Users need
@@ -117,3 +117,15 @@ A future discovery worker can use licensed search APIs and official directories
 to propose candidates with citations and fetched timestamps. Search engines and
 Google Maps do not establish legal responsibility or current office holders;
 automated discovery must feed verification, not silently create public tags.
+
+## TikTok — user-confirmed sharing
+
+TikTok is a manual destination for independently reviewed reports. The phone's
+share chooser can hand off the reviewed JPEGs and caption if a suitable app
+accepts them. When TikTok is absent, Save reviewed photos, Copy TikTok caption and
+Open TikTok provide an explicit upload path. The user selects their own account,
+checks attachment order and caption, then confirms in TikTok. Native chooser
+completion never confirms publication. See ADR-0014 for permissions, partial-save
+behavior and the physical-device verification gate. Registered Share Kit/Content
+Posting API integration is not configured; no TikTok credentials are needed by
+this manual path.

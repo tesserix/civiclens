@@ -1,5 +1,6 @@
+import { Text } from './text';
 import { useState } from 'react';
-import { Linking, Pressable, Text, View } from 'react-native';
+import { Linking, Pressable, View } from 'react-native';
 import { API_URL } from './api';
 import { Notice } from './ui';
 

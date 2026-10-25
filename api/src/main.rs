@@ -1,8 +1,14 @@
 mod account_deletion;
 mod admin;
+mod administrative;
 mod assist;
 mod auth;
 mod authority;
+mod community;
+mod community_links;
+#[cfg(test)]
+mod community_tests;
+mod complaints;
 mod config;
 mod content_safety;
 mod contracts;
@@ -11,7 +17,9 @@ mod error;
 mod http;
 mod media;
 mod nickname;
+mod official_complaints;
 mod privacy;
+mod profile;
 mod publishing;
 mod reports;
 #[cfg(test)]

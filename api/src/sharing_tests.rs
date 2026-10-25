@@ -302,9 +302,30 @@ async fn australia_five_photos_require_review_and_owner_consent_before_user_shar
         StatusCode::OK
     );
 
+    let mut unsupported = body.clone();
+    unsupported["channels"] = json!(["tiktok"]);
+    for mode in [None, Some("managed")] {
+        unsupported.as_object_mut().unwrap().remove("sharingMode");
+        if let Some(mode) = mode {
+            unsupported["sharingMode"] = json!(mode);
+        }
+        assert_eq!(
+            send(
+                &app,
+                "POST",
+                "/v1/reports",
+                &users[0].1,
+                unsupported.clone(),
+                Some(uuid::Uuid::new_v4())
+            )
+            .await
+            .0,
+            StatusCode::BAD_REQUEST
+        );
+    }
     let mut manual = body.clone();
     manual["sharingMode"] = json!("manual");
-    manual["channels"] = json!(["facebook", "instagram", "whatsapp"]);
+    manual["channels"] = json!(["facebook", "instagram", "whatsapp", "tiktok"]);
     let (manual_status, manual_report) = send(
         &app,
         "POST",
@@ -318,7 +339,7 @@ async fn australia_five_photos_require_review_and_owner_consent_before_user_shar
     assert_eq!(manual_report["sharingMode"], "manual");
     let manual_id = manual_report["id"].as_str().unwrap();
     let manual_export = format!("/v1/reports/{manual_id}/share-package");
-    let export_input = json!({"channel":"facebook","identityAcknowledged":true});
+    let export_input = json!({"channel":"tiktok","identityAcknowledged":true});
     assert_eq!(
         send(
             &app,
@@ -382,6 +403,8 @@ async fn australia_five_photos_require_review_and_owner_consent_before_user_shar
     let caption = package["caption"].as_str().unwrap();
     assert!(caption.contains("Please arrange a clean-up."));
     assert!(caption.contains("SampleFox"));
+    assert_eq!(package["channel"], "tiktok");
+    assert!(!caption.contains("@"));
     assert!(!caption.contains("Private original"));
     assert!(!caption.contains("37.81412345"));
     assert_eq!(

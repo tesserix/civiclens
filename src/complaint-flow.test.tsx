@@ -1,0 +1,37 @@
+import { fireEvent, render, screen, waitFor } from '@testing-library/react-native';
+import { Linking } from 'react-native';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ComplaintFlow } from './complaint-flow';
+import type { Report } from '../shared/contracts';
+const report={id:'test-report',complaintRequested:true,status:'approved',nickname:'HappyKea'} as Report;
+const channel={id:'melbourne',name:'City of Melbourne',url:'https://services.melbourne.vic.gov.au/report/cleanpublicspace',evidenceUrl:'https://www.melbourne.vic.gov.au/street-cleaning-and-maintenance',apiStatus:'unknown',authentication:'Complete the official form.',expiresAt:'2026-11-23T16:40:00Z'};
+const pkg={id:'intent',reportId:'test-report',channel,text:'Reviewed factual litter description.',status:'prepared',photosBase64:['/9j/AAAA']};
+let client:QueryClient;
+beforeEach(()=>{jest.clearAllMocks();client=new QueryClient({defaultOptions:{queries:{retry:false,gcTime:0}}});});
+afterEach(()=>{client.clear();jest.restoreAllMocks();});
+test('requires separate consent and keeps form handoff distinct from government receipt',async()=>{
+  const open=jest.spyOn(Linking,'openURL').mockResolvedValue(undefined);
+  globalThis.fetch=jest.fn(async(url)=>({ok:true,status:200,json:async()=>String(url).endsWith('/complaints')?{channels:[channel],factualTextReviewed:true,history:[]}:String(url).endsWith('/handoff')?{id:'intent',status:'handoff_requested'}:pkg})) as jest.Mock;
+  render(<QueryClientProvider client={client}><ComplaintFlow report={report} userId="one" token="session"/></QueryClientProvider>);
+  await screen.findByText('City of Melbourne');
+  fireEvent.press(screen.getByRole('radio',{name:'City of Melbourne'}));
+  expect(screen.getByRole('button',{name:'Prepare reviewed complaint'})).toBeDisabled();
+  fireEvent.press(screen.getByRole('checkbox',{name:'I confirm this destination and want to prepare the reviewed text and photos.'}));
+  fireEvent.press(screen.getByRole('button',{name:'Prepare reviewed complaint'}));
+  await screen.findByText('Reviewed factual litter description.');
+  expect(open).not.toHaveBeenCalled();
+  fireEvent.press(screen.getByRole('checkbox',{name:'I will check the official form, provide any required identity and submit it myself.'}));
+  fireEvent.press(screen.getByRole('button',{name:'Open official complaint form'}));
+  await waitFor(()=>expect(open).toHaveBeenCalledWith(channel.url));
+  await screen.findByText(/CivicLens has no official receipt/);
+  expect(globalThis.fetch).toHaveBeenCalledWith(expect.stringContaining('/handoff'),expect.objectContaining({body:JSON.stringify({consent:true})}));
+});
+test('does not open an expired or changed official destination',async()=>{
+  const open=jest.spyOn(Linking,'openURL').mockResolvedValue(undefined); let prepares=0;
+  globalThis.fetch=jest.fn(async(url)=>String(url).endsWith('/complaints')?{ok:true,status:200,json:async()=>({channels:[channel],factualTextReviewed:true,history:[]})}:++prepares===1?{ok:true,status:200,json:async()=>pkg}:{ok:false,status:409,json:async()=>({code:'CONFLICT',message:'Destination expired.'})}) as jest.Mock;
+  render(<QueryClientProvider client={client}><ComplaintFlow report={report} userId="one" token="session"/></QueryClientProvider>);
+  await screen.findByText('City of Melbourne');fireEvent.press(screen.getByRole('radio',{name:'City of Melbourne'}));
+  fireEvent.press(screen.getByRole('checkbox',{name:'I confirm this destination and want to prepare the reviewed text and photos.'}));fireEvent.press(screen.getByRole('button',{name:'Prepare reviewed complaint'}));
+  await screen.findByText(pkg.text);fireEvent.press(screen.getByRole('checkbox',{name:'I will check the official form, provide any required identity and submit it myself.'}));fireEvent.press(screen.getByRole('button',{name:'Open official complaint form'}));
+  await screen.findByText('Destination expired.');expect(open).not.toHaveBeenCalled();
+});

@@ -1,10 +1,11 @@
-import { FlatList, Pressable, Text, View } from 'react-native';
+import { Text } from '../../src/text';
+import { FlatList, Pressable, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
 import { useSession } from '../../src/session';
-import { Button, Loading, Notice, Status, Title, Viewfinder, categoryIcons, palette } from '../../src/ui';
+import { Button, Loading, Notice, Status, Title, Viewfinder, categoryIcons, cardShadow, palette } from '../../src/ui';
 import { request } from '../../src/api';
 import { categoryLabels, type Report } from '../../shared/contracts';
 
@@ -17,7 +18,7 @@ export default function Reports() {
   });
   return <SafeAreaView edges={['top', 'left', 'right']} className="flex-1 bg-canvas"><FlatList
     data={query.data?.pages.flatMap(p => p.items) || []} keyExtractor={r => r.id}
-    contentContainerStyle={{ padding: 20, gap: 12, flexGrow: 1 }}
+    contentContainerStyle={{ padding: 20, gap: 16, flexGrow: 1, width: '100%', maxWidth: 800, alignSelf: 'center' }}
     onRefresh={() => void query.refetch()} refreshing={query.isRefetching}
     onEndReached={() => { if (query.hasNextPage && !query.isFetchingNextPage) void query.fetchNextPage(); }}
     ListHeaderComponent={<View className="mb-3 gap-4">
@@ -31,7 +32,7 @@ export default function Reports() {
     </View> : null}
     ListFooterComponent={query.isFetchingNextPage ? <Loading label="Loading more reports" /> : null}
     renderItem={({ item }) => <Pressable accessibilityRole="button" accessibilityLabel={`View ${categoryLabels[item.category]} report in ${item.location.locality}`} onPress={() => router.push(`/report/${item.id}`)}
-      className="gap-3 rounded-2xl border border-line bg-surface p-4" style={({ pressed }) => ({ opacity: pressed ? 0.75 : 1 })}>
+      className="gap-4 rounded-3xl border border-line bg-surface p-5" style={({ pressed }) => [cardShadow, { opacity: pressed ? 0.75 : 1 }]}>
       <View className="flex-row items-center gap-2.5">
         <View className="h-8 w-8 items-center justify-center rounded-lg bg-mint"><Ionicons name={categoryIcons[item.category]} size={17} color={palette.brand} /></View>
         <Text className="flex-1 text-sm font-semibold text-ink">{categoryLabels[item.category]}</Text>

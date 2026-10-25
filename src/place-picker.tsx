@@ -1,5 +1,6 @@
+import { Text } from './text';
 import { useEffect, useRef, useState } from 'react';
-import { KeyboardAvoidingView, Modal, Platform, ScrollView, Text, View } from 'react-native';
+import { KeyboardAvoidingView, Modal, Platform, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import type { Location } from '../shared/contracts';
 import { searchLocations } from './location';
