@@ -56,12 +56,39 @@ Google Play's private reviewer-access fields now contain the dedicated QA
 Google account and login steps. The optional trusted-partner-device feedback
 switch is off. No credential values belong in this document or screenshots.
 
+## Authenticated Android checks
+
+A fresh secure sign-out and Google sign-in selected the dedicated QA account
+from Google's real account chooser and returned to the authenticated report tab.
+The public nickname remained unchanged. Account/profile controls, the report
+form, empty report history, community discovery and request composition rendered.
+The native Browse and Request type dropdowns opened, and the Android photo picker
+handled an empty device library. These are UI checks, not proof of image upload,
+AI generation, moderation or social delivery on Android.
+
+Four unedited 1080×1920 screenshots were captured for the Play phone listing.
+That temporary size caused black bands inside the taller Pixel emulator skin;
+`adb -s emulator-5554 shell wm size reset` and `wm density reset` restored its
+native 1080×2424, density 420 display. Full-height captures confirm the app fills
+the display. The ignored release directory contains the screenshots and
+`authenticated-qa-receipt.json`.
+
+Production checks after PR #20 still returned `Cache-Control: no-store` and
+obfuscated email links: the response-protection middleware overwrote the legal
+handler's header. A regression test through the real router failed with
+`Some("no-store")` instead of `Some("no-store, no-transform")`. The middleware
+now preserves no-store protection and prevents edge transformations on legal pages;
+private and other API responses retain their existing `no-store` header.
+The router test also checks all three legal pages, unauthenticated account
+access, health and not-found responses, preserving CSP and nosniff. Local Rust
+checks passed: 39 tests, with 20 database tests still reserved for CI, plus fmt,
+Clippy and build. This correction is prepared for a separately approved rollout;
+it is not yet a verified production fix and does not resolve BIC's 403 response.
+
 ## Remaining release gates
 
-- Android Google login and authenticated capture/community/sharing QA still
-  require the owner's pending approval of Chrome's first-run Terms of Service.
-  The same QA Google account was successfully used on iOS; this is not a claim
-  that Android authentication has been verified.
+- Google login and the authenticated UI checks above passed. Android image
+  upload, AI assistance and reviewed social handoffs still need end-to-end QA.
 - Google's URL validator and a Python HTTP client receive Cloudflare error 1010
   for the public deletion page, while curl/browser requests succeed. Zone
   Browser Integrity Check is enabled. A proposed exception is restricted to
@@ -73,9 +100,10 @@ switch is off. No credential values belong in this document or screenshots.
   post-rollout verification before claiming usable contact links.
 - Google Play's child-safety declaration is not submitted. The published policy,
   in-app reporting path and owner's declaration must be verified first.
-- The owner's manual asset upload is pending: automatic approval review denied
-  the icon upload on the store-listing page. Do not bypass that denial through
-  another automated upload route.
+- The owner manually uploaded the icon and feature graphic; both were assigned
+  and saved. Four authenticated Android phone screenshots are prepared, but their
+  upload is pending. Automatic approval review denied file uploads on the store
+  listing. Do not bypass that denial through another automated upload route.
 - Store screenshots, production bundle upload and production review submission
   remain incomplete. Native social app delivery has not been demonstrated on
   this emulator. A native handoff is never a delivery receipt.
