@@ -31,7 +31,7 @@ export function Button({ title, onPress, busy = false, disabled = false, variant
     className={`${compact ? 'min-h-11 px-3' : 'min-h-[52px] px-5'} flex-row items-center justify-center gap-2 rounded-xl border ${surfaces[variant]}`}
     style={({ pressed }) => ({ opacity: disabled ? 0.4 : busy ? 0.8 : pressed ? 0.7 : 1 })}>
     {busy ? <ActivityIndicator color={tint} /> : icon ? <Ionicons name={icon} size={compact ? 18 : 20} color={tint} /> : null}
-    <Text style={{flexShrink:1,textAlign:'center'}} className={`${compact ? 'text-[15px]' : 'text-base'} font-semibold ${inverse ? 'text-white' : variant === 'quiet' ? 'text-brand' : 'text-ink'}`}>{title}</Text>
+    <Text style={{flexGrow:1,flexShrink:1,textAlign:'center'}} className={`${compact ? 'text-[15px]' : 'text-base'} font-semibold ${inverse ? 'text-white' : variant === 'quiet' ? 'text-brand' : 'text-ink'}`}>{title}</Text>
   </Pressable>;
 }
 
