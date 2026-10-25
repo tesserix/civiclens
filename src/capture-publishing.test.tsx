@@ -104,3 +104,51 @@ test('preserves a TikTok draft but blocks submission against an older server',as
   expect(screen.getByRole('button',{name:'Submit report'})).toBeDisabled();
   expect(screen.getByDisplayValue('Litter beside the public path.')).toBeOnTheScreen();
 });
+
+test('explains the missing community-rules acceptance beside a disabled submission',async()=>{
+  stored.set('civiclens-draft-qa-photo',JSON.stringify({key:'ready-except-rules',sharingMode:'manual',photoUri:'file:///drafts/civiclens-photo-test.jpg',category:'waste',description:'Litter beside the public path.',location:{latitude:-37.814,longitude:144.9633,countryCode:'AU',locality:'Melbourne'},channels:['facebook'],consent:true}));
+  open();await screen.findByDisplayValue('Litter beside the public path.');
+  expect(await screen.findByText('Before submitting, accept the community rules.')).toBeOnTheScreen();
+  expect(screen.getByRole('button',{name:'Submit report'})).toBeDisabled();
+  fireEvent(screen.getByLabelText('Accept community rules'),'valueChange',true);
+  await waitFor(()=>expect(screen.getByRole('button',{name:'Submit report'})).toBeEnabled());
+  expect(screen.queryByText('Before submitting, accept the community rules.')).toBeNull();
+  expect(jest.mocked(fetch).mock.calls.some(([url])=>String(url).endsWith('/v1/reports'))).toBe(false);
+});
+
+test('recovers reporting availability after a failed capability request without losing the draft',async()=>{
+  stored.set('civiclens-draft-qa-photo',JSON.stringify({key:'retry-capabilities',sharingMode:'manual',photoUri:'file:///drafts/civiclens-photo-test.jpg',category:'waste',description:'Litter beside the public path.',location:{latitude:-37.814,longitude:144.9633,countryCode:'AU',locality:'Melbourne'},channels:['facebook'],consent:true,communityRulesVersion}));
+  let unavailable=true;
+  jest.mocked(fetch).mockImplementation(async()=>unavailable ? {ok:false,status:503,json:async()=>({code:'UNAVAILABLE',message:'Service unavailable.'})} as Response : {ok:true,json:async()=>({manualSharing:true,maxPhotos:5,communityRulesVersion})} as Response);
+  open();
+  expect(await screen.findByText('Could not check reporting availability. Your draft is safe. Retry to continue.')).toBeOnTheScreen();
+  expect(screen.getByRole('button',{name:'Submit report'})).toBeDisabled();
+  unavailable=false;
+  fireEvent.press(screen.getByRole('button',{name:'Retry reporting availability'}));
+  await waitFor(()=>expect(screen.getByRole('button',{name:'Submit report'})).toBeEnabled());
+  expect(screen.getByDisplayValue('Litter beside the public path.')).toBeOnTheScreen();
+  expect(screen.queryByText('Could not check reporting availability. Your draft is safe. Retry to continue.')).toBeNull();
+  expect(jest.mocked(fetch).mock.calls.some(([url])=>String(url).endsWith('/v1/reports'))).toBe(false);
+});
+
+test('keeps the complete draft after a failed upload and retries with the same submission key',async()=>{
+  stored.set('civiclens-draft-qa-photo',JSON.stringify({key:'stable-retry-key',sharingMode:'manual',photoUri:'file:///drafts/civiclens-photo-test.jpg',category:'waste',description:'Litter beside the public path.',location:{latitude:-37.814,longitude:144.9633,countryCode:'AU',locality:'Melbourne'},channels:['facebook'],consent:true,communityRulesVersion}));
+  let attempts=0;
+  jest.mocked(fetch).mockImplementation(async(url)=>{
+    if(String(url).endsWith('/v1/reports'))return ++attempts===1 ? {ok:false,status:503,json:async()=>({code:'UNAVAILABLE',message:'Upload unavailable. Please retry.'})} as Response : {ok:true,json:async()=>({id:'sample-report'})} as Response;
+    return {ok:true,json:async()=>({manualSharing:true,maxPhotos:5,communityRulesVersion})} as Response;
+  });
+  open();await screen.findByDisplayValue('Litter beside the public path.');
+  await waitFor(()=>expect(screen.getByRole('button',{name:'Submit report'})).toBeEnabled());
+  fireEvent.press(screen.getByRole('button',{name:'Submit report'}));
+  expect(await screen.findByText('Upload unavailable. Please retry.')).toBeOnTheScreen();
+  expect(screen.getByDisplayValue('Litter beside the public path.')).toBeOnTheScreen();
+  expect(screen.getByLabelText('Your report photo')).toBeOnTheScreen();
+  expect(SecureStore.deleteItemAsync).not.toHaveBeenCalledWith('civiclens-draft-qa-photo');
+  fireEvent.press(screen.getByRole('button',{name:'Submit report'}));
+  await waitFor(()=>expect(SecureStore.deleteItemAsync).toHaveBeenCalledWith('civiclens-draft-qa-photo'));
+  const uploads=jest.mocked(fetch).mock.calls.filter(([url])=>String(url).endsWith('/v1/reports'));
+  expect(uploads).toHaveLength(2);
+  expect(uploads.map(([,options])=>(options!.headers as Record<string,string>)['Idempotency-Key'])).toEqual(['stable-retry-key','stable-retry-key']);
+  expect(uploads[0][1]!.body).toBe(uploads[1][1]!.body);
+});

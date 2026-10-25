@@ -134,6 +134,18 @@ export default function Capture() {
   const described = draft.description.trim().length >= 10;
   const shared = draft.consent && (draft.channels.length > 0 || (draft.complaintRequested===true && capabilities.data?.complaintPreparation===true)) && rulesAccepted && rulesReady && manualReady && destinationsReady;
   const locked = submit.isPending || discarding || confirmDiscard;
+  const availabilityError = capabilities.isError && !capabilities.data;
+  const submissionHint = working === 'photo' ? 'Preparing your photo…'
+    : deviceLocation.busy ? 'Waiting for your device location…'
+    : !draft.photoUri ? 'Before submitting, add at least one photo.'
+    : !located ? 'Before submitting, choose and confirm the issue location.'
+    : !described ? 'Before submitting, write at least 10 characters in Description.'
+    : capabilities.isPending ? 'Checking reporting availability…'
+    : !manualReady || !rulesReady ? 'Reporting is temporarily unavailable. Keep your draft and retry.'
+    : !destinationsReady ? 'Before submitting, update the unavailable social destinations.'
+    : !draft.channels.length && !(draft.complaintRequested && capabilities.data?.complaintPreparation) ? 'Before submitting, choose a sharing destination.'
+    : !draft.consent ? 'Before submitting, confirm consent to reviewed sharing.'
+    : !rulesAccepted ? 'Before submitting, accept the community rules.' : '';
   const removePhoto = (index: number) => {
     const remaining = photos.filter((_,i)=>i!==index);
     const clearLocation = index===0 && (draft.locationSource==='photo' || draft.locationSource==='camera');
@@ -219,6 +231,11 @@ export default function Capture() {
 
       <View className="gap-3">
         {draftError || submit.error ? <Notice>{draftError || submit.error?.message}</Notice> : null}
+        {availabilityError ? <>
+          <Notice>Could not check reporting availability. Your draft is safe. Retry to continue.</Notice>
+          <Button title="Retry reporting availability" variant="secondary" busy={capabilities.isFetching} disabled={locked} onPress={() => void capabilities.refetch()} />
+        </> : null}
+        {submissionHint && !locked && !availabilityError ? <Text accessibilityLiveRegion="polite" className="text-sm leading-5 text-muted">{submissionHint}</Text> : null}
         <Button title="Submit report" icon="send" busy={submit.isPending} disabled={locked || !draft.photoUri || !located || !described || !shared || working !== '' || deviceLocation.busy} onPress={() => submit.mutate()} />
         <Text className="text-center text-xs leading-5 text-muted">{Platform.OS === 'web' ? 'Browser drafts last while this page stays open.' : 'Your draft stays on this device until you submit or discard it.'}{`\n`}In immediate danger? Contact local emergency services.</Text>
       </View>
