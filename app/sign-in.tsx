@@ -28,6 +28,7 @@ export default function Welcome() {
   };
   return <SafeAreaView className="flex-1 bg-canvas"><KeyboardAvoidingView className="flex-1" behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
     <ScrollView contentContainerStyle={{ flexGrow: 1, paddingHorizontal: 24, paddingTop: 12, paddingBottom: 24, gap: 28 }} keyboardShouldPersistTaps="handled">
+      <View className="w-full max-w-[680px] self-center gap-7">
       <Brand />
       {signOutNotice?<Notice>{signOutNotice}</Notice>:null}
       <View className="gap-4">
@@ -51,6 +52,7 @@ export default function Welcome() {
       </View>
       <View className="flex-row items-start gap-2.5"><Ionicons name="lock-closed-outline" size={16} color={palette.muted} /><Text className="flex-1 text-[13px] leading-5 text-muted">Your profile stays private. Reports appear under your nickname and are reviewed before public sharing.</Text></View>
       <LegalLinks />
+      </View>
     </ScrollView>
   </KeyboardAvoidingView></SafeAreaView>;
 }
