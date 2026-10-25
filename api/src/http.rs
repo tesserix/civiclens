@@ -58,9 +58,10 @@ async fn report_bulkhead(
 
 async fn protect_response(request: Request, next: Next) -> Response {
     let mut response = next.run(request).await;
-    response
-        .headers_mut()
-        .insert(header::CACHE_CONTROL, HeaderValue::from_static("no-store"));
+    response.headers_mut().insert(
+        header::CACHE_CONTROL,
+        HeaderValue::from_static("no-store, no-transform"),
+    );
     response.headers_mut().insert(
         header::X_CONTENT_TYPE_OPTIONS,
         HeaderValue::from_static("nosniff"),
@@ -317,4 +318,60 @@ pub fn router(state: Arc<AppState>) -> Result<Router, Error> {
         .layer(SetRequestIdLayer::x_request_id(MakeRequestUuid))
         .with_state(state);
     Ok(routes)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use axum::body::Body;
+    use sqlx::postgres::PgPoolOptions;
+    use std::{collections::HashMap, sync::Mutex};
+    use tower::ServiceExt;
+
+    #[tokio::test]
+    async fn routed_responses_prevent_caching_and_edge_transforms() {
+        let database_url = "postgres://localhost/civiclens_header_test";
+        let state = Arc::new(AppState {
+            pool: PgPoolOptions::new().connect_lazy(database_url).unwrap(),
+            config: crate::config::Config::for_test(database_url),
+            http: reqwest::Client::new(),
+            authorities: vec![],
+            rate_limits: Mutex::new(HashMap::new()),
+            photo_slots: Arc::new(tokio::sync::Semaphore::new(2)),
+            report_slots: Arc::new(tokio::sync::Semaphore::new(1)),
+            media: None,
+            assist_limits: Mutex::new(HashMap::new()),
+        });
+        let app = router(state).unwrap();
+        for (path, status, legal) in [
+            ("/v1/privacy", StatusCode::OK, true),
+            ("/v1/terms", StatusCode::OK, true),
+            ("/v1/account-deletion", StatusCode::OK, true),
+            ("/healthz", StatusCode::OK, false),
+            ("/v1/me", StatusCode::UNAUTHORIZED, false),
+            ("/missing", StatusCode::NOT_FOUND, false),
+        ] {
+            let response = app
+                .clone()
+                .oneshot(Request::builder().uri(path).body(Body::empty()).unwrap())
+                .await
+                .unwrap();
+            assert_eq!(response.status(), status, "{path}");
+            assert_eq!(
+                response.headers().get(header::CACHE_CONTROL),
+                Some(&HeaderValue::from_static("no-store, no-transform")),
+                "{path}"
+            );
+            assert_eq!(
+                response.headers().get(header::X_CONTENT_TYPE_OPTIONS),
+                Some(&HeaderValue::from_static("nosniff")),
+                "{path}"
+            );
+            if legal {
+                assert!(response
+                    .headers()
+                    .contains_key(header::CONTENT_SECURITY_POLICY));
+            }
+        }
+    }
 }
