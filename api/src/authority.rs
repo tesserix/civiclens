@@ -187,7 +187,12 @@ pub fn caption(
         })
         .collect::<Vec<_>>()
         .join(", ");
-    format!("{}\n\n{}\n\nApproximate location: {:.2}, {:.2} ({})\n\nReported by {} via CivicLens. Community report; awaiting official verification.\nResponsible offices: {}\n\n{}",
+    let offices = if offices.is_empty() {
+        String::new()
+    } else {
+        format!("\nResponsible offices: {offices}")
+    };
+    format!("{}\n\n{}\n\nApproximate location: {:.2}, {:.2} ({})\n\nReported by {} via CivicLens. Community report; awaiting official verification.{}\n\n{}",
         clean(locality), clean(description), location.latitude, location.longitude, location.country_code, report.nickname, offices, tags.join(" ")).trim_end().to_string()
 }
 

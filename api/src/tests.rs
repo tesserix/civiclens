@@ -1462,3 +1462,24 @@ fn public_caption_honours_selected_or_empty_tags_and_drops_unverified_tags() {
     report.hashtags = Some(vec![]);
     assert!(!generate(&report).contains('#'));
 }
+
+#[test]
+fn awareness_caption_without_verified_offices_does_not_invent_a_responsible_body() {
+    let report = caption_report(contracts::Location {
+        latitude: -60.0,
+        longitude: 0.0,
+        country_code: "AU".into(),
+        locality: "User-selected location".into(),
+    });
+    let caption = authority::caption(
+        &report,
+        "Litter is visible beside the path.",
+        "User-selected location",
+        &[],
+        contracts::Channel::Facebook,
+    );
+    assert!(!caption.contains("Responsible offices:"), "{caption}");
+    assert!(!caption.contains('@'));
+    assert!(!caption.contains("#Melbourne"));
+    assert!(caption.contains("Litter is visible beside the path."));
+}

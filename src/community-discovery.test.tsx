@@ -1,3 +1,4 @@
+import {communityRulesVersion} from '../shared/contracts';
 import { ActionSheetIOS, Dimensions } from 'react-native';
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react-native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -10,7 +11,7 @@ beforeEach(()=>{
   client=new QueryClient({defaultOptions:{queries:{retry:false,gcTime:0},mutations:{retry:false,gcTime:0}}});
   globalThis.fetch=jest.fn(async(url)=>{
     const path=String(url);
-    const value=path.endsWith('/capabilities')?{civicParticipation:true,communityDiscovery:true,communityRulesVersion:'2026-10-24'}:path.endsWith('/access')?{canModerate:false}:path.endsWith('/response')?{...card,myResponse:'yes'}:path.endsWith(`/community/${card.id}`)?card:{items:[card],nextCursor:null};
+    const value=path.endsWith('/capabilities')?{civicParticipation:true,communityDiscovery:true,communityRulesVersion:communityRulesVersion}:path.endsWith('/access')?{canModerate:false}:path.endsWith('/response')?{...card,myResponse:'yes'}:path.endsWith(`/community/${card.id}`)?card:{items:[card],nextCursor:null};
     return {ok:true,status:200,json:async()=>value};
   }) as jest.Mock;
 });

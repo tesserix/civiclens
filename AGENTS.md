@@ -5,7 +5,9 @@ Read docs/architecture.md before changing authentication, routing or publishing.
 Run npm run check, npx expo-doctor and npm run export before delivery.
 Never put provider access tokens or real names in reports, captions or client logs.
 Google/Facebook identify accounts privately; only unique nicknames are public.
-An unverified authority or unreviewed photo must never reach a social publisher.
+Managed publishers require independent photo/authority review. User-owned native
+sharing requires the reporter’s explicit all-photo/caption and identity confirmation;
+it does not require moderator approval. Keep automatic language/privacy safeguards.
 Use OpenBao for all deployed application credentials, with civiclens-prefixed
 identifiers and separate development/UAT/production paths. No live cloud changes.
 
@@ -16,7 +18,8 @@ Follow the caption style and tagging rules in docs/architecture.md.
 Offer Serious, Light satire and Balanced tones in the preferred language.
 Use natural, human phrasing and everyday English; retain useful detail rather
 than forcing shorter captions. Humour should be witty, clear and constructive.
-Keep profanity, privacy, factuality and human-review safeguards in every tone.
+Keep profanity, privacy, factuality and reporter-confirmation safeguards in every
+tone. Independent moderation remains for community content and managed publishing.
 Derive issue hashtags on the server and city/region/council tags from reviewed
 directory data. Mention only verified relevant accounts; never invent groups,
 handles, officials, responsibility or blame. Recheck tags when category/location changes.
@@ -35,7 +38,8 @@ New report flows use users' own social accounts and communities; do not offer
 CivicLens country-Page posting controls. Allow one, several or all destinations,
 with an explicit native handoff for each and no invented delivery receipt.
 Keep real names out of CivicLens captions; explain the external platform's
-sender identity before sharing. Never bypass independent photo/authority review.
+sender identity before sharing. Do not require moderator approval for sharing to the reporter’s own accounts.
+Keep independent review for managed publishers and official complaints.
 Use real API-connected builds for TestFlight. Do not ship demo paths or fixtures.
 Public Apple App Store and Google Play releases require the user's explicit
 confirmation after their TestFlight testing. TestFlight approval is not approval

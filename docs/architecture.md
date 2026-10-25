@@ -4,8 +4,11 @@
 
 Sign in with Google or Facebook; choose a unique public nickname or receive one
 automatically. Photograph a civic issue, confirm GPS/location, choose a category,
-and submit. Reports are private until reviewed. Managed posting publishes as CivicLens, crediting the nickname only. User sharing
-hands an approved caption and reviewed photos to the phone’s share sheet; the
+and submit. Reports are saved privately. Owner-confirmed sharing goes straight
+to native social handoff without moderator approval (ADR-0018). The reporter checks
+all photos and the caption, accepts responsibility and confirms the final post
+in each destination app. Managed posting publishes as CivicLens, crediting the nickname only. User sharing
+hands a safety-screened caption and reporter-confirmed, sanitized photos to the phone’s share sheet; the
 external app controls sender identity and may show a profile name, username or
 phone number. This is public pseudonymity: the service knows the
 account's provider identifier, and photos/text/location can themselves identify
@@ -114,8 +117,10 @@ rejects malformed, duplicate or out-of-route tags on submission and re-filters
 choices against fresh routing on approval. Verified account mentions remain
 separate. Reports use their existing JSON storage; no schema migration is needed.
 
-Every tone retains profanity/harassment checks, photo privacy checks, factuality,
-reporter approval and moderator review before publishing. Exact coordinates stay
+Every tone retains profanity/harassment checks, photo privacy checks, factuality
+and reporter confirmation. Independent moderator review remains required for
+managed publishing and official complaints; user-owned native sharing does not
+require a moderator. Exact coordinates stay
 out of model context and public hashtags. Emulator fixtures must be visibly labelled
 and their results kept distinct from live-provider evaluation.
 
@@ -190,8 +195,12 @@ silently sent after logout or to another account.
 ADR-0008 adds user-owned sharing without changing broker sign-in. The new UI
 offers no CivicLens country-Page mode. Old managed drafts require fresh consent
 and a submission key when restored into the user-owned flow.
-An owner-only export repeats all-photo approval, current authority and content
-safety checks. Manual approval creates no outbox jobs and needs no country Page
+ADR-0018 supersedes moderator gating only for user-owned native sharing.
+An owner-only export requires explicit all-photo/caption confirmation, external
+identity acknowledgement, current rules and final content-safety checks. Fresh
+verified authority tags are included when available; missing coverage does not
+block generic awareness sharing. Legacy reviewed export remains for official
+complaints and old clients. Manual approval creates no outbox jobs and needs no country Page
 token. Nicknames remain in captions; users acknowledge external identity visibility
 before preparation and the final handoff. Users create/administer communities in
 the destination app. Native completion is never recorded as provider delivery.

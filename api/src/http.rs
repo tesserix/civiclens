@@ -82,6 +82,7 @@ async fn capabilities(State(state): State<Arc<AppState>>) -> Json<crate::contrac
     use crate::contracts::{BrokerConfiguration, Capabilities, PublishingCapabilities};
     let config = &state.config;
     Json(Capabilities {
+        reporter_sharing: Some(true),
         community_blocking: Some(true),
         manual_share_channels: Some(crate::contracts::Channel::ALL.to_vec()),
         profile_editing: Some(true),

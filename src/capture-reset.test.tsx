@@ -31,7 +31,7 @@ test('keeps the draft on cancellation, then discards it across reopening and all
   await waitFor(()=>expect(screen.getByLabelText('Description').props.value).toBe(''));
   expect(screen.queryByLabelText('Your report photo')).toBeNull();
   expect(screen.getByLabelText('Description').props.value).toBe('');
-  expect(screen.getByLabelText('Consent to reviewed public sharing').props.value).toBe(false);
+  expect(screen.getByLabelText('Confirm my post and sharing responsibility').props.value).toBe(false);
   expect(FileSystem.deleteAsync).toHaveBeenCalledWith('file:///drafts/civiclens-photo-test.jpg',{idempotent:true});
   view.unmount();open();
   await screen.findByLabelText('Description');

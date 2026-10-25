@@ -38,7 +38,7 @@ export function SocialDestinationSelect({ value, options, onChange, disabled = f
           <ScrollView className="flex-1" contentContainerStyle={{ paddingVertical: 12 }}>
           <View className="gap-3 border-b border-line pb-4">
             <Text accessibilityRole="header" className="text-xl font-semibold text-ink">Choose social apps</Text>
-            <Text className="text-sm leading-5 text-muted">Choose one, several or all apps. You’ll confirm each post in its app after review.</Text>
+            <Text className="text-sm leading-5 text-muted">Choose one, several or all apps. You’ll confirm each post in its app.</Text>
             <View className="flex-row flex-wrap items-center justify-between gap-2">
               <Text accessibilityLiveRegion="polite" className="text-sm font-semibold text-ink">{pending?.length ?? 0} of {choices.length} selected</Text>
               <View className="flex-row flex-wrap gap-2">

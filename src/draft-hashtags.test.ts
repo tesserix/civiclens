@@ -41,3 +41,16 @@ test('moves an older country-Page draft to user sharing with fresh consent and s
   expect(view.result.current.draft).toMatchObject({sharingMode:'manual',consent:false,description:prior.description,channels:prior.channels});
   expect(view.result.current.draft.key).not.toBe(prior.key);
 });
+
+test('repeated native text callbacks keep an unchanged draft and submission key stable',async()=>{
+  const view=renderHook(()=>useDraft('qa-native-text'));
+  await waitFor(()=>expect(view.result.current.ready).toBe(true));
+  act(()=>view.result.current.update({description:'Litter is scattered on the grass.'}));
+  const saved=view.result.current.draft;
+  for(let i=0;i<60;i++)act(()=>view.result.current.update({description:saved.description}));
+  expect(view.result.current.draft).toBe(saved);
+  expect(view.result.current.draft.key).toBe(saved.key);
+  act(()=>view.result.current.update({description:'Litter is scattered beside the public path.'}));
+  expect(view.result.current.draft.description).toBe('Litter is scattered beside the public path.');
+  expect(view.result.current.draft.key).not.toBe(saved.key);
+});

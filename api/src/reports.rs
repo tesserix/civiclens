@@ -51,6 +51,8 @@ fn validate(input: &ReportInput) -> Result<(), Error> {
                 })
                 || tags.iter().collect::<HashSet<_>>().len() != tags.len()
         })
+        || (input.reporter_confirmed == Some(true)
+            && (input.sharing_mode != Some(SharingMode::Manual) || input.channels.is_empty()))
         || !input.consent
         || (input.channels.is_empty() && input.complaint_requested != Some(true))
         || (input.complaint_requested == Some(true)
@@ -196,7 +198,12 @@ pub async fn create(
         hashtags: input.hashtags,
         location: input.location,
         created_at: now.format(&Rfc3339).map_err(|_| Error::Internal)?,
-        status: "pending_review".into(),
+        status: if input.reporter_confirmed == Some(true) {
+            "ready_to_share"
+        } else {
+            "pending_review"
+        }
+        .into(),
         routing: Routing {
             status: if matches.is_empty() {
                 "needs_verification"
@@ -213,7 +220,14 @@ pub async fn create(
                 channel: *c,
                 status: PublicationStatus::Blocked,
                 provider_id: None,
-                reason: Some("Awaiting privacy and authority review".into()),
+                reason: Some(
+                    if input.reporter_confirmed == Some(true) {
+                        "Not posted. Share and confirm in your chosen app."
+                    } else {
+                        "Awaiting privacy and authority review"
+                    }
+                    .into(),
+                ),
             })
             .collect(),
     };
@@ -555,32 +569,64 @@ pub async fn share_package(
             "Confirm that your social account identity may be visible before sharing.",
         ));
     }
-    let (report, approval) = reviewed_export(&state, member.id, id).await?;
+    let (report, description, locality, offices) = if input.reporter_confirmed == Some(true) {
+        let report = read(&state, id, Some(member.id)).await?;
+        let count = report.photo_count.unwrap_or(1);
+        if report.sharing_mode != Some(SharingMode::Manual)
+            || !matches!(
+                report.status.as_str(),
+                "pending_review" | "ready_to_share" | "approved"
+            )
+            || input.community_rules_version.as_deref() != Some(COMMUNITY_RULES_VERSION)
+            || !(1..=5).contains(&count)
+            || input.confirmed_photo_count != Some(count)
+        {
+            return Err(Error::Conflict(
+                "Confirm every photo and the current rules before sharing your own report.",
+            ));
+        }
+        let offices = authority::route(
+            &state.authorities,
+            &report.location,
+            report.category,
+            OffsetDateTime::now_utc(),
+        );
+        let description = report.description.clone();
+        // An editable locality is not evidence for authority mentions or place hashtags.
+        let locality = if offices.is_empty() {
+            "User-selected location".into()
+        } else {
+            report.location.locality.clone()
+        };
+        (report, description, locality, offices)
+    } else {
+        let (report, approval) = reviewed_export(&state, member.id, id).await?;
+        let offices = reviewed_offices(&state, &report, approval.include_parents)?;
+        (
+            report,
+            approval.public_description,
+            approval.public_locality,
+            offices,
+        )
+    };
     if !report
         .publications
         .iter()
         .any(|p| p.channel == input.channel)
     {
         return Err(Error::Conflict(
-            "This report is not approved for this user-sharing destination.",
+            "This destination was not selected for this report.",
         ));
     }
     let count = report.photo_count.unwrap_or(1);
-    let offices = reviewed_offices(&state, &report, approval.include_parents)?;
-    let caption = authority::caption(
-        &report,
-        &approval.public_description,
-        &approval.public_locality,
-        &offices,
-        input.channel,
-    );
+    let caption = authority::caption(&report, &description, &locality, &offices, input.channel);
     crate::content_safety::check_publication(&state, &caption).await?;
     let mut photos_base64 = Vec::with_capacity(usize::from(count));
     for index in 0..count {
         photos_base64.push(STANDARD.encode(load_photo(&state, id, index).await?));
     }
     sqlx::query("INSERT INTO audit_events(actor_id,action,report_id,details) VALUES($1,'prepare_user_share',$2,$3)")
-        .bind(member.id).bind(id).bind(serde_json::json!({"channel":input.channel,"photoCount":count,"identityAcknowledged":true})).execute(&state.pool).await?;
+        .bind(member.id).bind(id).bind(serde_json::json!({"channel":input.channel,"photoCount":count,"identityAcknowledged":true,"reporterConfirmed":input.reporter_confirmed == Some(true),"rulesVersion":input.community_rules_version})).execute(&state.pool).await?;
     Ok(Json(SharePackage {
         report_id: report.id,
         channel: input.channel,
@@ -599,10 +645,18 @@ mod tests {
             "category":"waste","description":"Litter beside the public path.",
             "location":{"latitude":-37.81,"longitude":144.96,"countryCode":"AU","locality":"Melbourne"},
             "photoBase64":"first", "additionalPhotosBase64":["two","three","four","five"],
-            "channels":["facebook"],"consent":true,"communityRulesVersion":"2026-10-24"
+            "channels":["facebook"],"consent":true,"communityRulesVersion":COMMUNITY_RULES_VERSION
         });
         let input: ReportInput = serde_json::from_value(body.clone()).unwrap();
         assert!(validate(&input).is_ok());
+        let serialized = serde_json::to_value(&input).unwrap();
+        assert!(
+            !serialized
+                .as_object()
+                .unwrap()
+                .contains_key("reporterConfirmed"),
+            "legacy idempotency payload changed"
+        );
         body["additionalPhotosBase64"] = serde_json::json!(["2", "3", "4", "5", "6"]);
         assert!(validate(&serde_json::from_value(body.clone()).unwrap()).is_err());
         body["additionalPhotosBase64"] = serde_json::json!([]);

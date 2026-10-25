@@ -19,6 +19,7 @@ import { PlacePicker } from '../../src/place-picker';
 import { useDeviceLocation } from '../../src/useDeviceLocation';
 import { request } from '../../src/api';
 import { WritingAssist } from '../../src/writing-assist';
+import {beginReportSharing} from '../../src/report-sharing-intent';
 import { SocialDestinationSelect } from '../../src/social-destination-select';
 import {HashtagSelect} from '../../src/hashtag-select';
 import { AuthorityPreview } from '../../src/authority-preview';
@@ -40,7 +41,7 @@ export default function Capture() {
   const capabilities = useQuery({ queryKey: ['capabilities'], queryFn: ({ signal }) => request<Capabilities>('/v1/capabilities', { signal }) });
   const photos = draftPhotos(draft);
   const sharingMode = 'manual' as const;
-  const manualReady = capabilities.data?.manualSharing === true;
+  const manualReady = capabilities.data?.manualSharing === true && capabilities.data?.reporterSharing === true;
   const availableChannels = channels.filter(channel => capabilities.data?.manualShareChannels?.includes(channel) ?? channel !== 'tiktok');
   const destinationsReady = draft.channels.every(channel => availableChannels.includes(channel));
   const maxPhotos = capabilities.data?.maxPhotos === 5 ? 5 : 1;
@@ -75,11 +76,13 @@ export default function Capture() {
     for (const uri of photos.slice(1)) additionalPhotosBase64.push(await readPhoto(uri));
     const photoBase64 = await readPhoto();
     return request<Report>('/v1/reports', { token: session.token, method: 'POST', key: draft.key, timeoutMs: 90000,
-      body: { category: draft.category, description: draft.description, location: draft.location, photoBase64, additionalPhotosBase64, locationSource: draft.locationSource, communityRulesVersion, ...(capabilities.data?.complaintPreparation===true && draft.complaintRequested===true ? {complaintRequested:true} : {}), ...(capabilities.data?.manualSharing === true ? {sharingMode} : {}), channels: draft.channels, consent: draft.consent, ...(draft.hashtags === undefined ? {} : {hashtags:draft.hashtags}) } });
-  }, onSuccess: async () => {
+      body: { category: draft.category, description: draft.description, location: draft.location, photoBase64, additionalPhotosBase64, locationSource: draft.locationSource, communityRulesVersion, ...(capabilities.data?.reporterSharing===true && draft.channels.length ? {reporterConfirmed:true} : {}), ...(capabilities.data?.complaintPreparation===true && draft.complaintRequested===true ? {complaintRequested:true} : {}), ...(capabilities.data?.manualSharing === true ? {sharingMode} : {}), channels: draft.channels, consent: draft.consent, ...(draft.hashtags === undefined ? {} : {hashtags:draft.hashtags}) } });
+  }, onSuccess: async report => {
+    if (session && capabilities.data?.reporterSharing===true && draft.channels.length) beginReportSharing(session.token,report.id);
+    client.setQueryData(['report',session?.user.id,report.id],report);
     await reset();
     await client.invalidateQueries({ queryKey: ['reports', session?.user.id] });
-    router.push('/(tabs)/reports');
+    router.push(`/report/${encodeURIComponent(report.id)}`);
   } });
   const photoGeneration = useRef(0);
   const photo = async (camera: boolean, replace = false) => {
@@ -144,7 +147,7 @@ export default function Capture() {
     : !manualReady || !rulesReady ? 'Reporting is temporarily unavailable. Keep your draft and retry.'
     : !destinationsReady ? 'Before submitting, update the unavailable social destinations.'
     : !draft.channels.length && !(draft.complaintRequested && capabilities.data?.complaintPreparation) ? 'Before submitting, choose a sharing destination.'
-    : !draft.consent ? 'Before submitting, confirm consent to reviewed sharing.'
+    : !draft.consent ? 'Before submitting, confirm your post and sharing responsibility.'
     : !rulesAccepted ? 'Before submitting, accept the community rules.' : '';
   const removePhoto = (index: number) => {
     const remaining = photos.filter((_,i)=>i!==index);
@@ -154,7 +157,7 @@ export default function Capture() {
   const stepError = (step: 'photo') => error?.step === step ? <Notice>{error.message}</Notice> : null;
   return <SafeAreaView edges={['top', 'left', 'right']} className="flex-1 bg-canvas"><KeyboardAvoidingView className="flex-1" behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
     <ScrollView key={formVersion} keyboardShouldPersistTaps="handled" contentContainerStyle={{ padding: 20, gap: 32, paddingBottom: 40, width: '100%', maxWidth: 680, alignSelf: 'center' }}>
-      <Title subtitle="Nothing is shared until a reviewer has checked it.">Report an issue</Title>
+      <Title subtitle="Take a photo, tell the story and share it through your own social apps.">Report an issue</Title>
 
       {confirmDiscard ? <View className="gap-3 rounded-xl border border-line bg-surface p-4">
         <Text accessibilityRole="header" className="text-lg font-semibold text-ink">Discard this draft?</Text>
@@ -211,19 +214,19 @@ export default function Capture() {
           available={capabilities.data?.assist === true} sourceId={draft.photoUri} location={draft.location} contextual={capabilities.data?.assistContext === true} suggestedHashtags={hashtagOptions} selectedHashtags={draft.hashtags} onHashtagsChange={chooseHashtags} hashtagsBusy={hashtagsBusy} hashtagsError={suggestions?.error} onHashtagsRetry={retryHashtags} /> : null}
       </Step>
 
-      <Step number={5} title="Share after review" done={shared}>
-        <Text className="text-sm leading-5 text-muted">You choose the group, Channel or account in your social app after review. You own the community and manage its members there. Select one, several or all destinations. Your social profile, username or phone number may be visible; the caption credits your CivicLens nickname.</Text>
+      <Step number={5} title="Choose where to share" done={shared}>
+        <Text className="text-sm leading-5 text-muted">You choose the group, Channel or account in your social app. No moderator approval is needed for your own posts. You own the community and manage its members there. Select one, several or all destinations. Your social profile, username or phone number may be visible; the caption credits your CivicLens nickname.</Text>
         {!manualReady && capabilities.isSuccess ? <Notice>Sharing with your own apps is being updated. Keep your draft and retry with the latest CivicLens.</Notice> : null}
         {!destinationsReady ? <Notice>Some saved destinations are unavailable. Keep your draft and retry or change your selection.</Notice> : null}
         <SocialDestinationSelect value={draft.channels} options={availableChannels} disabled={locked} onChange={channels => update({channels})}/>
         {capabilities.data?.complaintPreparation===true?<View className="flex-row items-start gap-3 rounded-xl border border-line bg-surface p-4"><Text className="flex-1 text-sm leading-5 text-ink">Prepare a complaint for the responsible body after review. You will confirm the destination and finish on its official form. You can use this without social apps.</Text><Switch accessibilityLabel="Request official complaint preparation" value={draft.complaintRequested===true} disabled={locked} onValueChange={complaintRequested=>update({complaintRequested})} trackColor={{true:palette.brand}}/></View>:null}
         <View className="flex-row items-start gap-3 rounded-xl border border-line bg-surface p-4">
-          <Text className="flex-1 text-sm leading-5 text-ink">I agree to prepare my selected destinations after review, using my nickname and an approximate location. I’ve checked every photo for identifying details.</Text>
-          <Switch accessibilityLabel="Consent to reviewed public sharing" value={draft.consent} disabled={locked} onValueChange={consent => update({ consent })} trackColor={{ true: palette.brand }} />
+          <Text className="flex-1 text-sm leading-5 text-ink">I’ve checked the caption and every photo for accuracy and identifying details. I take responsibility for my post and agree to share using my nickname and approximate location. My social account name or phone number may be visible. I’ll confirm each post in its app.</Text>
+          <Switch accessibilityLabel="Confirm my post and sharing responsibility" value={draft.consent} disabled={locked} onValueChange={consent => update({ consent })} trackColor={{ true: palette.brand }} />
         </View>
         <View className="gap-3 rounded-xl border border-line bg-surface p-4">
           <Text accessibilityRole="header" className="font-semibold text-ink">Our community rules</Text>
-          <Text className="text-sm leading-6 text-muted">Keep it respectful: no hate, profanity, threats, harassment or personal attacks. Humour about the situation is welcome; humiliating a person is not.{`\n\n`}Share truthful evidence you have the right to share. Don’t invent a culprit or an official response. Keep private names, faces, number plates, children and precise home addresses out of public reports.{`\n\n`}Use photos of the same issue at one confirmed location. Every photo and public caption needs review. Hashtags do not guarantee that an authority has been notified. For emergencies, contact local emergency services.</Text>
+          <Text className="text-sm leading-6 text-muted">Keep it respectful: no hate, profanity, threats, harassment or personal attacks. Humour about the situation is welcome; humiliating a person is not.{`\n\n`}Share truthful evidence you have the right to share. Don’t invent a culprit or an official response. Keep private names, faces, number plates, children and precise home addresses out of public reports.{`\n\n`}Use photos of the same issue at one confirmed location. Check every photo and the caption before sharing. Your own social posts do not need moderator approval. Community requests and official complaints have separate review rules. Hashtags do not guarantee that an authority has been notified. For emergencies, contact local emergency services.</Text>
           <View className="flex-row items-center gap-3"><Text className="flex-1 text-sm leading-5 text-ink">I have read and accept these community rules.</Text><Switch accessibilityLabel="Accept community rules" value={rulesAccepted} disabled={locked} onValueChange={accepted=>update({communityRulesVersion:accepted ? communityRulesVersion : undefined})} trackColor={{true:palette.brand}}/></View>
           {!rulesReady && capabilities.isSuccess ? <Notice>Reporting is being updated. Your draft is safe; please retry shortly or update CivicLens.</Notice> : null}
         </View>

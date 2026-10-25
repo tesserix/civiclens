@@ -51,7 +51,7 @@ export function useDraft(userId: string) {
     return () => clearTimeout(timer);
   }, [draft, ready, storageKey, enqueue]);
   const update = useCallback((patch: Partial<Draft>) => setDraft(d => {
-    if (resetting.current) return d;
+    if (resetting.current || Object.entries(patch).every(([key,value])=>JSON.stringify(d[key as keyof Draft])===JSON.stringify(value))) return d;
     const changed = (patch.category !== undefined && patch.category !== d.category) || (patch.location !== undefined && JSON.stringify(patch.location) !== JSON.stringify(d.location));
     const next = { ...d, ...patch, ...(changed ? {hashtags:undefined}:{}), key: Crypto.randomUUID() };
     if (patch.photoUri!==undefined || patch.additionalPhotoUris!==undefined) next.photoFiles=[...new Set([...(d.photoFiles || []),...draftPhotos(d),...draftPhotos(next)])];

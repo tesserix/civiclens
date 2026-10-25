@@ -92,7 +92,7 @@ export function WritingAssist({ userId, token, category, description, hasPhoto, 
         <View className={stacked ? undefined : "flex-1"}><Button title="Use this" compact disabled={locked || !reviewed} onPress={() => { onUse(suggestion); setAnswer(null); setOpen(false); }} /></View>
         <View className={stacked ? undefined : "flex-1"}><Button title="Dismiss" variant="quiet" compact onPress={() => setAnswer(null)} /></View>
       </View>
-      <Text className="text-xs leading-5 text-muted">Keep it factual and respectful: no profanity, insults or threats. Remove identifying details from the caption; crop or replace photos showing faces, plates or private addresses. This check does not replace moderator review.</Text>
+      <Text className="text-xs leading-5 text-muted">Keep it factual and respectful: no profanity, insults or threats. Remove identifying details from the caption; crop or replace photos showing faces, plates or private addresses. You are responsible for checking your final post. Managed publishing and official complaints have separate review requirements.</Text>
     </View> : <Text className="text-xs leading-5 text-muted">{hasPhoto ? 'Your photo and notes are used to create a suggestion. Nothing changes until you choose Use this.' : 'Add a photo to draft a caption. You can fix spelling once you’ve written at least 10 characters.'}</Text>}
     {!suggestion ? hashtagPicker : null}
     {error ? <Notice>{error}</Notice> : null}
